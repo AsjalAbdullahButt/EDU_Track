@@ -1,1 +1,2 @@
-# SDA_Project
+# EDU-Track
+# Your Academic Companion
