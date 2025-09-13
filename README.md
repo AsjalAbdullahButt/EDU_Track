@@ -1,5 +1,5 @@
 # 📘 EDU Track – Academic Portal
-# Your Academic Companion 
+### Your Academic Companion
 
 EDU Track is a university-level academic management portal designed to provide students, faculty, and administrators with a **centralized platform** to handle all essential academic activities.  
 The system aims to streamline attendance tracking, course registration, fee management, grading, notifications, and feedback into one unified portal.
@@ -31,27 +31,31 @@ The system aims to streamline attendance tracking, course registration, fee mana
 ---
 
 ## 🏗️ Project Structure
+
+```
+EDU_Track/
 │
-├── frontend/ # HTML, CSS, JS files
-│ ├── index.html # Landing page
-│ ├── student/ # Student portal pages
-│ ├── faculty/ # Faculty portal pages
-│ └── admin/ # Admin dashboard
+├── frontend/                # **Frontend Module**
+│   ├── index.html           # Landing page
+│   ├── student/             # **Student Module Pages**
+│   ├── faculty/             # **Faculty Module Pages**
+│   └── admin/               # **Admin Module Pages**
 │
-├── backend/
-│ ├── app.py # Python backend (Flask/Django)
-│ ├── routes/ # API endpoints
-│ ├── models/ # Database models
-│ └── services/ # Business logic
+├── backend/                 # **Backend Module**
+│   ├── app.py               # Main backend application (Flask/Django)
+│   ├── routes/              # **API Endpoints**
+│   ├── models/              # **Database Models**
+│   └── services/            # **Business Logic/Services**
 │
-├── database/
-│ ├── schema.sql # MySQL schema
-│ └── seed.sql # Sample data
+├── database/                # **Database Scripts**
+│   ├── schema.sql           # MySQL schema
+│   └── seed.sql             # Sample data
 │
-├── docs/ # Documentation & proposal
-│ └── EDU-Track-Proposal.pdf
+├── docs/                    # **Documentation**
+│   └── EDU-Track-Proposal.pdf
 │
-└── README.md # Project overview
+└── README.md                # Project overview
+```
 
 ---
 
@@ -108,5 +112,3 @@ The system will expose RESTful APIs to handle communication between the frontend
 
 ## 📄 License
 This project is created as part of an academic requirement at **National University of Computer and Emerging Sciences (FAST-NUCES), Lahore**.  
-
-
