@@ -7,7 +7,7 @@ The system aims to streamline attendance tracking, course registration, fee mana
 ---
 
 ## 🚀 Features
-- *Student Module*
+- **Student Module**
   - Registration & secure login
   - Profile management
   - Attendance tracking
@@ -17,13 +17,13 @@ The system aims to streamline attendance tracking, course registration, fee mana
   - Notifications & alerts
   - Feedback submission  
 
-- *Faculty Module*
+- **Faculty Module**
   - Attendance management
   - Grade submissions
   - Course updates
   - Review student feedback  
 
-- *Administration Module*
+- **Administration Module**
   - Approve course registrations
   - Monitor fee transactions
   - Manage system security & user roles  
