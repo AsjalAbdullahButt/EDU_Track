@@ -52,7 +52,7 @@ EDU_Track/
 │   └── seed.sql             # Sample data
 │
 ├── docs/                    # **Documentation**
-│   └── EDU-Track-Proposal.pdf
+│   └── EDU-Track.pdf
 │
 └── README.md                # Project overview
 ```
