@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Notifications</title>
+  <link rel="stylesheet" href="../../../CSS/main.css">
+  <link rel="stylesheet" href="../../../CSS/dashboards.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo-section">
+  <img src="../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+
+    <nav class="nav-links">
+      <a href="../dashboard/student/dashboard_student.html">Dashboard</a>
+      <a href="courses.html">Courses</a>
+      <a href="attendance.html">Attendance</a>
+      <a href="results.html">Results</a>
+      <a href="fees.html">Fees</a>
+      <a href="notifications.html" class="active">Notifications</a>
+      <a href="feedback.html">Feedback</a>
+    </nav>
+
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <h1>Notifications</h1>
+      <p>Stay updated with your university alerts</p>
+    </header>
+
+    <section class="section">
+      <ul class="notification-list">
+        <li>📢 Midterm exams start on November 5.</li>
+        <li>💰 Fee due reminder: Pay before November 1.</li>
+        <li>🎓 Course evaluation forms are open now.</li>
+        <li>🗓️ Registration for Spring 2025 opens Dec 15.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="../../../JS/dashboard.js" defer></script>
+</body>
+</html>

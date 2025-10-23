@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Student Dashboard</title>
+  <link rel="stylesheet" href="../../../../CSS/main.css">
+  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="logo-section">
+  <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+
+    <nav class="nav-links">
+  <a href="dashboard_student.html" class="active">Dashboard</a>
+  <a href="../../student_pages/courses.html">My Courses</a>
+  <a href="../../student_pages/attendance.html">Attendance</a>
+  <a href="../../student_pages/results.html">Results</a>
+  <a href="../../student_pages/fees.html">Fees</a>
+  <a href="../../student_pages/notifications.html">Notifications</a>
+  <a href="../../student_pages/feedback.html">Feedback</a>
+    </nav>
+
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="dashboard-header">
+      <h1>Welcome, <span data-user-name id="studentName">Asjal Abdullah</span></h1>
+      <p>Your academic summary at a glance</p>
+    </header>
+
+    <!-- Quick Stats -->
+    <section class="stats-grid">
+  <a class="stat-link" href="../../student_pages/courses.html">
+        <div class="stat-card">
+          <h2>4</h2>
+          <p>Active Courses</p>
+        </div>
+      </a>
+
+  <a class="stat-link" href="../../student_pages/attendance.html">
+        <div class="stat-card">
+          <h2>92%</h2>
+          <p>Attendance</p>
+        </div>
+      </a>
+
+  <a class="stat-link" href="../../student_pages/results.html">
+        <div class="stat-card">
+          <h2>3.67</h2>
+          <p>CGPA</p>
+        </div>
+      </a>
+
+  <a class="stat-link" href="../../student_pages/fees.html">
+        <div class="stat-card">
+          <h2>Paid</h2>
+          <p>Fee Status</p>
+        </div>
+      </a>
+    </section>
+
+    <!-- Notifications -->
+    <section class="section">
+      <h2>Recent Notifications</h2>
+      <ul class="notification-list">
+        <li>⚙️ Your course registration for Spring 2025 has been confirmed.</li>
+        <li>📢 Midterm schedule is now available on the portal.</li>
+        <li>💰 Fee due reminder: 5th March 2025.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="../../../../JS/dashboard.js" defer></script>
+</body>
+</html>

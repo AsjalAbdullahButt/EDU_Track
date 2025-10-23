@@ -1,0 +1,306 @@
+/* ===============================================
+   EDU Track - Student Module Pages (Enhanced)
+   Author: Asjal Abdullah
+   =============================================== */
+
+/* Reuse global color palette */
+:root {
+  --midnight: #001f3f;
+  --pastel-mint: #cdeee4;
+  --whitesmoke: #f5f7f8;
+  --black: #0b0b0b;
+  --white: #ffffff;
+  --soft-shadow: 0 6px 18px rgba(11,11,11,0.06);
+  --transition: 0.3s ease-in-out;
+}
+
+/* -----------------------------------------------
+   🌟 General Layout Enhancements
+----------------------------------------------- */
+body {
+  background: linear-gradient(180deg, var(--whitesmoke), var(--pastel-mint));
+  animation: fadeIn 0.6s ease;
+}
+
+.section h2 {
+  position: relative;
+  display: inline-block;
+  color: var(--midnight);
+  font-weight: 700;
+}
+
+.section h2::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 3px;
+  background: var(--pastel-mint);
+  margin-top: 4px;
+  border-radius: 4px;
+}
+
+/* Smooth fade-in animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Table animations */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--soft-shadow);
+  animation: fadeIn 0.6s ease;
+}
+
+.data-table th {
+  background: var(--midnight);
+  color: var(--white);
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.data-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(11,11,11,0.06);
+  color: rgba(11,11,11,0.85);
+  transition: var(--transition);
+}
+
+.data-table tr:hover td {
+  background: rgba(205,238,228,0.25);
+  transform: scale(1.005);
+}
+
+/* -----------------------------------------------
+   📚 Courses Page Enhancements
+----------------------------------------------- */
+.data-table td:nth-child(4) {
+  font-weight: 600;
+}
+
+.btn {
+  transition: all var(--transition);
+}
+
+.btn.primary:hover {
+  background: linear-gradient(90deg, #11324a, var(--midnight));
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(11,11,11,0.1);
+}
+
+.btn.secondary:hover {
+  background: rgba(205,238,228,0.4);
+  transform: translateY(-2px);
+}
+
+/* -----------------------------------------------
+   💬 Feedback Page Styling
+----------------------------------------------- */
+.auth-form textarea {
+  resize: vertical;
+  transition: var(--transition);
+}
+
+.auth-form textarea:focus {
+  border-color: var(--pastel-mint);
+  box-shadow: 0 0 0 4px rgba(205,238,228,0.5);
+}
+
+.auth-form select {
+  background: var(--whitesmoke);
+  border: 1px solid rgba(11,11,11,0.1);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  transition: var(--transition);
+}
+
+.auth-form select:focus {
+  border-color: var(--pastel-mint);
+  box-shadow: 0 0 0 4px rgba(205,238,228,0.5);
+}
+
+/* Subtle hover glow on form */
+.auth-form:hover {
+  box-shadow: 0 8px 22px rgba(11,11,11,0.08);
+  transform: translateY(-3px);
+}
+
+/* -----------------------------------------------
+   💰 Fees Page Animations
+----------------------------------------------- */
+.data-table td span {
+  transition: all var(--transition);
+}
+
+.data-table td span:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 8px rgba(0, 31, 63, 0.15);
+}
+
+/* Floating receipt button animation */
+.btn.primary {
+  position: relative;
+}
+
+.btn.primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: radial-gradient(circle, rgba(205,238,228,0.25) 0%, transparent 80%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn.primary:hover::after {
+  opacity: 1;
+}
+
+/* -----------------------------------------------
+   🔔 Notifications Styling
+----------------------------------------------- */
+.notification-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(11,11,11,0.06);
+  transition: var(--transition);
+}
+
+.notification-list li:hover {
+  transform: translateX(8px);
+  color: var(--midnight);
+  font-weight: 600;
+}
+
+.notification-list li::before {
+  content: "•";
+  color: var(--pastel-mint);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* -----------------------------------------------
+   🧾 Results Page (Table Highlight)
+----------------------------------------------- */
+.data-table td:nth-child(4) {
+  color: var(--midnight);
+}
+
+.data-table tr td:last-child {
+  font-weight: 600;
+  color: #006b5b;
+  text-align: center;
+}
+
+/* Hover glow effect */
+.data-table tr:hover {
+  box-shadow: inset 0 0 12px rgba(0,31,63,0.05);
+}
+
+/* -----------------------------------------------
+   🗓️ Attendance Page - Circle Progress Bars
+----------------------------------------------- */
+.attendance-circles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: flex-start;
+  margin-top: 24px;
+}
+
+.circle-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: var(--soft-shadow);
+  width: 200px;
+  height: 240px;
+  text-align: center;
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.circle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(11,11,11,0.08);
+}
+
+/* Circle progress wrapper */
+.circle-progress {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 10px auto;
+  position: relative;
+  background: conic-gradient(var(--pastel-mint) calc(var(--value) * 1%), rgba(11,11,11,0.1) 0);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  transition: var(--transition);
+}
+
+.circle-progress::before {
+  content: attr(data-value) "%";
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--midnight);
+  position: absolute;
+}
+
+.circle-card h3 {
+  margin-top: 10px;
+  color: var(--midnight);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Circle hover glow */
+.circle-progress:hover {
+  box-shadow: 0 0 20px rgba(205,238,228,0.8);
+}
+
+/* Animate circle filling on load */
+@keyframes fillCircle {
+  0% { --value: 0; }
+  100% { --value: var(--final); }
+}
+
+/* Utility to apply animation */
+.circle-progress.animated {
+  animation: fillCircle 2s ease forwards;
+}
+
+/* -----------------------------------------------
+   ✨ Global Subtle Animations
+----------------------------------------------- */
+.section {
+  animation: fadeIn 0.8s ease;
+  transition: var(--transition);
+}
+
+.section:hover h2::after {
+  width: 80%;
+  background: var(--midnight);
+}
+
+/* Floating hover for cards and tables */
+.stat-card,
+.data-table,
+.auth-form {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card:hover,
+.data-table:hover,
+.auth-form:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(11,11,11,0.08);
+}
