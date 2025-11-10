@@ -14,15 +14,17 @@
 :root {
     --midnight: #001f3f;
     --mint: #cdeee4;
-    --pastel-mint: #aee6d6; /* used by components (footer/header hover) */
+    /* Use a single canonical pastel mint for the whole site */
+    --pastel-mint: #cdeee4; /* pastel mint */
     --whitesmoke: #f5f7f8;
     --black: #0b0b0b;
     --white: #ffffff;
 }
 
 /* Body defaults */
+/* Global page background: pastel mint */
 body {
-    background: var(--mint);
+    background: var(--pastel-mint);
     color: var(--black);
     min-height: 100vh;
     display: flex;

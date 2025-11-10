@@ -6,19 +6,37 @@
 /* ---- GLOBAL COLOR PALETTE (same as auth.css) ---- */
 :root {
   --midnight: #001f3f;       /* deep blue */
-  --pastel-mint: #cdeee4;    /* soft mint */
+  --pastel-mint: #cdeee4;    /* soft mint (canonical) */
   --whitesmoke: #f5f7f8;     /* off-white */
   --black: #0b0b0b;
   --white: #ffffff;
 }
 
-/* ---- PAGE LAYOUT ---- */
+/* Do not override the global body background here; main.css controls the pastel mint site background */
 body {
-  display: flex;
   min-height: 100vh;
-  background: var(--whitesmoke);
+  background: transparent; /* allow main.css to control global background */
   color: var(--black);
   font-family: "Inter", "Roboto", system-ui, sans-serif;
+}
+*** End Patch
+
+/* Pages that should show pastel mint background: add these classes to the <body> element in each HTML page:
+   dashboard, attendance, feedback, results, fees, notifications, courses */
+body.dashboard,
+body.attendance,
+body.feedback,
+body.results,
+body.fees,
+body.notifications,
+body.courses {
+  background: linear-gradient(180deg, rgba(205,238,228,0.85), rgba(205,238,228,0.95));
+}
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
 }
 
 /* ---- SIDEBAR ---- */
@@ -125,6 +143,27 @@ body {
   padding: 28px 40px;
   overflow-y: auto;
   background: var(--whitesmoke);
+}
+
+/* Main content sits on top of the page background. For pages using the pastel mint body background,
+   make the main-content slightly translucent so the mint shows through while keeping readability. */
+.main-content {
+  flex: 1;
+  padding: 28px 40px;
+  overflow-y: auto;
+  background: var(--whitesmoke);
+}
+
+/* When body has one of the target page classes, make .main-content use a semi-opaque white so the mint background is visible */
+body.dashboard .main-content,
+body.attendance .main-content,
+body.feedback .main-content,
+body.results .main-content,
+body.fees .main-content,
+body.notifications .main-content,
+body.courses .main-content {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(6px);
 }
 
 /* Improve content container readability */
