@@ -1,0 +1,30 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from database import get_db
+import crud.student as student_crud
+from schemas import StudentCreate, StudentResponse
+
+router = APIRouter(prefix="/students", tags=["Students"])
+
+@router.post("/", response_model=StudentResponse)
+def create_student(student: StudentCreate, db: Session = Depends(get_db)):
+    return student_crud.create_student(db, student)
+
+@router.get("/", response_model=list[StudentResponse])
+def list_students(db: Session = Depends(get_db)):
+    return student_crud.get_students(db)
+
+@router.get("/{student_id}", response_model=StudentResponse)
+def get_student(student_id: int, db: Session = Depends(get_db)):
+    student = student_crud.get_student(db, student_id)
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return student
+
+@router.put("/{student_id}", response_model=StudentResponse)
+def update_student(student_id: int, data: StudentCreate, db: Session = Depends(get_db)):
+    return student_crud.update_student(db, student_id, data)
+
+@router.delete("/{student_id}")
+def delete_student(student_id: int, db: Session = Depends(get_db)):
+    return student_crud.delete_student(db, student_id)
