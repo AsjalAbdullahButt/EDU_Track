@@ -18,6 +18,10 @@
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" placeholder="e.g. Ahmad Ali" required>
 
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" placeholder="e.g rollno@city.nu.edu.pk" required>
+
+
                 <label for="roll">Roll Number</label>
                 <input type="text" id="roll" name="roll" placeholder="e.g. 22L-6273" required>
 
@@ -28,6 +32,12 @@
                 <input type="password" id="confirm" name="confirm" placeholder="Repeat your password" required>
 
                 <div id="pwHelp" class="field-help"></div>
+
+                <!-- Added: show passwords checkbox -->
+                <div class="field-help">
+                    <input type="checkbox" id="showPassword" />
+                    <label for="showPassword">Show Passwords</label>
+                </div>
 
                 <div class="auth-actions">
                     <button type="submit" class="btn primary">Sign Up</button>
@@ -41,9 +51,25 @@
             <h2>Welcome to EDU Track</h2>
             <img src="../../Images/EDU-Logo.png" alt="EDU Track Logo" class="app-logo">
             <p>Create your student account and start learning!</p>
+            
         </aside>
     </div>
 
     <script src="../../JS/auth.js" defer></script>
+
+    <!-- Added: toggle script for showing/hiding both password fields -->
+    <script>
+        (function(){
+            const pw = document.getElementById('password');
+            const confirmPw = document.getElementById('confirm');
+            const toggle = document.getElementById('showPassword');
+            if (!pw || !confirmPw || !toggle) return;
+            toggle.addEventListener('change', function(){
+                const type = this.checked ? 'text' : 'password';
+                pw.type = type;
+                confirmPw.type = type;
+            });
+        })();
+    </script>
 </body>
 </html>

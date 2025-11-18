@@ -6,66 +6,246 @@
   <title>EDU Track - Feedback</title>
   <link rel="stylesheet" href="../../../CSS/main.css">
   <link rel="stylesheet" href="../../../CSS/dashboards.css">
+  <link rel="stylesheet" href="../../../CSS/student_pages.css">
 </head>
-<body>
+<body class="feedback">
 
   <div class="layout-wrapper">
-  <aside class="sidebar">
-    <div class="logo-section">
-  <img src="../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
-      <h2>EDU Track</h2>
-    </div>
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
 
-    <nav class="nav-links">
-      <a href="../dashboard/student/dashboard_student.html">Dashboard</a>
-      <a href="courses.html">Courses</a>
-      <a href="attendance.html">Attendance</a>
-      <a href="results.html">Results</a>
-      <a href="fees.html">Fees</a>
-      <a href="notifications.html">Notifications</a>
-      <a href="feedback.html" class="active">Feedback</a>
-    </nav>
+      <nav class="nav-links">
+        <a href="../dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="courses.html">Courses</a>
+        <a href="attendance.html">Attendance</a>
+        <a href="results.html">Results</a>
+        <a href="fees.html">Fees</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="#" class="active">Feedback</a>
+      </nav>
 
-    <div class="logout-section">
-      <button class="btn secondary" onclick="logout()">Logout</button>
-    </div>
-  </aside>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
 
-  <main class="main-content">
-    <header class="dashboard-header">
-      <h1>Feedback</h1>
-      <p>Share your thoughts about faculty and courses</p>
-    </header>
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Course Feedback</h1>
+        <p>Share your valuable feedback to help improve teaching and learning experience</p>
+      </header>
 
-    <section class="section">
-      <form class="auth-form" style="max-width:600px;">
-        <label for="course">Select Course</label>
-        <select id="course" name="course" required>
-          <option value="">-- Choose a course --</option>
-          <option value="dbms">Database Systems</option>
-          <option value="ai">Artificial Intelligence</option>
-          <option value="os">Operating Systems</option>
-        </select>
+      <!-- Feedback Overview -->
+      <section class="section">
+        <div class="feedback-stats">
+          <a href="feedback_submitted.html" class="stat-link">
+            <div class="stat-card">
+              <div class="stat-icon">📝</div>
+              <div class="stat-content">
+                <h3>12</h3>
+                <p>Feedbacks Submitted</p>
+                <div class="stat-action">View All →</div>
+              </div>
+            </div>
+          </a>
+          
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-content">
+              <h3>4.2</h3>
+              <p>Average Rating</p>
+            </div>
+          </div>
+          
+          <a href="feedback_pending.html" class="stat-link">
+            <div class="stat-card">
+              <div class="stat-icon">🎯</div>
+              <div class="stat-content">
+                <h3>3</h3>
+                <p>Pending Feedback</p>
+                <div class="stat-action">Complete Now →</div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
 
-        <label for="rating">Rate the Instructor</label>
-        <select id="rating" name="rating" required>
-          <option value="">-- Select rating --</option>
-          <option>Excellent</option>
-          <option>Good</option>
-          <option>Average</option>
-          <option>Poor</option>
-        </select>
+      <!-- Quick Actions -->
+      <section class="section">
+        <h2>Quick Actions</h2>
+        <div class="actions-grid">
+          <button class="action-btn" onclick="location.href='feedback_pending.html'">
+            <span class="action-icon">📋</span>
+            <span>Submit Pending Feedback</span>
+            <span class="action-badge">3 pending</span>
+          </button>
+          <button class="action-btn" onclick="location.href='feedback_submitted.html'">
+            <span class="action-icon">📊</span>
+            <span>View Submitted Feedback</span>
+            <span class="action-badge">12 submitted</span>
+          </button>
+          <button class="action-btn" onclick="startNewFeedback()">
+            <span class="action-icon">✨</span>
+            <span>New Feedback</span>
+            <span class="action-subtext">Any course</span>
+          </button>
+          <button class="action-btn" onclick="downloadFeedbackHistory()">
+            <span class="action-icon">📥</span>
+            <span>Download History</span>
+            <span class="action-subtext">PDF Report</span>
+          </button>
+        </div>
+      </section>
 
-        <label for="comments">Additional Comments</label>
-        <textarea id="comments" name="comments" rows="4" placeholder="Write your feedback..."></textarea>
+      <!-- Recent Feedback Activity -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Recent Feedback Activity</h2>
+          <a href="feedback_submitted.html" class="btn-text">View All History</a>
+        </div>
+        
+        <div class="activity-timeline">
+          <div class="timeline-item">
+            <div class="timeline-marker completed"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="course-badge">CS301</span>
+                <span class="timeline-date">Today</span>
+              </div>
+              <h4>Database Systems</h4>
+              <p>Submitted feedback with 4.5⭐ rating</p>
+              <div class="timeline-preview">
+                "Excellent course content and practical assignments..."
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-marker completed"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="course-badge">CS302</span>
+                <span class="timeline-date">2 days ago</span>
+              </div>
+              <h4>Operating Systems</h4>
+              <p>Submitted feedback with 4.0⭐ rating</p>
+              <div class="timeline-preview">
+                "Good course structure, more lab sessions would be helpful..."
+              </div>
+            </div>
+          </div>
+          
+          <div class="timeline-item pending">
+            <div class="timeline-marker pending"></div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="course-badge">CS303</span>
+                <span class="timeline-date">Due in 3 days</span>
+              </div>
+              <h4>Artificial Intelligence</h4>
+              <p>Feedback pending submission</p>
+              <button class="btn small primary" onclick="location.href='feedback_pending.html'">Submit Now</button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <button type="submit" class="btn primary">Submit Feedback</button>
-      </form>
-    </section>
-  </main>
-
+      <!-- Feedback Guidelines -->
+      <section class="section">
+        <div class="guidelines-card">
+          <h3>📝 Feedback Guidelines</h3>
+          <div class="guidelines-list">
+            <div class="guideline-item">
+              <span class="guideline-icon">🎯</span>
+              <div class="guideline-content">
+                <strong>Be Specific</strong>
+                <p>Provide concrete examples to support your feedback</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">💡</span>
+              <div class="guideline-content">
+                <strong>Constructive Criticism</strong>
+                <p>Focus on suggestions for improvement rather than just criticism</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">⭐</span>
+              <div class="guideline-content">
+                <strong>Balanced Feedback</strong>
+                <p>Highlight both strengths and areas for improvement</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">🔒</span>
+              <div class="guideline-content">
+                <strong>Anonymous Option</strong>
+                <p>You can choose to submit feedback anonymously</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <script src="../../../JS/dashboard.js" defer></script>
+  <!-- New Feedback Modal -->
+  <div id="newFeedbackModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Start New Feedback</h3>
+        <span class="close" onclick="closeNewFeedbackModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Select a course to provide feedback:</p>
+        <div class="modal-courses">
+          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS301'">
+            <span class="course-code">CS301</span>
+            <span class="course-name">Database Systems</span>
+          </div>
+          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS302'">
+            <span class="course-code">CS302</span>
+            <span class="course-name">Operating Systems</span>
+          </div>
+          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS303'">
+            <span class="course-code">CS303</span>
+            <span class="course-name">Artificial Intelligence</span>
+          </div>
+          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS304'">
+            <span class="course-code">CS304</span>
+            <span class="course-name">Software Engineering</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../../JS/auth.js"></script>
+  <script src="../../../JS/student-api.js"></script>
+  <script src="../../../JS/dashboard.js"></script>
+  <script>
+    function startNewFeedback() {
+      document.getElementById('newFeedbackModal').style.display = 'block';
+    }
+
+    function closeNewFeedbackModal() {
+      document.getElementById('newFeedbackModal').style.display = 'none';
+    }
+
+    function downloadFeedbackHistory() {
+      alert('Feedback history download feature coming soon!');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('newFeedbackModal');
+      if (event.target === modal) {
+        closeNewFeedbackModal();
+      }
+    }
+  </script>
 </body>
 </html>
