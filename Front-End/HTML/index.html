@@ -21,55 +21,6 @@
         <a href="pages/register.html" class="btn secondary">Register</a>
     </main>
 
-    <button onclick="loadStudents()">Load Students</button>
-    <script>
-        function loadStudents() {
-            fetch("http://127.0.0.1:8000/students")
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    let out = "";
-                    data.forEach(row => {
-                        out += JSON.stringify(row) + "<br>";
-                    });
-                    document.getElementById("output").innerHTML = out;
-                })
-                .catch(err => {
-                    document.getElementById("output").innerHTML = "Error: " + err;
-                });
-        }
-    </script>
-
-<button onclick="addStudent()">Add Dummy Student</button>
-
-<script>
-function addStudent() {
-    // Create dummy student object
-    const student = {
-        FULL_NAME: "Waleed payn kelu",
-        EMAIL: "john" + Math.floor(Math.random() * 10000) + "@example.com", // unique email
-        PASSWORD: "password123",
-        GENDER: "Male",
-        DOB: "2000-01-01",
-        DEPARTMENT: "Computer Science",
-        SEMESTER: 4,
-        CONTACT: "1234567890",
-        ADDRESS: "123 Main St"
-    };
-
-    fetch("http://127.0.0.1:8000/students", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(student)
-    })
-    .then(response => response.json())
-    .then(data => alert(data.message))
-    .catch(err => {
-        alert("Error: " + err);
-        console.error(err);
-    });
-}
-</script>
     <footer class="footer">
         <p>© 2025 EDU Track. All rights reserved.</p>
     </footer>
