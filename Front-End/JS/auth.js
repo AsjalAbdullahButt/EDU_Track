@@ -20,9 +20,17 @@ if (signupForm) {
   signupForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = signupForm.fullname.value.trim();
+    const email = (signupForm.email && signupForm.email.value) ? signupForm.email.value.trim() : '';
     const roll = signupForm.roll.value.trim();
     const password = signupForm.password.value.trim();
     const confirm = signupForm.confirm.value.trim();
+
+    // Require university email (e.g. rollno@city.nu.edu.pk) OR a .org email
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(?:nu\.edu\.pk)$/i;
+    if (!email || !emailRegex.test(email)) {
+      showAlert("Please enter a valid university email (e.g. rollno@city.nu.edu.pk) or a .org email.");
+      return;
+    }
 
     if (!name || !roll || !password) {
       showAlert("All fields are required!");
@@ -35,7 +43,7 @@ if (signupForm) {
     }
 
     // Save user in localStorage (for demo)
-    users.push({ name, roll, password });
+    users.push({ name, email, roll, password });
     localStorage.setItem("users", JSON.stringify(users));
 
     showAlert("Account created successfully! Redirecting to login...");
