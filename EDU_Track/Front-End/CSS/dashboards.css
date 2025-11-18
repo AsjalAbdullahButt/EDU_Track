@@ -1,0 +1,300 @@
+/* ==============================================
+   EDU Track - Dashboard Styling
+   Author: Asjal Abdullah
+   ============================================== */
+
+/* ---- GLOBAL COLOR PALETTE (same as auth.css) ---- */
+:root {
+  --midnight: #001f3f;       /* deep blue */
+  --pastel-mint: #cdeee4;    /* soft mint (canonical) */
+  --whitesmoke: #f5f7f8;     /* off-white */
+  --black: #0b0b0b;
+  --white: #ffffff;
+}
+
+/* Do not override the global body background here; main.css controls the pastel mint site background */
+body {
+  min-height: 100vh;
+  background: transparent; /* allow main.css to control global background */
+  color: var(--black);
+  font-family: "Inter", "Roboto", system-ui, sans-serif;
+}
+*** End Patch
+
+/* Pages that should show pastel mint background: add these classes to the <body> element in each HTML page:
+   dashboard, attendance, feedback, results, fees, notifications, courses */
+body.dashboard,
+body.attendance,
+body.feedback,
+body.results,
+body.fees,
+body.notifications,
+body.courses {
+  background: linear-gradient(180deg, rgba(205,238,228,0.85), rgba(205,238,228,0.95));
+}
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+/* ---- SIDEBAR ---- */
+.sidebar {
+  width: 250px;
+  background: var(--midnight);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Sidebar Branding */
+.logo-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(205, 238, 228, 0.3), rgba(255, 255, 255, 0.1));
+  margin-bottom: 12px;
+}
+
+.logo-section h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.nav-links a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+}
+
+.nav-links a.active {
+  background: linear-gradient(90deg, var(--pastel-mint), rgba(255, 255, 255, 0.1));
+  color: var(--midnight);
+  font-weight: 600;
+}
+
+/* Accessible focus state */
+.nav-links a:focus {
+  outline: 3px solid rgba(205,238,228,0.35);
+  outline-offset: 2px;
+}
+
+/* Logout button */
+.logout-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.logout-section .btn {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* Button variants used across the app */
+.btn {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--midnight), rgba(0,31,63,0.8));
+  color: var(--white);
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ---- MAIN CONTENT AREA ---- */
+.main-content {
+  flex: 1;
+  padding: 28px 40px;
+  overflow-y: auto;
+  background: var(--whitesmoke);
+}
+
+/* Main content sits on top of the page background. For pages using the pastel mint body background,
+   make the main-content slightly translucent so the mint shows through while keeping readability. */
+.main-content {
+  flex: 1;
+  padding: 28px 40px;
+  overflow-y: auto;
+  background: var(--whitesmoke);
+}
+
+/* When body has one of the target page classes, make .main-content use a semi-opaque white so the mint background is visible */
+body.dashboard .main-content,
+body.attendance .main-content,
+body.feedback .main-content,
+body.results .main-content,
+body.fees .main-content,
+body.notifications .main-content,
+body.courses .main-content {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(6px);
+}
+
+/* Improve content container readability */
+.container-wide {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  margin-bottom: 28px;
+  border-bottom: 2px solid rgba(0, 31, 63, 0.05);
+  padding-bottom: 12px;
+}
+
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--midnight);
+}
+
+.dashboard-header p {
+  color: rgba(11, 11, 11, 0.65);
+  margin-top: 6px;
+}
+
+/* ---- STATS GRID (Cards) ---- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 18px rgba(11, 11, 11, 0.06);
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  border-left: 5px solid var(--midnight);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(11, 11, 11, 0.08);
+}
+
+.stat-card h2 {
+  font-size: 2rem;
+  color: var(--midnight);
+  margin-bottom: 6px;
+}
+
+.stat-card p {
+  color: rgba(11, 11, 11, 0.7);
+  font-size: 1rem;
+}
+
+/* Make stat cards clickable when wrapped in anchors */
+.stat-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.stat-link:focus {
+  outline: 3px solid rgba(0,31,63,0.12);
+  outline-offset: 4px;
+}
+
+/* ---- SECTIONS ---- */
+.section {
+  margin-bottom: 36px;
+}
+
+.section h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--midnight);
+  margin-bottom: 12px;
+}
+
+/* ---- NOTIFICATION LIST ---- */
+.notification-list {
+  list-style: none;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(11, 11, 11, 0.05);
+  padding: 18px;
+}
+
+.notification-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(11, 11, 11, 0.06);
+  font-size: 0.96rem;
+  color: rgba(11, 11, 11, 0.8);
+}
+
+.notification-list li:last-child {
+  border-bottom: none;
+}
+
+/* ---- RESPONSIVENESS ---- */
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+  }
+
+  .nav-links {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
