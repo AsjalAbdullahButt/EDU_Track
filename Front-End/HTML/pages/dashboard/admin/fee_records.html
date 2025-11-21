@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Fee Records</title>
+  <link rel="stylesheet" href="../../../../CSS/main.css">
+  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+  <style>
+    .filter-section {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-section input,
+    .filter-section select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(11,11,11,0.2);
+      font-size: 0.95rem;
+    }
+
+    .fee-table th,
+    .fee-table td {
+      padding: 12px 20px;
+      text-align: left;
+    }
+
+    .fee-table th {
+      font-weight: bold;
+    }
+
+    .fee-table td.status-paid {
+      color: green;
+      font-weight: 600;
+    }
+
+    .fee-table td.status-missing {
+      color: red;
+      font-weight: 600;
+    }
+
+    .fee-table tr:nth-child(even) {
+      background-color: #e0f0ec; /* subtle mint for alternate rows */
+    }
+  </style>
+</head>
+<body>
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+      <nav class="nav-links">
+        <a href="dashboard_admin.html" class="nav-link">Dashboard</a>
+        <a href="admin_user_management.html" class="nav-link">User Management</a>
+        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="fee_records.html" class="nav-link active">Fee Records</a>
+        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="admin_security.html" class="nav-link">Security Settings</a>
+        <a href="admin_record.html" class="nav-link">Records</a>
+      </nav>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Fee Records</h1>
+        <p>View all student fee payments and missing payments</p>
+      </header>
+
+      <section class="container-wide">
+        <div class="filter-section">
+          <input type="text" id="filterName" placeholder="Search by Name" oninput="applyFilters()">
+          <select id="filterDepartment" onchange="applyFilters()">
+            <option value="">All Departments</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+          </select>
+          <select id="filterMonth" onchange="applyFilters()">
+            <option value="">All Months</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+          </select>
+          <select id="filterStatus" onchange="applyFilters()">
+            <option value="">All Status</option>
+            <option value="Paid">Paid</option>
+            <option value="Missing">Missing</option>
+          </select>
+        </div>
+
+        <table class="fee-table">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Month</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="feeList">
+            <!-- Fee records populated here -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Dummy student fee data
+    const students = [
+      { id: 1, name: "Alice", department: "Computer Science", month: "January", amount: 1000, status: "Paid" },
+      { id: 2, name: "Bob", department: "Mathematics", month: "January", amount: 1000, status: "Missing" },
+      { id: 3, name: "Charlie", department: "Physics", month: "February", amount: 1000, status: "Paid" },
+      { id: 4, name: "David", department: "Computer Science", month: "March", amount: 1000, status: "Missing" },
+      { id: 5, name: "Eva", department: "Mathematics", month: "February", amount: 1000, status: "Paid" },
+      { id: 6, name: "Frank", department: "Physics", month: "March", amount: 1000, status: "Missing" }
+    ];
+
+    function populateFeeTable(data) {
+      const tbody = document.getElementById('feeList');
+      tbody.innerHTML = '';
+      data.forEach(student => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${student.id}</td>
+          <td>${student.name}</td>
+          <td>${student.department}</td>
+          <td>${student.month}</td>
+          <td>${student.amount}</td>
+          <td class="status-${student.status.toLowerCase()}">${student.status}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function applyFilters() {
+      const nameFilter = document.getElementById('filterName').value.toLowerCase();
+      const departmentFilter = document.getElementById('filterDepartment').value;
+      const monthFilter = document.getElementById('filterMonth').value;
+      const statusFilter = document.getElementById('filterStatus').value;
+
+      const filtered = students.filter(s => {
+        return (!nameFilter || s.name.toLowerCase().includes(nameFilter)) &&
+               (!departmentFilter || s.department === departmentFilter) &&
+               (!monthFilter || s.month === monthFilter) &&
+               (!statusFilter || s.status === statusFilter);
+      });
+
+      populateFeeTable(filtered);
+    }
+
+    function logout() {
+      alert("Logging out...");
+      window.location.href = "login.html";
+    }
+
+    window.onload = () => {
+      populateFeeTable(students);
+    }
+  </script>
+</body>
+</html>

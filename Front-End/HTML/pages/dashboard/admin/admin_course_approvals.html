@@ -6,39 +6,107 @@
   <title>EDU Track - Admin Course Approvals</title>
   <link rel="stylesheet" href="../../../../CSS/main.css">
   <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+
+  <!-- Added spacing for table fields -->
+  <style>
+    .course-table th,
+    .course-table td {
+      padding: 14px 24px;   /* Same consistent spacing */
+      text-align: left;
+    }
+
+    .course-table th {
+      font-weight: bold;
+    }
+  </style>
+
 </head>
 <body>
   <div class="layout-wrapper">
-  <aside class="sidebar">
-    <div class="logo-section">
-  <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
-      <h2>EDU Track</h2>
-    </div>
-    <nav class="nav-links">
-  <a href="dashboard_admin.html">Dashboard</a>
-  <a href="admin_user_management.html">User Management</a>
-  <a href="admin_course_approvals.html" class="active">Course Approvals</a>
-  <a href="admin_reports.html">Reports</a>
-  <a href="admin_security.html">Security Settings</a>
-    </nav>
-    <div class="logout-section">
-      <button class="btn secondary" onclick="logout()">Logout</button>
-    </div>
-  </aside>
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+<nav class="nav-links">
+        <a href="dashboard_admin.html" class="nav-link active">Dashboard</a>
+        <a href="admin_user_management.html" class="nav-link">User Management</a>
+        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="fee_record" class="nav-link">Fee Records</a>
+        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="admin_security.html" class="nav-link">Security Settings</a>
+        <a href="admin_record.html" class="nav-link">Records</a>
+      </nav>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
 
-  <main class="main-content">
-    <header class="dashboard-header">
-      <h1>Course Approvals</h1>
-      <p>Approve or reject course proposals (stub page)</p>
-    </header>
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Course Approvals</h1>
+        <p>Approve or reject course proposals</p>
+      </header>
 
-    <section class="section container-wide">
-      <p>This is a placeholder page for course approvals.</p>
-    </section>
-  </main>
-
+      <section class="container-wide">
+        <table class="course-table">
+          <thead>
+            <tr>
+              <th>Course ID</th>
+              <th>Course Title</th>
+              <th>Instructor</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="courseList">
+            <!-- Course data will be populated here -->
+          </tbody>
+        </table>
+      </section>
+    </main>
   </div>
 
-  <script src="../../../../JS/dashboard.js" defer></script>
+  <script>
+    // Sample course data
+    const courses = [
+      { id: 1, title: "Mathematics 101", instructor: "Dr. John", status: "Pending" },
+      { id: 2, title: "Computer Science 101", instructor: "Prof. Jane", status: "Pending" }
+    ];
+
+    // Populate course approvals table
+    function populateCourseTable() {
+      const courseList = document.getElementById('courseList');
+      courseList.innerHTML = "";
+      courses.forEach(course => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${course.id}</td>
+          <td>${course.title}</td>
+          <td>${course.instructor}</td>
+          <td>${course.status}</td>
+          <td>
+            <button onclick="approveCourse(${course.id})">Approve</button>
+            <button onclick="rejectCourse(${course.id})">Reject</button>
+          </td>
+        `;
+        courseList.appendChild(row);
+      });
+    }
+
+    // Approve course
+    function approveCourse(id) {
+      alert("Course approved: " + id);
+    }
+
+    // Reject course
+    function rejectCourse(id) {
+      alert("Course rejected: " + id);
+    }
+
+    // Initialize the table
+    window.onload = populateCourseTable;
+  </script>
 </body>
 </html>

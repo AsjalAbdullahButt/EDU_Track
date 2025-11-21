@@ -1,41 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EDU Track - Faculty Grades</title>
-  <link rel="stylesheet" href="../../../../CSS/main.css">
-  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faculty Grades - EDU Track</title>
+<link rel="stylesheet" href="../../../../CSS/main.css">
+<link rel="stylesheet" href="../../../../CSS/dashboards.css">
+
+<style>
+body.grades .main-content { 
+  background: rgba(255,255,255,0.85); 
+  backdrop-filter: blur(6px); 
+  border-radius: 12px;
+  padding: 30px;
+}
+
+/* Tabs */
+.tab-container { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.tab { padding: 10px 18px; background: #001f3f; color: #fff; border-radius: 12px; cursor: pointer; }
+.tab.active { background: #001f3f; font-weight: 600; }
+
+/* Table */
+.table-container table { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; }
+.table-container th, .table-container td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+.table-container th { background: var(--midnight); color: #fff; }
+.table-container td input { width: 60px; padding: 6px; border-radius: 8px; border: 1px solid #ccc; }
+
+/* Buttons */
+.add-tab-btn, .add-column-btn { margin-top: 10px; padding: 6px 12px; background: var(--midnight); color:#fff; border:none; border-radius:12px; cursor:pointer; }
+.add-column-btn { margin-left: 5px; }
+</style>
 </head>
-<body>
+<body class="grades">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo-section">
-  <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
       <h2>EDU Track</h2>
     </div>
     <nav class="nav-links">
-  <a href="dashboard_faculty.html">Dashboard</a>
-  <a href="faculty_grades.html" class="active">Grades</a>
-  <a href="faculty_announcements.html">Post Announcements</a>
-  <a href="../../student_pages/attendance.html">Attendance</a>
-  <a href="../../student_pages/feedback.html">Feedback</a>
+      <a href="dashboard_faculty.html">Dashboard</a>
+      <a class="active" href="faculty_grades.html">Grades</a>
+      <a href="faculty_announcements.html">Post Announcements</a>
+      <a href="manage_attendance.html">Attendance</a>
+      <a href="faculty_attendance_report.html">Attendance Report</a>
+      <a href="view_feedback.html">Feedback</a>
     </nav>
     <div class="logout-section">
       <button class="btn secondary" onclick="logout()">Logout</button>
     </div>
   </aside>
 
+  <!-- MAIN CONTENT -->
   <main class="main-content">
-    <header class="dashboard-header">
-      <h1>Grades</h1>
-      <p>Faculty grade management (stub page)</p>
-    </header>
+    <h1>Grades Management</h1>
+    <p>Manage student grades per category and calculate total marks</p>
 
-    <section class="section container-wide">
-      <p>This is a placeholder page for faculty grade management. Implement grade upload and editing here.</p>
-    </section>
+    <div>
+      <label>Select Course</label>
+      <select class="select-box" style="border-radius:12px;">
+        <option>BSCS - Database Systems</option>
+        <option>BSCS - AI</option>
+        <option>BSSE - Software Design</option>
+      </select>
+    </div>
+
+    <div class="tab-container" id="tabs">
+      <div class="tab active">Midterms</div>
+      <div class="tab">Assignments</div>
+      <div class="tab">Quizzes</div>
+      <div class="tab">Finals</div>
+    </div>
+
+    <div class="table-container">
+      <table id="gradesTable">
+        <thead>
+          <tr id="headerRow">
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Midterm1</th>
+            <th>Midterm2</th>
+            <th class="assign-header">Assignment1 <button class="add-column-btn" onclick="addAssignment()">+</button></th>
+            <th class="quiz-header">Quiz1 <button class="add-column-btn" onclick="addQuiz()">+</button></th>
+            <th>Final</th>
+            <th>Total /100</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BSCS-001</td>
+            <td>Ali Khan</td>
+            <td><input type="number" value="20" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="18" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="10" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="15" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="25" onchange="calculateTotal(this)"></td>
+            <td class="total">88</td>
+          </tr>
+          <tr>
+            <td>BSCS-002</td>
+            <td>Ayesha Noor</td>
+            <td><input type="number" value="18" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="20" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="10" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="15" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="22" onchange="calculateTotal(this)"></td>
+            <td class="total">85</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </main>
+</div>
 
-  <script src="../../../../JS/dashboard.js" defer></script>
+<script>
+let assignmentCount = 1;
+let quizCount = 1;
+const assignmentTotal = 10; // total marks for all assignments
+const quizTotal = 15; // total marks for all quizzes
+
+function addAssignment() {
+  assignmentCount++;
+  const table = document.getElementById("gradesTable");
+  const header = table.tHead.rows[0];
+  const th = document.createElement("th");
+  th.className = "assign-header";
+  th.innerHTML = `Assignment${assignmentCount} <button class="add-column-btn" onclick="addAssignment()">+</button>`;
+  header.insertBefore(th, header.cells[header.cells.length - 2]);
+
+  const perMark = (assignmentTotal / assignmentCount).toFixed(1);
+  for(let i=1;i<table.tBodies[0].rows.length;i++){
+    const row = table.tBodies[0].rows[i];
+    const cells = row.querySelectorAll("td.assign-header, td");
+    const td = document.createElement("td");
+    td.innerHTML = `<input type="number" value="${perMark}" onchange="calculateTotal(this)">`;
+    row.insertBefore(td, row.cells[row.cells.length - 2]);
+    // Update all previous assignment marks
+    for(let j=4;j<4+assignmentCount;j++){
+      row.cells[j].querySelector("input").value = perMark;
+    }
+  }
+  calculateAllTotals();
+}
+
+function addQuiz() {
+  quizCount++;
+  const table = document.getElementById("gradesTable");
+  const header = table.tHead.rows[0];
+  const th = document.createElement("th");
+  th.className = "quiz-header";
+  th.innerHTML = `Quiz${quizCount} <button class="add-column-btn" onclick="addQuiz()">+</button>`;
+  header.insertBefore(th, header.cells[header.cells.length - 2]);
+
+  const perMark = (quizTotal / quizCount).toFixed(1);
+  for(let i=1;i<table.tBodies[0].rows.length;i++){
+    const row = table.tBodies[0].rows[i];
+    const td = document.createElement("td");
+    td.innerHTML = `<input type="number" value="${perMark}" onchange="calculateTotal(this)">`;
+    row.insertBefore(td, row.cells[row.cells.length - 2]);
+    // Update all previous quiz marks
+    const firstQuizIndex = 5; // initial Quiz1 column
+    for(let j=firstQuizIndex;j<firstQuizIndex+quizCount;j++){
+      if(row.cells[j])
+        row.cells[j].querySelector("input").value = perMark;
+    }
+  }
+  calculateAllTotals();
+}
+
+function calculateTotal(el){
+  const row = el.parentElement.parentElement;
+  let total = 0;
+  for(let i=2;i<row.cells.length-1;i++){
+    const val = parseFloat(row.cells[i].querySelector("input")?.value || 0);
+    total += val;
+  }
+  row.querySelector(".total").textContent = total.toFixed(1);
+}
+
+function calculateAllTotals(){
+  const table = document.getElementById("gradesTable");
+  for(let i=0;i<table.tBodies[0].rows.length;i++){
+    const row = table.tBodies[0].rows[i];
+    calculateTotal(row.cells[0].querySelector("input") || row.cells[0]);
+  }
+}
+</script>
 </body>
 </html>

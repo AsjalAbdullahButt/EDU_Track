@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Attendance - EDU Track</title>
+<link rel="stylesheet" href="../../../../CSS/main.css">
+<link rel="stylesheet" href="../../../../CSS/dashboards.css">
+
+<style>
+body.attendance .main-content { 
+  background: rgba(255,255,255,0.85); 
+  backdrop-filter: blur(6px); 
+  border-radius: 12px; 
+  padding: 30px; 
+}
+table { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
+th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+th { background: var(--midnight); color:#fff; }
+input, select { padding: 6px; border-radius: 8px; border:1px solid #ccc; }
+.toggle-btn { padding: 6px 12px; border:none; border-radius:12px; cursor:pointer; color:#fff; background:#001f3f; }
+</style>
+</head>
+<body class="attendance">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard_faculty.html">Dashboard</a>
+      <a href="faculty_grades.html">Grades</a>
+      <a href="faculty_announcements.html">Post Announcements</a>
+      <a class="active" href="manage_attendance.html">Attendance</a>
+      <a href="faculty_attendance_report.html">Attendance Report</a>
+      <a href="view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn primary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <h1>Manage Attendance</h1>
+
+    <div style="display:flex; gap:15px; margin-bottom:20px; flex-wrap: wrap;">
+      <div>
+        <label>Select Course:</label>
+        <select id="courseSelect" style="border-radius:8px;">
+          <option>BSCS - Database Systems</option>
+          <option>BSCS - AI</option>
+          <option>BSSE - Software Design</option>
+        </select>
+      </div>
+      <div>
+        <label>Date:</label>
+        <input type="date" id="attendanceDate" onchange="loadAttendance()">
+      </div>
+    </div>
+
+    <button class="toggle-btn" onclick="markAllAbsent()">Mark All Absent</button>
+
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Roll No</th>
+          <th>Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Students will be populated dynamically -->
+      </tbody>
+    </table>
+  </main>
+</div>
+
+<script>
+const students = [
+  {roll:'BSCS-001', name:'Ali Khan'},
+  {roll:'BSCS-002', name:'Ayesha Noor'},
+  {roll:'BSCS-003', name:'Ahmed Raza'},
+  {roll:'BSCS-004', name:'Sara Khan'}
+];
+
+// Store attendance by course + date
+const attendanceData = {};
+
+function loadAttendance() {
+  const date = document.getElementById('attendanceDate').value;
+  const course = document.getElementById('courseSelect').value;
+  const tbody = document.querySelector('#attendanceTable tbody');
+  tbody.innerHTML = '';
+
+  if(!date) return;
+
+  // Initialize data for this date+course if not exist
+  if(!attendanceData[course]) attendanceData[course] = {};
+  if(!attendanceData[course][date]) {
+    attendanceData[course][date] = students.map(s => ({...s, status:'Absent'}));
+  }
+
+  attendanceData[course][date].forEach((s,i)=>{
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${s.roll}</td>
+      <td>${s.name}</td>
+      <td><button class="toggle-btn" onclick="toggleAttendance('${course}','${date}',${i}, this)">${s.status}</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// Toggle Present/Absent
+function toggleAttendance(course, date, idx, btn) {
+  const student = attendanceData[course][date][idx];
+  student.status = student.status === 'Present' ? 'Absent' : 'Present';
+  btn.textContent = student.status;
+  btn.style.background = student.status === 'Present' ? '#27ae60' : '#001f3f';
+}
+
+// Mark all absent for current selection
+function markAllAbsent() {
+  const date = document.getElementById('attendanceDate').value;
+  const course = document.getElementById('courseSelect').value;
+  if(!date) return alert('Select a date first');
+  attendanceData[course][date].forEach(s=>s.status='Absent');
+  loadAttendance();
+}
+
+</script>
+</body>
+</html>

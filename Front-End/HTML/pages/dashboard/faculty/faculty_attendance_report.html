@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance Report - EDU Track</title>
+<link rel="stylesheet" href="../../../../CSS/main.css">
+<link rel="stylesheet" href="../../../../CSS/dashboards.css">
+<style>
+body.attendance-report .main-content { 
+  background: rgba(255,255,255,0.85); 
+  backdrop-filter: blur(6px); 
+  border-radius: 12px; 
+  padding: 30px; 
+}
+
+table { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
+th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+th { background: var(--midnight); color:#fff; }
+
+select { padding:6px 10px; border-radius:8px; border:1px solid #ccc; margin-bottom:15px; }
+</style>
+</head>
+<body class="attendance-report">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard_faculty.html">Dashboard</a>
+      <a href="faculty_grades.html">Grades</a>
+      <a href="faculty_announcements.html">Post Announcements</a>
+      <a href="manage_attendance.html">Attendance</a>
+      <a class="active" href="faculty_attendance_report.html">Attendance Report</a>
+      <a href="view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn primary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <h1>Attendance Report</h1>
+
+    <!-- Course Filter -->
+    <div>
+      <label>Filter by Course: </label>
+      <select id="courseFilter" onchange="filterAttendance()">
+        <option value="">All Courses</option>
+        <option value="Database Systems">Database Systems</option>
+        <option value="AI">AI</option>
+        <option value="Software Design">Software Design</option>
+      </select>
+    </div>
+
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Roll No</th>
+          <th>Name</th>
+          <th>Course</th>
+          <th>Classes Attended</th>
+          <th>Attendance %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BSCS-001</td>
+          <td>Ali Khan</td>
+          <td>Database Systems</td>
+          <td>28</td>
+          <td>93%</td>
+        </tr>
+        <tr>
+          <td>BSCS-002</td>
+          <td>Ayesha Noor</td>
+          <td>Database Systems</td>
+          <td>25</td>
+          <td>83%</td>
+        </tr>
+        <tr>
+          <td>BSCS-003</td>
+          <td>Ahmed Raza</td>
+          <td>AI</td>
+          <td>30</td>
+          <td>100%</td>
+        </tr>
+        <tr>
+          <td>BSCS-004</td>
+          <td>Sara Khan</td>
+          <td>AI</td>
+          <td>27</td>
+          <td>90%</td>
+        </tr>
+        <tr>
+          <td>BSSE-001</td>
+          <td>Hina Tariq</td>
+          <td>Software Design</td>
+          <td>29</td>
+          <td>97%</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+</div>
+
+<script>
+function filterAttendance() {
+  const course = document.getElementById("courseFilter").value.toLowerCase();
+  const table = document.getElementById("attendanceTable");
+
+  for (let i = 1; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const rowCourse = row.cells[2].innerText.toLowerCase();
+    row.style.display = (!course || rowCourse === course) ? '' : 'none';
+  }
+}
+</script>
+
+</body>
+</html>
