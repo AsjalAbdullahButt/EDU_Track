@@ -4,66 +4,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDU Track - Admin Dashboard</title>
+
+  <!-- Existing CSS files -->
   <link rel="stylesheet" href="../../../../CSS/main.css">
   <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+
+  <!-- Add layout override so sidebar and main sit side-by-side -->
+  <style>
+    /* keep rules minimal to avoid clashing with existing CSS */
+    html, body { height: 100%; margin: 0; }
+    .page-layout { display: flex; align-items: stretch; gap: 1rem; min-height: 100vh; }
+    .page-layout .sidebar { flex: 0 0 260px; /* fixed sidebar width; adjust if needed */ }
+    .page-layout .main-content { flex: 1 1 auto; min-width: 0; /* allow proper shrinking */ padding: 1.5rem; }
+  </style>
 </head>
+
 <body>
 
-  <aside class="sidebar">
-    <div class="logo-section">
-  <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
-      <h2>EDU Track</h2>
-    </div>
-
-    <nav class="nav-links">
-  <a href="dashboard_admin.html" class="active">Dashboard</a>
-  <a href="admin_user_management.html">User Management</a>
-  <a href="admin_course_approvals.html">Course Approvals</a>
-  <a href="../../student_pages/fees.html">Fee Records</a>
-  <a href="admin_security.html">Security Settings</a>
-  <a href="admin_reports.html">Reports</a>
-    </nav>
-
-    <div class="logout-section">
-      <button class="btn secondary" onclick="logout()">Logout</button>
-    </div>
-  </aside>
-
-  <main class="main-content">
-    <header class="dashboard-header">
-      <h1>Welcome, <span data-user-name id="adminName">Admin</span></h1>
-      <p>Manage and oversee institutional data</p>
-    </header>
-
-    <section class="stats-grid">
-      <div class="stat-card">
-        <h2>3,200</h2>
-        <p>Registered Students</p>
+  <!-- Wrap sidebar + main in a flex container so they display side-by-side -->
+  <div class="page-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2 class="sidebar-title">EDU Track</h2>
       </div>
-      <div class="stat-card">
-        <h2>180</h2>
-        <p>Faculty Members</p>
-      </div>
-      <div class="stat-card">
-        <h2>98%</h2>
-        <p>Fee Collection</p>
-      </div>
-      <div class="stat-card">
-        <h2>5</h2>
-        <p>Pending Requests</p>
-      </div>
-    </section>
 
-    <section class="section">
-      <h2>System Alerts</h2>
-      <ul class="notification-list">
-        <li>⚠️ Backup scheduled for tonight at 12 AM.</li>
-        <li>📦 New version update available (v2.1).</li>
-        <li>🔒 Two-factor authentication enabled for all admins.</li>
-      </ul>
-    </section>
-  </main>
+      <!-- Updated nav-links: added Fee Verification; removed duplicate Fee Records -->
+      <nav class="nav-links">
+        <a href="dashboard_admin.html" class="nav-link active">Dashboard</a>
+        <a href="admin_user_management.html" class="nav-link">User Management</a>
+        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="fee_record" class="nav-link">Fee Records</a>
+        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="admin_security.html" class="nav-link">Security Settings</a>
+        <a href="admin_record.html" class="nav-link">Records</a>
+      </nav>
 
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="dashboard-header">
+        <h1 class="dashboard-title">
+          Welcome, <span id="adminName" data-user-name>Admin</span>
+        </h1>
+        <p class="dashboard-subtitle">Manage and oversee institutional data</p>
+      </header>
+
+      <!-- Stats Cards -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h2 class="stat-value">3,200</h2>
+          <p class="stat-label">Registered Students</p>
+        </div>
+
+        <div class="stat-card">
+          <h2 class="stat-value">180</h2>
+          <p class="stat-label">Faculty Members</p>
+        </div>
+
+        <div class="stat-card">
+          <h2 class="stat-value">98%</h2>
+          <p class="stat-label">Fee Collection</p>
+        </div>
+
+        <!-- Give this stat an id so it can be updated when verifications occur -->
+        <div class="stat-card">
+          <h2 id="pendingRequestsCount" class="stat-value">5</h2>
+          <p class="stat-label">Pending Requests</p>
+        </div>
+      </section>
+
+      <!-- Alerts Section -->
+      <section class="section system-alerts">
+        <h2 class="section-title">System Alerts</h2>
+
+        <ul class="notification-list">
+          <li>⚠️ Backup scheduled for tonight at 12 AM.</li>
+          <li>📦 New version update available (v2.1).</li>
+          <li>🔒 Two-factor authentication enabled for all admins.</li>
+        </ul>
+      </section>
+
+      <!-- New: Fee Verification Section -->
+      <section class="section fee-verification">
+  <!-- JS -->
   <script src="../../../../JS/dashboard.js" defer></script>
+
 </body>
 </html>

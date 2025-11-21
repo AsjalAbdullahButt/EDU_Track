@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Admin — Reports</title>
+
+	<!-- Main Global Styles -->
+	<link rel="stylesheet" href="../../../../CSS/main.css">
+
+	<!-- Admin Report Styles -->
+	<link rel="stylesheet" href="../../../../CSS/admin_record.css">
+</head>
+
+<body>
+
+	<main class="admin-report-page" data-api="/api/admin/reports">
+
+		<header class="report-header">
+			<h1>Reports — Records</h1>
+			<div class="report-actions">
+				<button id="exportCsv" class="btn">Export CSV</button>
+				<button id="exportPdf" class="btn">Export PDF</button>
+			</div>
+		</header>
+
+		<section class="filters">
+			<form id="reportFilters" class="filter-form" aria-label="Report filters">
+
+				<div class="filter-group">
+					<label for="filterFrom">From</label>
+					<input type="date" id="filterFrom" name="from" />
+				</div>
+
+				<div class="filter-group">
+					<label for="filterTo">To</label>
+					<input type="date" id="filterTo" name="to" />
+				</div>
+
+				<div class="filter-group">
+					<label for="filterCourse">Course</label>
+					<select id="filterCourse" name="course">
+						<option value="">All</option>
+						<option value="web-dev">Web Development</option>
+						<option value="data-science">Data Science</option>
+						<option value="design">UI/UX Design</option>
+						<option value="marketing">Digital Marketing</option>
+					</select>
+				</div>
+
+				<div class="filter-group">
+					<label for="filterStatus">Status</label>
+					<select id="filterStatus" name="status">
+						<option value="">All</option>
+						<option value="active">Active</option>
+						<option value="completed">Completed</option>
+						<option value="dropped">Dropped</option>
+					</select>
+				</div>
+
+				<div class="filter-actions">
+					<button type="submit" id="applyFilters" class="btn primary">Apply</button>
+					<button type="button" id="clearFilters" class="btn">Clear</button>
+				</div>
+
+			</form>
+		</section>
+
+		<section class="summary-cards">
+			<div class="card">
+				<div class="card-title">Total Enrollments</div>
+				<div id="totalEnrollments" class="card-value">1,247</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Active Students</div>
+				<div id="activeStudents" class="card-value">893</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Completed</div>
+				<div id="completedCount" class="card-value">284</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Dropouts</div>
+				<div id="dropoutCount" class="card-value">70</div>
+			</div>
+		</section>
+
+		<section class="report-visuals">
+			<div class="chart-card">
+				<h2>Enrollment Trend</h2>
+				<canvas id="enrollmentChart" width="600" height="300"></canvas>
+			</div>
+
+			<div class="table-card">
+				<h2>Records</h2>
+
+				<div class="table-actions">
+					<div class="search-group">
+						<label for="tableSearch">Search</label>
+						<input type="search" id="tableSearch" placeholder="Search by student or course" />
+					</div>
+				</div>
+
+				<table id="reportTable" class="report-table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Student</th>
+							<th>Course</th>
+							<th>Enrolled On</th>
+							<th>Status</th>
+							<th>Progress</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td data-label="#">1</td>
+							<td data-label="Student">John Smith</td>
+							<td data-label="Course">Web Development</td>
+							<td data-label="Enrolled On">03/15/2024</td>
+							<td data-label="Status"><span class="status-active">Active</span></td>
+							<td data-label="Progress">65%</td>
+						</tr>
+						<tr>
+							<td data-label="#">2</td>
+							<td data-label="Student">Sarah Johnson</td>
+							<td data-label="Course">Data Science</td>
+							<td data-label="Enrolled On">02/28/2024</td>
+							<td data-label="Status"><span class="status-completed">Completed</span></td>
+							<td data-label="Progress">100%</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<nav class="pagination">
+					<button class="active">1</button>
+					<button>2</button>
+					<button>3</button>
+					<button>4</button>
+					<button>5</button>
+				</nav>
+			</div>
+		</section>
+
+	</main>
+
+	<script src="./admin_record.js" defer></script>
+
+</body>
+</html>

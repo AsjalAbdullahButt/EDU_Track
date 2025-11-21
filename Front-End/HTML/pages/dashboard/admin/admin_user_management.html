@@ -6,39 +6,112 @@
   <title>EDU Track - Admin User Management</title>
   <link rel="stylesheet" href="../../../../CSS/main.css">
   <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+
+  <!-- Added spacing for table columns -->
+  <style>
+    .user-table th,
+    .user-table td {
+      padding: 14px 24px;   /* Same spacing as fee verification */
+      text-align: left;
+    }
+
+    .user-table th {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <div class="layout-wrapper">
-  <aside class="sidebar">
-    <div class="logo-section">
-  <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
-      <h2>EDU Track</h2>
-    </div>
-    <nav class="nav-links">
-  <a href="dashboard_admin.html">Dashboard</a>
-  <a href="admin_user_management.html" class="active">User Management</a>
-  <a href="admin_course_approvals.html">Course Approvals</a>
-  <a href="admin_reports.html">Reports</a>
-  <a href="admin_security.html">Security Settings</a>
-    </nav>
-    <div class="logout-section">
-      <button class="btn secondary" onclick="logout()">Logout</button>
-    </div>
-  </aside>
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+<nav class="nav-links">
+        <a href="dashboard_admin.html" class="nav-link active">Dashboard</a>
+        <a href="admin_user_management.html" class="nav-link">User Management</a>
+        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="fee_record" class="nav-link">Fee Records</a>
+        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="admin_security.html" class="nav-link">Security Settings</a>
+        <a href="admin_record.html" class="nav-link">Records</a>
+      </nav>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
 
-  <main class="main-content">
-    <header class="dashboard-header">
-      <h1>User Management</h1>
-      <p>Admin user operations (stub page)</p>
-    </header>
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>User Management</h1>
+        <p>Manage all users in the system</p>
+      </header>
 
-    <section class="section container-wide">
-      <p>This is a placeholder for user management functions (create/edit/delete accounts).</p>
-    </section>
-  </main>
-
+      <section class="container-wide">
+        <div class="user-actions">
+          <button class="btn primary" onclick="addUser()">Add New User</button>
+        </div>
+        
+        <!-- User Table -->
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userList">
+            <!-- User entries will go here -->
+          </tbody>
+        </table>
+      </section>
+    </main>
   </div>
 
-  <script src="../../../../JS/dashboard.js" defer></script>
+  <script>
+    // Sample user data for demo
+    const users = [
+      { id: 1, name: "John Doe", email: "john.doe@example.com", role: "Student" },
+      { id: 2, name: "Jane Smith", email: "jane.smith@example.com", role: "Faculty" }
+    ];
+
+    // Populate user table
+    function populateUserTable() {
+      const userList = document.getElementById('userList');
+      userList.innerHTML = "";
+      users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>
+            <button onclick="editUser(${user.id})">Edit</button>
+            <button onclick="deleteUser(${user.id})">Delete</button>
+          </td>
+        `;
+        userList.appendChild(row);
+      });
+    }
+
+    function addUser() {
+      alert("Add user functionality goes here.");
+    }
+
+    function editUser(id) {
+      alert("Edit user functionality for ID: " + id);
+    }
+
+    function deleteUser(id) {
+      alert("Delete user functionality for ID: " + id);
+    }
+
+    window.onload = populateUserTable;
+  </script>
 </body>
 </html>

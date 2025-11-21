@@ -1,41 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EDU Track - Faculty Announcements</title>
-  <link rel="stylesheet" href="../../../../CSS/main.css">
-  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post Announcements - EDU Track</title>
+<link rel="stylesheet" href="../../../../CSS/main.css">
+<link rel="stylesheet" href="../../../../CSS/dashboards.css">
+<style>
+body.announcements .main-content { 
+  background: rgba(255,255,255,0.85); 
+  backdrop-filter: blur(6px); 
+  border-radius: 12px; 
+  padding: 30px; 
+}
+
+.announcement-list { 
+  list-style:none; 
+  padding:0; 
+  margin-top:20px; 
+}
+
+.announcement-list li { 
+  padding:12px 16px; 
+  margin-bottom:10px; 
+  background:#fff; 
+  border-radius:12px; 
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center; 
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+input { 
+  padding:6px; 
+  border-radius:8px; 
+  border:1px solid #ccc; 
+  margin-right:10px;
+  width:70%;
+}
+
+button.add-btn, button.delete-btn { 
+  padding:6px 12px; 
+  border:none; 
+  border-radius:12px; 
+  cursor:pointer; 
+  color:#fff; 
+  background:#001f3f;
+  transition: all 0.2s ease-in-out;
+}
+
+button.add-btn:hover, button.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+</style>
 </head>
-<body>
+<body class="announcements">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo-section">
-  <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
       <h2>EDU Track</h2>
     </div>
     <nav class="nav-links">
-  <a href="dashboard_faculty.html">Dashboard</a>
-  <a href="faculty_grades.html">Grades</a>
-  <a href="faculty_announcements.html" class="active">Post Announcements</a>
-  <a href="../../student_pages/attendance.html">Attendance</a>
-  <a href="../../student_pages/feedback.html">Feedback</a>
+      <a href="dashboard_faculty.html">Dashboard</a>
+      <a href="faculty_grades.html">Grades</a>
+      <a class="active" href="faculty_announcements.html">Post Announcements</a>
+      <a href="manage_attendance.html">Attendance</a>
+      <a href="faculty_attendance_report.html">Attendance Report</a>
+      <a href="view_feedback.html">Feedback</a>
     </nav>
     <div class="logout-section">
-      <button class="btn secondary" onclick="logout()">Logout</button>
+      <button class="btn primary" onclick="logout()">Logout</button>
     </div>
   </aside>
 
   <main class="main-content">
-    <header class="dashboard-header">
-      <h1>Post Announcements</h1>
-      <p>Faculty announcement center (stub page)</p>
-    </header>
+    <h1>Post Announcements</h1>
 
-    <section class="section container-wide">
-      <p>This is a placeholder page for posting announcements. Implement form and posting logic here.</p>
-    </section>
+    <div style="display:flex; margin-top:20px;">
+      <input type="text" id="announcementInput" placeholder="Write a new announcement...">
+      <button class="add-btn" onclick="addAnnouncement()">Add</button>
+    </div>
+
+    <ul class="announcement-list" id="announcementList">
+      <!-- Existing announcements will appear here -->
+      <li>
+        Welcome to the new semester!
+        <button class="delete-btn" onclick="deleteAnnouncement(this)">Delete</button>
+      </li>
+      <li>
+        Submit assignments by Nov 25.
+        <button class="delete-btn" onclick="deleteAnnouncement(this)">Delete</button>
+      </li>
+    </ul>
   </main>
+</div>
 
-  <script src="../../../../JS/dashboard.js" defer></script>
+<script>
+function addAnnouncement() {
+  const input = document.getElementById('announcementInput');
+  const text = input.value.trim();
+  if(!text) return alert("Please enter an announcement");
+  
+  const li = document.createElement('li');
+  li.innerHTML = `
+    ${text}
+    <button class="delete-btn" onclick="deleteAnnouncement(this)">Delete</button>
+  `;
+  document.getElementById('announcementList').appendChild(li);
+  input.value = '';
+}
+
+function deleteAnnouncement(btn) {
+  if(confirm("Are you sure you want to delete this announcement?")) {
+    btn.parentElement.remove();
+  }
+}
+</script>
+
 </body>
 </html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Admin — Salary Payments</title>
+    <link rel="stylesheet" href="../../../../CSS/main.css">
+    <link rel="stylesheet" href="../../../../CSS/salary_payments.css">
+</head>
+<body>
+	<!-- ...existing code... -->
+
+	<main class="admin-salary-page" data-api="/api/admin/salaries">
+		<header class="salary-header">
+			<h1>Faculty Salary Payments</h1>
+			<div class="salary-actions">
+				<button id="exportCsv" class="btn">Export CSV</button>
+				<button id="exportPdf" class="btn">Export PDF</button>
+			</div>
+		</header>
+
+		<section class="filters">
+			<form id="salaryFilters" class="filter-form" aria-label="Salary filters">
+				<div class="filter-row">
+					<label>
+						From
+						<input type="date" id="filterFrom" name="from" />
+					</label>
+					<label>
+						To
+						<input type="date" id="filterTo" name="to" />
+					</label>
+					<label>
+						Department
+						<select id="filterDept" name="department">
+							<option value="">All</option>
+							<!-- JS will populate department options -->
+						</select>
+					</label>
+					<label>
+						Status
+						<select id="filterStatus" name="status">
+							<option value="">All</option>
+							<option value="paid">Paid</option>
+							<option value="pending">Pending</option>
+							<option value="overdue">Overdue</option>
+						</select>
+					</label>
+					<button type="submit" id="applyFilters" class="btn primary">Apply</button>
+					<button type="button" id="clearFilters" class="btn">Clear</button>
+				</div>
+			</form>
+		</section>
+
+		<section class="summary-cards">
+			<div class="card">
+				<div class="card-title">Total Payments</div>
+				<div id="totalPayments" class="card-value">—</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Paid</div>
+				<div id="paidCount" class="card-value">—</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Pending</div>
+				<div id="pendingCount" class="card-value">—</div>
+			</div>
+			<div class="card">
+				<div class="card-title">Overdue</div>
+				<div id="overdueCount" class="card-value">—</div>
+			</div>
+		</section>
+
+		<section class="salary-visuals">
+			<div class="chart-card">
+				<h2>Salary Payment Trend</h2>
+				<canvas id="salaryChart" width="600" height="300" aria-label="Salary trend chart"></canvas>
+			</div>
+
+			<div class="table-card">
+				<h2>Payments</h2>
+				<div class="table-actions">
+					<label>
+						Search
+						<input type="search" id="tableSearch" placeholder="Search by faculty or department" />
+					</label>
+				</div>
+				<table id="salaryTable" class="salary-table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Faculty</th>
+							<th>Department</th>
+							<th>Payment Date</th>
+							<th>Status</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- JS will inject rows here -->
+					</tbody>
+				</table>
+				<nav class="pagination" id="salaryPagination" aria-label="Salary pagination">
+					<!-- JS will render pagination controls -->
+				</nav>
+			</div>
+		</section>
+	</main>
+
+	<!-- ...existing code... -->
+
+	<script src="./salary_payments.js" defer></script>
+</body>
+</html>

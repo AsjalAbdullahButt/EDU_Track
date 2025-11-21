@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Feedback - EDU Track</title>
+<link rel="stylesheet" href="../../../../CSS/main.css">
+<link rel="stylesheet" href="../../../../CSS/dashboards.css">
+<style>
+body.feedback .main-content { 
+  background: rgba(255,255,255,0.85); 
+  backdrop-filter: blur(6px); 
+  border-radius: 12px; 
+  padding: 30px; 
+}
+
+table { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
+th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+th { background: var(--midnight); color:#fff; }
+
+select { padding:6px 10px; border-radius:8px; border:1px solid #ccc; margin-bottom:15px; }
+</style>
+</head>
+<body class="feedback">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard_faculty.html">Dashboard</a>
+      <a href="faculty_grades.html">Grades</a>
+      <a href="faculty_announcements.html">Post Announcements</a>
+      <a href="manage_attendance.html">Attendance</a>
+      <a href="faculty_attendance_report.html">Attendance Report</a>
+      <a class="active" href="view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn primary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <h1>Course Feedback</h1>
+
+    <!-- Course Filter -->
+    <div>
+      <label>Filter by Course: </label>
+      <select id="courseFilter" onchange="filterFeedback()">
+        <option value="">All Courses</option>
+        <option value="Database Systems">Database Systems</option>
+        <option value="AI">AI</option>
+        <option value="Software Design">Software Design</option>
+      </select>
+
+      <label>Filter by Rating: </label>
+      <select id="ratingFilter" onchange="filterFeedback()">
+        <option value="">All Ratings</option>
+        <option value="5">5 Stars</option>
+        <option value="4">4 Stars</option>
+        <option value="3">3 Stars</option>
+        <option value="2">2 Stars</option>
+        <option value="1">1 Star</option>
+      </select>
+    </div>
+
+    <table id="feedbackTable">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Rating</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Database Systems</td>
+          <td>5</td>
+          <td>Excellent teaching and clear explanations.</td>
+        </tr>
+        <tr>
+          <td>Database Systems</td>
+          <td>4</td>
+          <td>Very helpful, but pace could be faster.</td>
+        </tr>
+        <tr>
+          <td>AI</td>
+          <td>5</td>
+          <td>Loved the practical examples and exercises.</td>
+        </tr>
+        <tr>
+          <td>AI</td>
+          <td>3</td>
+          <td>Some topics were unclear, need more examples.</td>
+        </tr>
+        <tr>
+          <td>Software Design</td>
+          <td>4</td>
+          <td>Good course content and structured lectures.</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+</div>
+
+<script>
+function filterFeedback() {
+  const course = document.getElementById("courseFilter").value.toLowerCase();
+  const rating = document.getElementById("ratingFilter").value;
+  const table = document.getElementById("feedbackTable");
+
+  for (let i = 1; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const rowCourse = row.cells[0].innerText.toLowerCase();
+    const rowRating = row.cells[1].innerText;
+
+    let show = true;
+    if(course && rowCourse !== course) show = false;
+    if(rating && rowRating !== rating) show = false;
+
+    row.style.display = show ? '' : 'none';
+  }
+}
+</script>
+
+</body>
+</html>
