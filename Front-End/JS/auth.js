@@ -42,13 +42,34 @@ if (signupForm) {
       return;
     }
 
-    // Save user in localStorage (for demo)
-    users.push({ name, email, roll, password });
-    localStorage.setItem("users", JSON.stringify(users));
+    // Attempt to register via backend API
+    const payload = {
+      full_name: name,
+      email: email,
+      password: password,
+      contact: roll
+    };
 
-    showAlert("Account created successfully! Redirecting to login...");
-    // redirect to login page that exists in pages folder
-    window.location.href = "login.html";
+    fetch('/students/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(async (res) => {
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Registration failed');
+      }
+      return res.json();
+    })
+    .then((data) => {
+      showAlert('Account created successfully! Redirecting to login...');
+      window.location.href = 'login.html';
+    })
+    .catch((err) => {
+      console.error('Signup error', err);
+      showAlert('Registration failed: ' + (err.message || 'server error'));
+    });
   });
 }
 
@@ -62,18 +83,42 @@ if (loginForm) {
     const password = (loginForm.password && loginForm.password.value)
       ? loginForm.password.value.trim()
       : (loginForm.querySelector('#password')?.value || '').trim();
-
-    const existingUser = users.find(
-      (u) => (u.name === username || u.roll === username) && u.password === password
-    );
-
-    if (existingUser) {
-      localStorage.setItem("loggedInUser", JSON.stringify(existingUser));
-      showAlert(`Welcome back, ${existingUser.name}!`);
-      // Dashboard file path relative to the current page (pages/login.html)
-      window.location.href = "dashboard/student/dashboard_student.html";
-    } else {
-      showAlert("Invalid credentials. Please try again.");
-    }
+    // Try server-side login first
+    const payload = { email: username, password };
+    fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(async res => {
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || 'Login failed');
+      }
+      return res.json();
+    })
+    .then(data => {
+      // Save minimal session info
+      localStorage.setItem('loggedInUser', JSON.stringify(data));
+      showAlert(`Welcome back, ${data.name}!`);
+      if (data.role === 'student') window.location.href = 'dashboard/student/dashboard_student.html';
+      else if (data.role === 'faculty') window.location.href = 'dashboard/faculty/dashboard_faculty.html';
+      else if (data.role === 'admin') window.location.href = 'dashboard/admin/dashboard_admin.html';
+      else window.location.href = '/';
+    })
+    .catch(err => {
+      console.error('Login error', err);
+      // Fallback to local cache (demo)
+      const existingUser = users.find(
+        (u) => (u.name === username || u.roll === username) && u.password === password
+      );
+      if (existingUser) {
+        localStorage.setItem("loggedInUser", JSON.stringify(existingUser));
+        showAlert(`Welcome back, ${existingUser.name}! (offline)`);
+        window.location.href = "dashboard/student/dashboard_student.html";
+      } else {
+        showAlert("Invalid credentials. Please try again.");
+      }
+    });
   });
 }

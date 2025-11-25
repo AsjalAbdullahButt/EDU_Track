@@ -1,0 +1,1 @@
+"""EDU-Track backend package."""

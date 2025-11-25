@@ -100,27 +100,9 @@ button.add-btn:hover, button.delete-btn:hover {
   </main>
 </div>
 
-<script>
-function addAnnouncement() {
-  const input = document.getElementById('announcementInput');
-  const text = input.value.trim();
-  if(!text) return alert("Please enter an announcement");
-  
-  const li = document.createElement('li');
-  li.innerHTML = `
-    ${text}
-    <button class="delete-btn" onclick="deleteAnnouncement(this)">Delete</button>
-  `;
-  document.getElementById('announcementList').appendChild(li);
-  input.value = '';
-}
-
-function deleteAnnouncement(btn) {
-  if(confirm("Are you sure you want to delete this announcement?")) {
-    btn.parentElement.remove();
-  }
-}
-</script>
+<script src="../../../../JS/dashboard.js" defer></script>
+</body>
+</html>
 
 </body>
 </html>
