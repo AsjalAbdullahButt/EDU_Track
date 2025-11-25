@@ -30,9 +30,31 @@ const notifications = [
 const notifContainer = document.querySelector(".notification-list");
 if (notifContainer) {
   notifContainer.innerHTML = "";
-  notifications.forEach((msg) => {
-    const li = document.createElement("li");
-    li.textContent = msg;
-    notifContainer.appendChild(li);
-  });
+  const logged = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+  fetch('/notifications')
+    .then(res => res.json())
+    .then(data => {
+      let rows = data;
+      if (logged && logged.role === 'student') rows = data.filter(n => n.recipient_id === logged.id);
+      notifContainer.innerHTML = '';
+      rows.forEach(n => {
+        const li = document.createElement('li');
+        li.textContent = `${new Date(n.date_sent).toLocaleString()} — ${n.message}`;
+        notifContainer.appendChild(li);
+      });
+    })
+    .catch(() => {
+      // fallback to static demo messages
+      const notifications = [
+        "Your AI assignment has been graded.",
+        "Next Software Engineering class rescheduled to 2 PM.",
+        "Fee reminder: Due by 25th Oct 2025.",
+      ];
+      notifContainer.innerHTML = '';
+      notifications.forEach((msg) => {
+        const li = document.createElement('li');
+        li.textContent = msg;
+        notifContainer.appendChild(li);
+      });
+    });
 }

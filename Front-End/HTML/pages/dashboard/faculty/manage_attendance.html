@@ -31,61 +31,7 @@ input, select { padding: 6px; border-radius: 8px; border:1px solid #ccc; }
       <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
       <h2>EDU Track</h2>
     </div>
-    <nav class="nav-links">
-      <a href="dashboard_faculty.html">Dashboard</a>
-      <a href="faculty_grades.html">Grades</a>
-      <a href="faculty_announcements.html">Post Announcements</a>
-      <a class="active" href="manage_attendance.html">Attendance</a>
-      <a href="faculty_attendance_report.html">Attendance Report</a>
-      <a href="view_feedback.html">Feedback</a>
-    </nav>
-    <div class="logout-section">
-      <button class="btn primary" onclick="logout()">Logout</button>
-    </div>
-  </aside>
-
-  <main class="main-content">
-    <h1>Manage Attendance</h1>
-
-    <div style="display:flex; gap:15px; margin-bottom:20px; flex-wrap: wrap;">
-      <div>
-        <label>Select Course:</label>
-        <select id="courseSelect" style="border-radius:8px;">
-          <option>BSCS - Database Systems</option>
-          <option>BSCS - AI</option>
-          <option>BSSE - Software Design</option>
-        </select>
-      </div>
-      <div>
-        <label>Date:</label>
-        <input type="date" id="attendanceDate" onchange="loadAttendance()">
-      </div>
-    </div>
-
-    <button class="toggle-btn" onclick="markAllAbsent()">Mark All Absent</button>
-
-    <table id="attendanceTable">
-      <thead>
-        <tr>
-          <th>Roll No</th>
-          <th>Name</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Students will be populated dynamically -->
-      </tbody>
-    </table>
-  </main>
-</div>
-
-<script>
-const students = [
-  {roll:'BSCS-001', name:'Ali Khan'},
-  {roll:'BSCS-002', name:'Ayesha Noor'},
-  {roll:'BSCS-003', name:'Ahmed Raza'},
-  {roll:'BSCS-004', name:'Sara Khan'}
-];
+    <script src="../../../../JS/dashboard.js" defer></script>
 
 // Store attendance by course + date
 const attendanceData = {};

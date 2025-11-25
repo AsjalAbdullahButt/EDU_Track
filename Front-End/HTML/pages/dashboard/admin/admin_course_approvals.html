@@ -105,8 +105,34 @@
       alert("Course rejected: " + id);
     }
 
-    // Initialize the table
+    // Populate from backend
+    function populateCourseTable() {
+      const courseList = document.getElementById('courseList');
+      fetch('/courses').then(r=>r.json()).then(courses=>{
+        courseList.innerHTML = '';
+        courses.forEach(course=>{
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${course.course_id}</td>
+            <td>${course.course_name}</td>
+            <td>${course.faculty_id || ''}</td>
+            <td>Active</td>
+            <td>
+              <button onclick="approveCourse(${course.course_id})">Approve</button>
+              <button onclick="rejectCourse(${course.course_id})">Reject</button>
+            </td>
+          `;
+          courseList.appendChild(row);
+        });
+      });
+    }
+
+    function approveCourse(id){ alert('Approved '+id); }
+    function rejectCourse(id){ alert('Rejected '+id); }
+
     window.onload = populateCourseTable;
   </script>
+
+  <script src="../../../../JS/dashboard.js" defer></script>
 </body>
 </html>
