@@ -1,26 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-    </table>
-  </main>
-</div>
-
-<script src="../../../../JS/dashboard.js" defer></script>
-</body>
-</html>
-.tab-container { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
-.tab { padding: 10px 18px; background: #001f3f; color: #fff; border-radius: 12px; cursor: pointer; }
-.tab.active { background: #001f3f; font-weight: 600; }
-
-/* Table */
-.table-container table { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; }
-.table-container th, .table-container td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
-.table-container th { background: var(--midnight); color: #fff; }
-.table-container td input { width: 60px; padding: 6px; border-radius: 8px; border: 1px solid #ccc; }
-
-/* Buttons */
-.add-tab-btn, .add-column-btn { margin-top: 10px; padding: 6px 12px; background: var(--midnight); color:#fff; border:none; border-radius:12px; cursor:pointer; }
-.add-column-btn { margin-left: 5px; }
-</style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grades Management - EDU Track</title>
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/faculty/faculty_grades.css">
 </head>
 <body class="grades">
 
@@ -108,78 +94,7 @@
   </main>
 </div>
 
-<script>
-let assignmentCount = 1;
-let quizCount = 1;
-const assignmentTotal = 10; // total marks for all assignments
-const quizTotal = 15; // total marks for all quizzes
-
-function addAssignment() {
-  assignmentCount++;
-  const table = document.getElementById("gradesTable");
-  const header = table.tHead.rows[0];
-  const th = document.createElement("th");
-  th.className = "assign-header";
-  th.innerHTML = `Assignment${assignmentCount} <button class="add-column-btn" onclick="addAssignment()">+</button>`;
-  header.insertBefore(th, header.cells[header.cells.length - 2]);
-
-  const perMark = (assignmentTotal / assignmentCount).toFixed(1);
-  for(let i=1;i<table.tBodies[0].rows.length;i++){
-    const row = table.tBodies[0].rows[i];
-    const cells = row.querySelectorAll("td.assign-header, td");
-    const td = document.createElement("td");
-    td.innerHTML = `<input type="number" value="${perMark}" onchange="calculateTotal(this)">`;
-    row.insertBefore(td, row.cells[row.cells.length - 2]);
-    // Update all previous assignment marks
-    for(let j=4;j<4+assignmentCount;j++){
-      row.cells[j].querySelector("input").value = perMark;
-    }
-  }
-  calculateAllTotals();
-}
-
-function addQuiz() {
-  quizCount++;
-  const table = document.getElementById("gradesTable");
-  const header = table.tHead.rows[0];
-  const th = document.createElement("th");
-  th.className = "quiz-header";
-  th.innerHTML = `Quiz${quizCount} <button class="add-column-btn" onclick="addQuiz()">+</button>`;
-  header.insertBefore(th, header.cells[header.cells.length - 2]);
-
-  const perMark = (quizTotal / quizCount).toFixed(1);
-  for(let i=1;i<table.tBodies[0].rows.length;i++){
-    const row = table.tBodies[0].rows[i];
-    const td = document.createElement("td");
-    td.innerHTML = `<input type="number" value="${perMark}" onchange="calculateTotal(this)">`;
-    row.insertBefore(td, row.cells[row.cells.length - 2]);
-    // Update all previous quiz marks
-    const firstQuizIndex = 5; // initial Quiz1 column
-    for(let j=firstQuizIndex;j<firstQuizIndex+quizCount;j++){
-      if(row.cells[j])
-        row.cells[j].querySelector("input").value = perMark;
-    }
-  }
-  calculateAllTotals();
-}
-
-function calculateTotal(el){
-  const row = el.parentElement.parentElement;
-  let total = 0;
-  for(let i=2;i<row.cells.length-1;i++){
-    const val = parseFloat(row.cells[i].querySelector("input")?.value || 0);
-    total += val;
-  }
-  row.querySelector(".total").textContent = total.toFixed(1);
-}
-
-function calculateAllTotals(){
-  const table = document.getElementById("gradesTable");
-  for(let i=0;i<table.tBodies[0].rows.length;i++){
-    const row = table.tBodies[0].rows[i];
-    calculateTotal(row.cells[0].querySelector("input") || row.cells[0]);
-  }
-}
-</script>
+<script src="/static/JS/faculty/faculty_grades.js" defer></script>
+<script src="/static/JS/dashboard.js" defer></script>
 </body>
 </html>

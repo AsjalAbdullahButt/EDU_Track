@@ -7,19 +7,7 @@
   <link rel="stylesheet" href="/static/CSS/main.css">
 <link rel="stylesheet" href="/static/CSS/dashboards.css">
 
-<style>
-body.attendance .main-content { 
-  background: rgba(255,255,255,0.85); 
-  backdrop-filter: blur(6px); 
-  border-radius: 12px; 
-  padding: 30px; 
-}
-table { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
-th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
-th { background: var(--midnight); color:#fff; }
-input, select { padding: 6px; border-radius: 8px; border:1px solid #ccc; }
-.toggle-btn { padding: 6px 12px; border:none; border-radius:12px; cursor:pointer; color:#fff; background:#001f3f; }
-</style>
+  <link rel="stylesheet" href="/static/CSS/faculty/manage_attendance.css">
 </head>
 <body class="attendance">
 
@@ -31,53 +19,7 @@ input, select { padding: 6px; border-radius: 8px; border:1px solid #ccc; }
       <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
       <h2>EDU Track</h2>
     </div>
+    <script src="/static/JS/faculty/manage_attendance.js" defer></script>
     <script src="/static/JS/dashboard.js" defer></script>
-    <script>
-  // Store attendance by course + date
-const attendanceData = {};
-
-function loadAttendance() {
-  const date = document.getElementById('attendanceDate').value;
-  const course = document.getElementById('courseSelect').value;
-  const tbody = document.querySelector('#attendanceTable tbody');
-  tbody.innerHTML = '';
-
-  if(!date) return;
-
-  // Initialize data for this date+course if not exist
-  if(!attendanceData[course]) attendanceData[course] = {};
-  if(!attendanceData[course][date]) {
-    attendanceData[course][date] = students.map(s => ({...s, status:'Absent'}));
-  }
-
-  attendanceData[course][date].forEach((s,i)=>{
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${s.roll}</td>
-      <td>${s.name}</td>
-      <td><button class="toggle-btn" onclick="toggleAttendance('${course}','${date}',${i}, this)">${s.status}</button></td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
-// Toggle Present/Absent
-function toggleAttendance(course, date, idx, btn) {
-  const student = attendanceData[course][date][idx];
-  student.status = student.status === 'Present' ? 'Absent' : 'Present';
-  btn.textContent = student.status;
-  btn.style.background = student.status === 'Present' ? '#27ae60' : '#001f3f';
-}
-
-// Mark all absent for current selection
-function markAllAbsent() {
-  const date = document.getElementById('attendanceDate').value;
-  const course = document.getElementById('courseSelect').value;
-  if(!date) return alert('Select a date first');
-  attendanceData[course][date].forEach(s=>s.status='Absent');
-  loadAttendance();
-}
-
-</script>
-</body>
+  </body>
 </html>

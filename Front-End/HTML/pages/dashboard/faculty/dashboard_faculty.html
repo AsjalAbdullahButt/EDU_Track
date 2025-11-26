@@ -7,17 +7,7 @@
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
 
-  <style>
-    body {
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:#f4f6f9;
-    }
-    main {
-      flex:1;
-      padding:25px;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/CSS/faculty/faculty_dashboard.css">
 </head>
 <body>
 <div class="layout-wrapper">
@@ -43,7 +33,7 @@
   </aside>
 
   <!-- MAIN CONTENT -->
-  <main>
+  <main class="main-content">
     <header class="dashboard-header">
       <h1>Welcome, <span data-user-name id="facultyName">Sir Zeeshan Nazar</span></h1>
       <p>Manage your courses and students here</p>
@@ -75,5 +65,11 @@
   </main>
 
 </div>
+
+<script src="/static/JS/session-protection.js"></script>
+<!-- Protect dashboard for faculty -->
+<script>
+  protectDashboard('faculty');
+</script>
 </body>
 </html>

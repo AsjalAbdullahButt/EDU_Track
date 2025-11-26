@@ -167,14 +167,15 @@
       </div>
     </main>
   </div>
-
+  <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/auth.js"></script>
   <script src="/static/JS/student-api.js"></script>
   <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/dashboard_student.js"></script>
+  
+  <!-- Protect dashboard and display user info -->
   <script>
-    function downloadTranscript() {
-      alert('Transcript download feature coming soon!');
-    }
+    protectDashboard('student');
   </script>
 </body>
 </html>

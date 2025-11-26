@@ -1,6 +1,6 @@
 /* ================================
    EDU Track - Global Styles
-   Author: Asjal Abdullah
+   Modern Professional Design System
    ================================ */
 
 /* Reset and base typography */
@@ -8,84 +8,341 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Inter", "Roboto", system-ui, sans-serif;
+    font-family: "Inter", "Segoe UI", "Roboto", system-ui, sans-serif;
 }
 
 :root {
     --midnight: #001f3f;
     --mint: #cdeee4;
-    /* Use a single canonical pastel mint for the whole site */
-    --pastel-mint: #cdeee4; /* pastel mint */
+    --pastel-mint: #cdeee4;
     --whitesmoke: #f5f7f8;
     --black: #0b0b0b;
     --white: #ffffff;
+    
+    /* Professional color palette additions */
+    --primary: #001f3f;
+    --primary-light: #11324a;
+    --primary-hover: #0d1f2d;
+    --secondary: #cdeee4;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --info: #3498db;
+    --light-gray: #ecf0f1;
+    --gray: #95a5a6;
+    --dark-gray: #34495e;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.2);
+    
+    /* Transitions */
+    --transition-fast: all 0.2s ease-in-out;
+    --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s ease-in-out;
 }
 
 /* Body defaults */
-/* Global page background: pastel mint */
 body {
-    background: var(--pastel-mint);
+    background: linear-gradient(135deg, var(--pastel-mint) 0%, #f0f9f7 100%);
     color: var(--black);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    line-height: 1.6;
 }
 
-/* Buttons */
+/* ===== TYPOGRAPHY ===== */
+h1 { font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+h2 { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 15px; }
+h3 { font-size: 1.5rem; font-weight: 600; color: var(--dark-gray); margin-bottom: 12px; }
+h4 { font-size: 1.25rem; font-weight: 600; color: var(--dark-gray); }
+h5 { font-size: 1.1rem; font-weight: 600; }
+p { margin-bottom: 12px; color: var(--dark-gray); }
+
+/* ===== BUTTONS - Enhanced ===== */
 .btn {
     display: inline-block;
-    padding: 10px 16px;
-    border-radius: 10px;
+    padding: 12px 24px;
+    border-radius: 8px;
     text-decoration: none;
     text-align: center;
     font-weight: 600;
-    transition: all 0.2s ease-in-out;
+    font-size: 0.95rem;
+    transition: var(--transition-normal);
     cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .btn.primary {
-    background: linear-gradient(90deg, var(--midnight), #11324a);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.btn.primary:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn.primary:active {
+    transform: translateY(0);
 }
 
 .btn.secondary {
-    background: transparent;
-    border: 1px solid rgba(11,11,11,0.2);
-    color: var(--black);
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(11,11,11,0.1);
-}
-
-/* Subtle micro-animations and utility classes */
-.fade-in {
-    animation: fadeInUp 420ms ease both;
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-.glow-hover:hover {
-    box-shadow: 0 8px 30px rgba(17,50,74,0.12), 0 2px 6px rgba(0,0,0,0.06);
-    transform: translateY(-3px) scale(1.01);
-}
-
-/* Links */
-.link {
-    color: var(--midnight);
-    text-decoration: none;
+    background: var(--light-gray);
+    color: var(--primary);
+    border: 2px solid var(--primary);
     font-weight: 600;
 }
 
-.link:hover {
-    text-decoration: underline;
+.btn.secondary:hover {
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: var(--shadow-md);
 }
 
-/* General utilities */
-.text-small {
-    font-size: 0.9rem;
+.btn.success {
+    background: linear-gradient(135deg, var(--success) 0%, #229954 100%);
+    color: var(--white);
+}
+
+.btn.success:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn.danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+    color: var(--white);
+}
+
+.btn.danger:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ===== ANIMATIONS ===== */
+.fade-in {
+    animation: fadeInUp 0.5s ease both;
+}
+
+.fade-in-delay {
+    animation: fadeInUp 0.5s ease both;
+    animation-delay: 0.1s;
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.spin { animation: spin 1s linear infinite; }
+.glow-hover:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px) scale(1.02);
+}
+
+/* ===== LINKS ===== */
+.link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+.link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.link:hover {
+    color: var(--primary-hover);
+}
+
+.link:hover::after {
+    width: 100%;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-small { font-size: 0.9rem; }
+.text-center { text-align: center; }
+.text-muted { color: var(--gray); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-primary { background: var(--primary); color: var(--white); }
+.badge-success { background: var(--success); color: var(--white); }
+.badge-warning { background: var(--warning); color: var(--white); }
+.badge-danger { background: var(--danger); color: var(--white); }
+
+/* ===== CARDS ===== */
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-normal);
+    border: 1px solid rgba(0, 31, 63, 0.08);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+}
+
+.card-body {
+    color: var(--dark-gray);
+}
+
+.card-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--light-gray);
+    display: flex;
+    gap: 10px;
+}
+
+/* ===== FORMS ===== */
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--light-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition-fast);
+    background: var(--white);
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.1);
+}
+
+input:hover, textarea:hover, select:hover {
+    border-color: var(--gray);
+}
+
+input::placeholder {
+    color: var(--gray);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--dark-gray);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-error {
+    color: var(--danger);
+    font-size: 0.875rem;
+    margin-top: 4px;
 }
 
 /* Hero section (for index page) */

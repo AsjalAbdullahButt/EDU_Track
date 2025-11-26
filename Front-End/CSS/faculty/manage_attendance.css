@@ -1,0 +1,11 @@
+/* manage_attendance styles extracted from inline */
+body.attendance .main-content { background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); border-radius: 12px; padding: 30px; }
+#attendancePanel { background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+#attendanceControls { display:flex; gap:8px; margin-bottom:12px; align-items:center }
+#attendanceTable { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
+#attendanceTable th, #attendanceTable td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+#attendanceTable th { background: var(--midnight); color:#fff; }
+input, select { padding: 6px; border-radius: 8px; border:1px solid #ccc; }
+.toggle-btn { padding: 6px 12px; border:none; border-radius:12px; cursor:pointer; color:#fff; background:#001f3f; }
+.toggle-btn.present { background: #27ae60 }
+.toggle-btn.absent { background: #001f3f }

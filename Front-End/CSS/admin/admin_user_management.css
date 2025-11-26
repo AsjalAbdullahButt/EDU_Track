@@ -1,0 +1,10 @@
+/* Admin User Management table styles */
+.user-table th,
+.user-table td {
+  padding: 14px 24px;
+  text-align: left;
+}
+
+.user-table th {
+  font-weight: bold;
+}

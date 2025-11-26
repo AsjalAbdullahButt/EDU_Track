@@ -84,15 +84,15 @@ if (signupForm) {
         // Save session
         localStorage.setItem('loggedInUser', JSON.stringify(session));
         showAlert(`Welcome, ${session.name}! Redirecting to your dashboard...`);
-        if (session.role === 'student') window.location.href = '/pages/dashboard/dashboard_student.html';
-        else if (session.role === 'faculty') window.location.href = '/pages/dashboard/dashboard_faculty.html';
-        else if (session.role === 'admin') window.location.href = '/pages/dashboard/dashboard_admin.html';
+        if (session.role === 'student') window.location.href = '/pages/dashboard/student/dashboard_student.html';
+        else if (session.role === 'faculty') window.location.href = '/pages/dashboard/faculty/dashboard_faculty.html';
+        else if (session.role === 'admin') window.location.href = '/pages/dashboard/admin/dashboard_admin.html';
         else window.location.href = '/';
       })
       .catch((err) => {
         console.error('Auto-login failed', err);
         showAlert('Account created. Please login manually.');
-        window.location.href = 'login.html';
+        window.location.href = '/pages/login.html';
       });
     })
     .catch((err) => {
@@ -102,6 +102,20 @@ if (signupForm) {
   });
 }
 
+// ---- PASSWORD VISIBILITY TOGGLE (for register/login forms) ----
+document.addEventListener('DOMContentLoaded', function() {
+  const pw = document.getElementById('password');
+  const confirmPw = document.getElementById('confirm');
+  const toggle = document.getElementById('showPassword');
+  
+  if (!pw || !confirmPw || !toggle) return;
+  
+  toggle.addEventListener('change', function(){
+    const type = this.checked ? 'text' : 'password';
+    pw.type = type;
+    if (confirmPw) confirmPw.type = type;
+  });
+});
 // ---- LOGIN HANDLER ----
 if (loginForm) {
   loginForm.addEventListener("submit", (e) => {
@@ -134,9 +148,9 @@ if (loginForm) {
       } catch (e) { /* ignore */ }
       localStorage.setItem('loggedInUser', JSON.stringify(data));
       showAlert(`Welcome back, ${data.name}!`);
-      if (data.role === 'student') window.location.href = '/pages/dashboard/dashboard_student.html';
-      else if (data.role === 'faculty') window.location.href = '/pages/dashboard/dashboard_faculty.html';
-      else if (data.role === 'admin') window.location.href = '/pages/dashboard/dashboard_admin.html';
+      if (data.role === 'student') window.location.href = '/pages/dashboard/student/dashboard_student.html';
+      else if (data.role === 'faculty') window.location.href = '/pages/dashboard/faculty/dashboard_faculty.html';
+      else if (data.role === 'admin') window.location.href = '/pages/dashboard/admin/dashboard_admin.html';
       else window.location.href = '/';
     })
     .catch(err => {

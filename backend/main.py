@@ -37,6 +37,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 # Import database helpers and SQLAlchemy Base/engine
 from backend.database import engine, Base
@@ -78,7 +79,7 @@ def check_database_connection():
     try:
         # Try a short-lived connection to validate DB credentials and reachability
         with engine.connect() as conn:
-            conn.execute("SELECT 1")
+            conn.execute(text("SELECT 1"))
         print("[startup] Database connection OK")
     except Exception as e:
         # Don't crash the server, but log a clear message for the developer
@@ -99,12 +100,17 @@ if os.path.isdir(FRONTEND_STATIC):
     # Serve all frontend assets (CSS/JS/Images) under /static
     app.mount("/static", StaticFiles(directory=FRONTEND_STATIC), name="static")
 
-# Catch-all route to serve any other frontend file from Front-End directory.
-# This runs after API routes, so APIs are matched first. It allows requests
-# like `/pages/login.html` or `/CSS/main.css` to return files from the
-# frontend directory without mounting at root which can block APIs.
+# Catch-all route to serve frontend HTML files.
+# This allows requests like `/pages/login.html` to be served.
+# Importantly: this does NOT fallback to index.html, preventing interference
+# with API redirects and dashboard navigation.
 @app.get("/{full_path:path}")
 def serve_frontend_file(full_path: str):
+    # Prevent serving API-like paths through this route
+    if full_path.startswith("api/") or full_path.startswith("auth/") or full_path.startswith("students/"):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Not Found")
+    
     # Try to serve files from the HTML folder first (e.g. /pages/login.html -> Front-End/HTML/pages/login.html)
     candidate_html = os.path.join(FRONTEND_HTML, full_path)
     if os.path.isfile(candidate_html):
@@ -115,11 +121,8 @@ def serve_frontend_file(full_path: str):
     if os.path.isfile(candidate_static):
         return FileResponse(candidate_static)
 
-    # If not found, fallback to index (single page app fallback)
-    if os.path.isfile(index_path):
-        return FileResponse(index_path)
-
-    # Not found
+    # If file not found, return 404 instead of fallback to index
+    # This prevents catching dashboard redirects and returning index.html
     from fastapi import HTTPException
     raise HTTPException(status_code=404, detail="Not Found")
 

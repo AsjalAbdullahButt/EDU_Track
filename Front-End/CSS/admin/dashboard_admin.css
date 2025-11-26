@@ -1,0 +1,5 @@
+/* Admin Dashboard page layout */
+html, body { height: 100%; margin: 0; }
+.page-layout { display: flex; align-items: stretch; gap: 1rem; min-height: 100vh; }
+.page-layout .sidebar { flex: 0 0 260px; }
+.page-layout .main-content { flex: 1 1 auto; min-width: 0; padding: 1.5rem; }

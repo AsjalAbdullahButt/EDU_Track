@@ -6,20 +6,7 @@
 <title>Attendance Report - EDU Track</title>
 <link rel="stylesheet" href="/static/CSS/main.css">
 <link rel="stylesheet" href="/static/CSS/dashboards.css">
-<style>
-body.attendance-report .main-content { 
-  background: rgba(255,255,255,0.85); 
-  backdrop-filter: blur(6px); 
-  border-radius: 12px; 
-  padding: 30px; 
-}
-
-table { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
-th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
-th { background: var(--midnight); color:#fff; }
-
-select { padding:6px 10px; border-radius:8px; border:1px solid #ccc; margin-bottom:15px; }
-</style>
+  <link rel="stylesheet" href="/static/CSS/faculty/faculty_attendance_report.css">
 </head>
 <body class="attendance-report">
 
@@ -50,17 +37,30 @@ select { padding:6px 10px; border-radius:8px; border:1px solid #ccc; margin-bott
     <!-- Course Filter -->
     <div>
       <label>Filter by Course: </label>
-      <select id="courseFilter" onchange="filterAttendance()">
+      <select id="courseFilter">
         <option value="">All Courses</option>
         <option value="Database Systems">Database Systems</option>
         <option value="AI">AI</option>
         <option value="Software Design">Software Design</option>
-      </main>
+      </select>
     </div>
 
-    <script src="/static/JS/dashboard.js" defer></script>
-  </body>
-  </html>
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Roll</th>
+          <th>Name</th>
+          <th>Course</th>
+          <th>Sessions</th>
+          <th>Attendance %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BSCS-001</td>
+          <td>Ali Khan</td>
+          <td>Database Systems</td>
+          <td>28</td>
           <td>93%</td>
         </tr>
         <tr>
@@ -97,18 +97,7 @@ select { padding:6px 10px; border-radius:8px; border:1px solid #ccc; margin-bott
 
 </div>
 
-<script>
-function filterAttendance() {
-  const course = document.getElementById("courseFilter").value.toLowerCase();
-  const table = document.getElementById("attendanceTable");
-
-  for (let i = 1; i < table.rows.length; i++) {
-    const row = table.rows[i];
-    const rowCourse = row.cells[2].innerText.toLowerCase();
-    row.style.display = (!course || rowCourse === course) ? '' : 'none';
-  }
-}
-</script>
-
+<script src="/static/JS/faculty/faculty_attendance_report.js" defer></script>
+<script src="/static/JS/dashboard.js" defer></script>
 </body>
 </html>

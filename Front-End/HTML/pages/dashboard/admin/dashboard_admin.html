@@ -8,16 +8,7 @@
   <!-- Existing CSS files -->
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
-  <link rel="stylesheet" href="/static/CSS/admin_dashboard.css">
-
-  <!-- Add layout override so sidebar and main sit side-by-side -->
-  <style>
-    /* keep rules minimal to avoid clashing with existing CSS */
-    html, body { height: 100%; margin: 0; }
-    .page-layout { display: flex; align-items: stretch; gap: 1rem; min-height: 100vh; }
-    .page-layout .sidebar { flex: 0 0 260px; /* fixed sidebar width; adjust if needed */ }
-    .page-layout .main-content { flex: 1 1 auto; min-width: 0; /* allow proper shrinking */ padding: 1.5rem; }
-  </style>
+  <link rel="stylesheet" href="/static/CSS/admin/dashboard_admin.css">
 </head>
 
 <body>
@@ -95,8 +86,14 @@
       <!-- New: Fee Verification Section -->
       <section class="section fee-verification">
   <!-- JS -->
+  <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/admin_dashboard.js" defer></script>
   <script src="/static/JS/dashboard.js" defer></script>
+  
+  <!-- Protect dashboard for admin -->
+  <script>
+    protectDashboard('admin');
+  </script>
 
 </body>
 </html>

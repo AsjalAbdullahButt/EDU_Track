@@ -1,0 +1,59 @@
+/* ===============================================
+   EDU Track - Student Module Pages (Complete)
+   Author: Asjal Abdullah
+   =============================================== */
+
+/* Reuse global color palette */
+:root {
+  --midnight: #001f3f;
+  --pastel-mint: #cdeee4;
+  --whitesmoke: #f5f7f8;
+  --black: #0b0b0b;
+  --white: #ffffff;
+  --soft-shadow: 0 6px 18px rgba(11,11,11,0.06);
+  --transition: 0.3s ease-in-out;
+}
+
+/* -----------------------------------------------
+   🌟 General Layout Enhancements
+----------------------------------------------- */
+body {
+  background: linear-gradient(180deg, var(--whitesmoke), var(--pastel-mint));
+  animation: fadeIn 0.6s ease;
+}
+
+.section h2 {
+  position: relative;
+  display: inline-block;
+  color: var(--midnight);
+  font-weight: 700;
+}
+
+.section h2::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 3px;
+  background: var(--pastel-mint);
+  margin-top: 4px;
+  border-radius: 4px;
+}
+
+/* Smooth fade-in animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Table animations */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--soft-shadow);
+  animation: fadeIn 0.6s ease;
+}
+
+/* (content truncated for brevity) */

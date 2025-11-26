@@ -6,7 +6,7 @@
   <title>EDU Track - Submitted Feedback</title>
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="../../../CSS/dashboards.css">
-  <link rel="stylesheet" href="../../../CSS/student_pages.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
 </head>
 <body class="feedback">
 
@@ -213,24 +213,8 @@
   </div>
 
   <script src="/static/JS/auth.js"></script>
-  <script src="../../../JS/student-api.js"></script>
-  <script src="../../../JS/dashboard.js"></script>
-  <script>
-    function downloadAllFeedback() {
-      alert('Downloading all submitted feedback as PDF...');
-    }
-
-    function editFeedback(courseCode) {
-      alert(`Redirecting to edit feedback for ${courseCode}...`);
-      // In real implementation: location.href = `feedback_form.html?course=${courseCode}&edit=true`;
-    }
-
-    function deleteFeedback(courseCode) {
-      if (confirm(`Are you sure you want to delete your feedback for ${courseCode}? This action cannot be undone.`)) {
-        alert(`Feedback for ${courseCode} deleted successfully.`);
-        // In real implementation: API call to delete feedback
-      }
-    }
-  </script>
+  <script src="/static/JS/student-api.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/feedback_submitted.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,13 @@
+.tab-container { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.tab { padding: 10px 18px; background: #001f3f; color: #fff; border-radius: 12px; cursor: pointer; }
+.tab.active { background: #001f3f; font-weight: 600; }
+
+/* Table */
+.table-container table { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; }
+.table-container th, .table-container td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+.table-container th { background: var(--midnight); color: #fff; }
+.table-container td input { width: 60px; padding: 6px; border-radius: 8px; border: 1px solid #ccc; }
+
+/* Buttons */
+.add-tab-btn, .add-column-btn { margin-top: 10px; padding: 6px 12px; background: var(--midnight); color:#fff; border:none; border-radius:12px; cursor:pointer; }
+.add-column-btn { margin-left: 5px; }

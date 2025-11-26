@@ -18,7 +18,7 @@
       </div>
 
       <nav class="nav-links">
-        <a href="/pages/dashboard/dashboard_student.html">Dashboard</a>
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
         <a href="/pages/student_pages/courses.html" class="active">Courses</a>
         <a href="/pages/student_pages/attendance.html">Attendance</a>
         <a href="/pages/student_pages/results.html">Results</a>
@@ -63,8 +63,12 @@
     </main>
   </div>
 
+  <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/auth.js"></script>
   <script src="/static/JS/student-api.js"></script>
   <script src="/static/JS/dashboard.js"></script>
+  <script>
+    protectDashboard('student');
+  </script>
 </body>
 </html>

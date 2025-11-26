@@ -56,20 +56,5 @@
     </div>
 
     <script src="/static/JS/auth.js" defer></script>
-
-    <!-- Added: toggle script for showing/hiding both password fields -->
-    <script>
-        (function(){
-            const pw = document.getElementById('password');
-            const confirmPw = document.getElementById('confirm');
-            const toggle = document.getElementById('showPassword');
-            if (!pw || !confirmPw || !toggle) return;
-            toggle.addEventListener('change', function(){
-                const type = this.checked ? 'text' : 'password';
-                pw.type = type;
-                confirmPw.type = type;
-            });
-        })();
-    </script>
 </body>
 </html>

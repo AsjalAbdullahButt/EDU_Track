@@ -6,6 +6,7 @@
   <title>EDU Track - Notifications</title>
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
 </head>
 <body>
 
@@ -17,13 +18,13 @@
     </div>
 
     <nav class="nav-links">
-      <a href="../dashboard/student/dashboard_student.html">Dashboard</a>
-      <a href="courses.html">Courses</a>
-      <a href="attendance.html">Attendance</a>
-      <a href="results.html">Results</a>
-      <a href="fees.html">Fees</a>
-      <a href="notifications.html" class="active">Notifications</a>
-      <a href="feedback.html">Feedback</a>
+      <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+      <a href="/pages/student_pages/courses.html">Courses</a>
+      <a href="/pages/student_pages/attendance.html">Attendance</a>
+      <a href="/pages/student_pages/results.html">Results</a>
+      <a href="/pages/student_pages/fees.html">Fees</a>
+      <a href="/pages/student_pages/notifications.html" class="active">Notifications</a>
+      <a href="/pages/student_pages/feedback.html">Feedback</a>
     </nav>
 
     <div class="logout-section">
@@ -49,6 +50,10 @@
 
   </div>
 
+  <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/dashboard.js" defer></script>
+  <script>
+    protectDashboard('student');
+  </script>
 </body>
 </html>

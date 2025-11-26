@@ -1,0 +1,10 @@
+/* Admin Course Approvals table styles */
+.course-table th,
+.course-table td {
+  padding: 14px 24px;
+  text-align: left;
+}
+
+.course-table th {
+  font-weight: bold;
+}
