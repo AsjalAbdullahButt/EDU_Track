@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Fees</title>
+  <link rel="stylesheet" href="../../../CSS/main.css">
+  <link rel="stylesheet" href="../../../CSS/dashboards.css">
+  <link rel="stylesheet" href="../../../CSS/student_pages.css">
+</head>
+<body class="fees">
+
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="../dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="courses.html">Courses</a>
+        <a href="attendance.html">Attendance</a>
+        <a href="results.html">Results</a>
+        <a href="#" class="active">Fees</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Fee Management</h1>
+        <p>View your fee status, transactions, and download receipts</p>
+      </header>
+
+      <section class="section">
+        <h2>Fee Summary</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Semester</th>
+              <th>Total Fee</th>
+              <th>Paid Amount</th>
+              <th>Balance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Fall 2024</td><td>120,000 PKR</td><td>120,000 PKR</td><td>0</td><td><span style="color:green;font-weight:600;">Paid</span></td></tr>
+            <tr><td>Spring 2025</td><td>125,000 PKR</td><td>100,000 PKR</td><td>25,000 PKR</td><td><span style="color:crimson;font-weight:600;">Pending</span></td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:20px;">
+          <button class="btn primary">Pay Remaining Fee</button>
+          <button class="btn secondary">Download Receipt</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../../../JS/auth.js"></script>
+  <script src="../../../JS/student-api.js"></script>
+  <script src="../../../JS/dashboard.js"></script>
+</body>
+</html>
