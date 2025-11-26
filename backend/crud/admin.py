@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Admin
-from schemas import AdminCreate
+from backend.models import Admin
+from backend.schemas import AdminCreate
 
 def create_admin(db: Session, data: AdminCreate):
     obj = Admin(**data.dict())

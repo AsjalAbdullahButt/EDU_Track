@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Faculty
-from schemas import FacultyCreate
+from backend.models import Faculty
+from backend.schemas import FacultyCreate
 
 def create_faculty(db: Session, data: FacultyCreate):
     obj = Faculty(**data.dict())

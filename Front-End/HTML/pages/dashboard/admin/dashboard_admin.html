@@ -6,8 +6,9 @@
   <title>EDU Track - Admin Dashboard</title>
 
   <!-- Existing CSS files -->
-  <link rel="stylesheet" href="../../../../CSS/main.css">
-  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/admin_dashboard.css">
 
   <!-- Add layout override so sidebar and main sit side-by-side -->
   <style>
@@ -26,20 +27,20 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="logo-section">
-        <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
         <h2 class="sidebar-title">EDU Track</h2>
       </div>
 
       <!-- Updated nav-links: added Fee Verification; removed duplicate Fee Records -->
       <nav class="nav-links">
-        <a href="dashboard_admin.html" class="nav-link active">Dashboard</a>
-        <a href="admin_user_management.html" class="nav-link">User Management</a>
-        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
-        <a href="fee_record" class="nav-link">Fee Records</a>
-        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
-        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
-        <a href="admin_security.html" class="nav-link">Security Settings</a>
-        <a href="admin_record.html" class="nav-link">Records</a>
+        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link active">Dashboard</a>
+        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+        <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+        <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+        <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
       </nav>
 
       <div class="logout-section">
@@ -61,23 +62,23 @@
       <!-- Stats Cards -->
       <section class="stats-grid">
         <div class="stat-card">
-          <h2 class="stat-value">3,200</h2>
+          <h2 id="studentsCount" class="stat-value">—</h2>
           <p class="stat-label">Registered Students</p>
         </div>
 
         <div class="stat-card">
-          <h2 class="stat-value">180</h2>
+          <h2 id="facultyCount" class="stat-value">—</h2>
           <p class="stat-label">Faculty Members</p>
         </div>
 
         <div class="stat-card">
-          <h2 class="stat-value">98%</h2>
+          <h2 id="feeCollection" class="stat-value">—</h2>
           <p class="stat-label">Fee Collection</p>
         </div>
 
         <!-- Give this stat an id so it can be updated when verifications occur -->
         <div class="stat-card">
-          <h2 id="pendingRequestsCount" class="stat-value">5</h2>
+          <h2 id="pendingRequestsCount" class="stat-value">—</h2>
           <p class="stat-label">Pending Requests</p>
         </div>
       </section>
@@ -86,17 +87,16 @@
       <section class="section system-alerts">
         <h2 class="section-title">System Alerts</h2>
 
-        <ul class="notification-list">
-          <li>⚠️ Backup scheduled for tonight at 12 AM.</li>
-          <li>📦 New version update available (v2.1).</li>
-          <li>🔒 Two-factor authentication enabled for all admins.</li>
+        <ul class="notification-list" id="adminNotificationList">
+          <!-- populated dynamically -->
         </ul>
       </section>
 
       <!-- New: Fee Verification Section -->
       <section class="section fee-verification">
   <!-- JS -->
-  <script src="../../../../JS/dashboard.js" defer></script>
+  <script src="/static/JS/admin_dashboard.js" defer></script>
+  <script src="/static/JS/dashboard.js" defer></script>
 
 </body>
 </html>

@@ -9,11 +9,71 @@ document.addEventListener("DOMContentLoaded", () => {
   const header = document.querySelector(".dashboard-header");
 
   if (user && header) {
-    const subText = document.createElement("p");
-    subText.textContent = `Logged in as: ${user.name} (${user.roll || "Student"})`;
-    subText.style.color = "rgba(11,11,11,0.6)";
-    subText.style.fontSize = "0.9rem";
-    header.appendChild(subText);
+    // Update welcome name if an element with id `studentName` exists
+    const nameSpan = header.querySelector('[data-user-name]') || header.querySelector('#studentName');
+    if (nameSpan) nameSpan.textContent = user.name || nameSpan.textContent;
+
+    // Add avatar / photo upload UI (if not already present)
+    if (!header.querySelector('.user-photo')) {
+      const photoWrap = document.createElement('div');
+      photoWrap.className = 'user-photo';
+      photoWrap.style.display = 'flex';
+      photoWrap.style.alignItems = 'center';
+      photoWrap.style.gap = '12px';
+
+      const img = document.createElement('img');
+      img.src = '';
+      img.alt = 'avatar';
+      img.style.width = '48px';
+      img.style.height = '48px';
+      img.style.borderRadius = '50%';
+      img.style.objectFit = 'cover';
+      img.style.background = '#f0f0f0';
+
+      const uploadBtn = document.createElement('button');
+      uploadBtn.className = 'btn secondary';
+      uploadBtn.textContent = 'Upload Photo';
+
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.style.display = 'none';
+
+      // Load saved avatar (stored in loggedInUser.photo or separate key)
+      const saved = user.photo || localStorage.getItem(`userAvatar_${user.role}_${user.id}`);
+      if (saved) img.src = saved;
+
+      uploadBtn.addEventListener('click', () => input.click());
+      input.addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          img.src = ev.target.result;
+          // persist avatar for this user key
+          try {
+            localStorage.setItem(`userAvatar_${user.role}_${user.id}`, ev.target.result);
+            // also update loggedInUser object for quick usage
+            const session = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+            session.photo = ev.target.result;
+            localStorage.setItem('loggedInUser', JSON.stringify(session));
+          } catch (err) {
+            console.warn('Could not persist avatar:', err);
+          }
+        };
+        reader.readAsDataURL(f);
+      });
+
+      photoWrap.appendChild(img);
+      photoWrap.appendChild(uploadBtn);
+      photoWrap.appendChild(input);
+
+      // insert at top-right of header
+      header.style.display = 'flex';
+      header.style.justifyContent = 'space-between';
+      header.style.alignItems = 'center';
+      header.appendChild(photoWrap);
+    }
   }
 });
 

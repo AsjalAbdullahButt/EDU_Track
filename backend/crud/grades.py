@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Grades
-from schemas import GradesCreate
+from backend.models import Grades
+from backend.schemas import GradesCreate
 
 def create_grade(db: Session, data: GradesCreate):
     obj = Grades(**data.dict())

@@ -4,10 +4,14 @@ from contextlib import contextmanager
 import os
 import pymysql
 from pymysql.cursors import DictCursor
+from dotenv import load_dotenv
+
+# Load environment variables from backend/.env if present
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Configuration - change as needed or provide via environment variables
 DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "12345678")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "EDU_Track")

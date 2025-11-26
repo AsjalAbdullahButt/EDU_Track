@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Enrollment
-from schemas import EnrollmentCreate
+from backend.models import Enrollment
+from backend.schemas import EnrollmentCreate
 
 def create_enrollment(db: Session, data: EnrollmentCreate):
     obj = Enrollment(**data.dict())

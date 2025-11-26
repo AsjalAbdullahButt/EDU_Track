@@ -1,0 +1,7 @@
+/* Extracted styles for fee verification page */
+.user-table th, .user-table td { padding: 14px 24px; text-align: left; }
+.user-table th { font-weight: bold; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); place-items: center; z-index: 300; }
+.modal-content { background: var(--white); padding: 18px; border-radius: 10px; max-width: 720px; width: 95%; }
+.modal img { max-width: 100%; height: auto; display: block; margin-bottom: 12px; }
+.modal-buttons { display:flex; gap:8px; justify-content: flex-end; }

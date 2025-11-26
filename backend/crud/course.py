@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Course
-from schemas import CourseCreate
+from backend.models import Course
+from backend.schemas import CourseCreate
 
 def create_course(db: Session, data: CourseCreate):
     obj = Course(**data.dict())

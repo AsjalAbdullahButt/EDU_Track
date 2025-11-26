@@ -1,0 +1,8 @@
+/* Extracted styles for fee records page */
+.filter-section { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-section input, .filter-section select { padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(11,11,11,0.2); font-size: 0.95rem; }
+.fee-table th, .fee-table td { padding: 12px 20px; text-align: left; }
+.fee-table th { font-weight: bold; }
+.fee-table td.status-paid { color: green; font-weight: 600; }
+.fee-table td.status-missing { color: red; font-weight: 600; }
+.fee-table tr:nth-child(even) { background-color: #e0f0ec; }

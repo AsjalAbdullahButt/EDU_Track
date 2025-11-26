@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Fee
-from schemas import FeeCreate
+from backend.models import Fee
+from backend.schemas import FeeCreate
 
 def create_fee(db: Session, data: FeeCreate):
     obj = Fee(**data.dict())

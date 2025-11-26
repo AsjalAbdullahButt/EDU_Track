@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Feedback
-from schemas import FeedbackCreate
+from backend.models import Feedback
+from backend.schemas import FeedbackCreate
 
 def create_feedback(db: Session, data: FeedbackCreate):
     obj = Feedback(**data.dict())

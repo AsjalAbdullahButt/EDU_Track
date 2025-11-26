@@ -25,7 +25,7 @@ class StudentResponse(StudentBase):
     student_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -47,7 +47,7 @@ class FacultyResponse(FacultyBase):
     faculty_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -67,7 +67,7 @@ class AdminResponse(AdminBase):
     admin_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -88,7 +88,7 @@ class CourseResponse(CourseBase):
     course_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -109,7 +109,7 @@ class EnrollmentResponse(EnrollmentBase):
     enrollment_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -130,7 +130,7 @@ class AttendanceResponse(AttendanceBase):
     attendance_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -152,7 +152,7 @@ class GradesResponse(GradesBase):
     grade_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -174,7 +174,7 @@ class FeeResponse(FeeBase):
     fee_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -196,7 +196,7 @@ class NotificationResponse(NotificationBase):
     date_sent: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # -----------------------------------------------------------
@@ -218,4 +218,4 @@ class FeedbackResponse(FeedbackBase):
     date_submitted: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True

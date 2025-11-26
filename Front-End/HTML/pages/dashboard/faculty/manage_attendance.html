@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manage Attendance - EDU Track</title>
-<link rel="stylesheet" href="../../../../CSS/main.css">
-<link rel="stylesheet" href="../../../../CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+<link rel="stylesheet" href="/static/CSS/dashboards.css">
 
 <style>
 body.attendance .main-content { 
@@ -28,12 +28,12 @@ input, select { padding: 6px; border-radius: 8px; border:1px solid #ccc; }
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="logo-section">
-      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
+      <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
       <h2>EDU Track</h2>
     </div>
-    <script src="../../../../JS/dashboard.js" defer></script>
-
-// Store attendance by course + date
+    <script src="/static/JS/dashboard.js" defer></script>
+    <script>
+  // Store attendance by course + date
 const attendanceData = {};
 
 function loadAttendance() {

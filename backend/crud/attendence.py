@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Attendance
-from schemas import AttendanceCreate
+from backend.models import Attendance
+from backend.schemas import AttendanceCreate
 
 def create_attendance(db: Session, data: AttendanceCreate):
     obj = Attendance(**data.dict())

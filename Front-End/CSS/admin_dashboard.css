@@ -1,0 +1,9 @@
+/* Extracted minimal admin dashboard layout overrides */
+.page-layout { display: flex; align-items: stretch; gap: 1rem; min-height: 100vh; }
+.page-layout .sidebar { flex: 0 0 260px; }
+.page-layout .main-content { flex: 1 1 auto; min-width: 0; padding: 1.5rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 12px; }
+.stat-card { background: var(--white); padding: 14px; border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.04); }
+.stat-value { font-size: 1.5rem; font-weight: 700; }
+.system-alerts .notification-list { list-style: none; padding: 0; margin: 0; }
+.system-alerts .notification-list li { padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.04); }

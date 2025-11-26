@@ -105,3 +105,79 @@ The system will expose RESTful APIs to handle communication between the frontend
 
 ## 📄 License
 This project is created as part of an academic requirement at **National University of Computer and Emerging Sciences (FAST-NUCES), Lahore**.  
+
+---
+
+**Developer Setup**
+
+- **Copy env template and fill credentials** (backend):
+
+```powershell
+cd .\backend
+copy .env.template .env
+# Edit backend\.env and set DB_USER, DB_PASSWORD, DB_HOST, DB_NAME
+```
+
+- **Create virtualenv and install dependencies**:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate
+pip install -r requirements.txt
+```
+
+- **(Optional) Import DB schema** — this will run `SQL/EDU-Track.sql` against the configured database. It is interactive and will ask before overwriting existing tables:
+
+```powershell
+python ..\backend\sync_db.py
+```
+
+- **Run the API server**:
+
+```powershell
+cd ..\backend
+.\.venv\Scripts\Activate
+uvicorn backend.main:app --reload --port 8000
+```
+
+- **Run smoke tests** (verifies core endpoints):
+
+```powershell
+python ..\scripts\smoke_test.py http://localhost:8000
+```
+
+If you get database connection errors, check `backend/.env` values and ensure MySQL is running and reachable. The server prints a startup message indicating DB connectivity status.
+
+---
+
+**Developer Setup**
+
+ - **1. Prepare environment file**: copy `backend/.env.template` to `backend/.env` and fill in your MySQL credentials.
+
+ - **2. Install backend dependencies (recommended in a virtualenv)**:
+
+   ```powershell
+   cd backend
+   python -m venv .venv; .\.venv\Scripts\Activate; pip install -r requirements.txt
+   ```
+
+ - **3. (Optional) Sync database schema**:
+
+   ```powershell
+   # from repository root
+   python backend/sync_db.py
+   ```
+
+ - **4. Run the API server**:
+
+   ```powershell
+   # from repository root
+   cd backend
+   .\.venv\Scripts\Activate
+   uvicorn backend.main:app --reload --port 8000
+   ```
+
+ - **5. Open the frontend**: in your browser go to `http://localhost:8000/` which serves the `Front-End` static files via the API server.
+
+
+

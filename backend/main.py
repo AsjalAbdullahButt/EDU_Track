@@ -36,6 +36,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
+from dotenv import load_dotenv
 
 # Import database helpers and SQLAlchemy Base/engine
 from backend.database import engine, Base
@@ -57,6 +58,9 @@ from backend.routers import auth as auth_router
 
 app = FastAPI(title="EDU-Track API")
 
+# Load backend/.env if present so DB settings are available
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -67,6 +71,18 @@ app.add_middleware(
 
 # Create DB tables (if they don't exist)
 Base.metadata.create_all(bind=engine)
+
+
+@app.on_event("startup")
+def check_database_connection():
+    try:
+        # Try a short-lived connection to validate DB credentials and reachability
+        with engine.connect() as conn:
+            conn.execute("SELECT 1")
+        print("[startup] Database connection OK")
+    except Exception as e:
+        # Don't crash the server, but log a clear message for the developer
+        print("[startup] WARNING: Could not connect to database:", e)
 
 # Mount frontend static HTML/CSS/JS
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

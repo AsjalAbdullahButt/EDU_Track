@@ -63,8 +63,37 @@ if (signupForm) {
       return res.json();
     })
     .then((data) => {
-      showAlert('Account created successfully! Redirecting to login...');
-      window.location.href = 'login.html';
+      // After successful registration, automatically log the user in
+      const loginPayload = { email: email, password: password };
+      fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginPayload)
+      })
+      .then(async (res) => {
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error(txt || 'Auto-login failed');
+        }
+        return res.json();
+      })
+      .then(session => {
+        // session contains { role, id, name }
+        // augment session with email for future convenience
+        session.email = email;
+        // Save session
+        localStorage.setItem('loggedInUser', JSON.stringify(session));
+        showAlert(`Welcome, ${session.name}! Redirecting to your dashboard...`);
+        if (session.role === 'student') window.location.href = '/pages/dashboard/dashboard_student.html';
+        else if (session.role === 'faculty') window.location.href = '/pages/dashboard/dashboard_faculty.html';
+        else if (session.role === 'admin') window.location.href = '/pages/dashboard/dashboard_admin.html';
+        else window.location.href = '/';
+      })
+      .catch((err) => {
+        console.error('Auto-login failed', err);
+        showAlert('Account created. Please login manually.');
+        window.location.href = 'login.html';
+      });
     })
     .catch((err) => {
       console.error('Signup error', err);
@@ -98,12 +127,16 @@ if (loginForm) {
       return res.json();
     })
     .then(data => {
-      // Save minimal session info
+      // Save minimal session info and include any stored avatar
+      try {
+        const avatar = localStorage.getItem(`userAvatar_${data.role}_${data.id}`);
+        if (avatar) data.photo = avatar;
+      } catch (e) { /* ignore */ }
       localStorage.setItem('loggedInUser', JSON.stringify(data));
       showAlert(`Welcome back, ${data.name}!`);
-      if (data.role === 'student') window.location.href = 'dashboard/student/dashboard_student.html';
-      else if (data.role === 'faculty') window.location.href = 'dashboard/faculty/dashboard_faculty.html';
-      else if (data.role === 'admin') window.location.href = 'dashboard/admin/dashboard_admin.html';
+      if (data.role === 'student') window.location.href = '/pages/dashboard/dashboard_student.html';
+      else if (data.role === 'faculty') window.location.href = '/pages/dashboard/dashboard_faculty.html';
+      else if (data.role === 'admin') window.location.href = '/pages/dashboard/dashboard_admin.html';
       else window.location.href = '/';
     })
     .catch(err => {
@@ -115,7 +148,7 @@ if (loginForm) {
       if (existingUser) {
         localStorage.setItem("loggedInUser", JSON.stringify(existingUser));
         showAlert(`Welcome back, ${existingUser.name}! (offline)`);
-        window.location.href = "dashboard/student/dashboard_student.html";
+        window.location.href = "/pages/dashboard/dashboard_student.html";
       } else {
         showAlert("Invalid credentials. Please try again.");
       }

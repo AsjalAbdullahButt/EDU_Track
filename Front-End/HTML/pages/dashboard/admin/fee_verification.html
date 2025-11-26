@@ -5,21 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDU Track - Fee Verification</title>
 
-  <link rel="stylesheet" href="../../../../CSS/main.css">
-  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
-
-  <!-- Added spacing for table columns -->
-  <style>
-    .user-table th,
-    .user-table td {
-      padding: 14px 24px; /* Increase spacing between all fields */
-      text-align: left;
-    }
-
-    .user-table th {
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/fee_verification.css">
 
 </head>
 
@@ -30,20 +18,20 @@
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="logo-section">
-      <img src="../../../../Images/EDU-Logo.png" class="sidebar-logo">
+      <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
       <h2>EDU Track</h2>
     </div>
 
-<nav class="nav-links">
-        <a href="dashboard_admin.html" class="nav-link active">Dashboard</a>
-        <a href="admin_user_management.html" class="nav-link">User Management</a>
-        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
-        <a href="fee_record" class="nav-link">Fee Records</a>
-        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
-        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
-        <a href="admin_security.html" class="nav-link">Security Settings</a>
-        <a href="admin_record.html" class="nav-link">Records</a>
-      </nav>
+    <nav class="nav-links">
+      <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+      <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+      <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+      <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+      <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link active">Fee Verification</a>
+      <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+      <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+      <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
+    </nav>
 
     <div class="logout-section">
       <button class="btn secondary" onclick="logout()">Logout</button>
@@ -89,7 +77,7 @@
   <div class="modal-content">
     <h3>Receipt Preview</h3>
     <img id="receiptImage" src="" alt="Receipt">
-    <textarea id="remarks" placeholder="Add remarks (optional)" style="width:100%; padding:10px; margin-bottom:10px;"></textarea>
+    <textarea id="remarks" placeholder="Add remarks (optional)"></textarea>
 
     <div class="modal-buttons">
       <button class="btn primary" onclick="approveFee()">Approve</button>
@@ -99,71 +87,7 @@
   </div>
 </div>
 
-<script>
-// Sample fee verification data
-const feeSubmissions = [
-  { id: 1, name: "John Doe", amount: "PKR 35,000", method: "Bank Transfer", receipt: "../../../../Images/sample_receipt1.png", status: "Pending" },
-  { id: 2, name: "Ayesha Khan", amount: "PKR 35,000", method: "JazzCash", receipt: "../../../../Images/sample_receipt2.png", status: "Pending" }
-];
-
-let activeStudent = null;
-
-// Populate table
-function loadFeeSubmissions() {
-  const list = document.getElementById("feeVerificationList");
-  list.innerHTML = "";
-
-  feeSubmissions.forEach((s, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${s.id}</td>
-      <td>${s.name}</td>
-      <td>${s.amount}</td>
-      <td>${s.method}</td>
-      <td><button onclick="openReceipt(${index})">View</button></td>
-      <td>${s.status}</td>
-      <td>
-        <button onclick="openReceipt(${index})" class="btn primary">Verify</button>
-      </td>
-    `;
-    list.appendChild(row);
-  });
-}
-
-// Open modal
-function openReceipt(index) {
-  activeStudent = index;
-  document.getElementById("receiptImage").src = feeSubmissions[index].receipt;
-  document.getElementById("receiptModal").style.display = "grid";
-}
-
-// Close modal
-function closeModal() {
-  document.getElementById("receiptModal").style.display = "none";
-}
-
-// Approve
-function approveFee() {
-  const remarks = document.getElementById("remarks").value;
-  feeSubmissions[activeStudent].status = "Approved";
-  alert("Payment approved.\nRemarks: " + remarks);
-  closeModal();
-  loadFeeSubmissions();
-}
-
-// Reject
-function rejectFee() {
-  const remarks = document.getElementById("remarks").value;
-  feeSubmissions[activeStudent].status = "Rejected";
-  alert("Payment rejected.\nRemarks: " + remarks);
-  closeModal();
-  loadFeeSubmissions();
-}
-
-window.onload = loadFeeSubmissions;
-</script>
-
-<!-- Use centralized dashboard script to wire to backend -->
-<script src="../../../../JS/dashboard.js" defer></script>
+<script src="/static/JS/fee_verification.js" defer></script>
+<script src="/static/JS/dashboard.js" defer></script>
 </body>
 </html>

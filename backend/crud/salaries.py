@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Salary
-from schemas import NotificationResponse
+from backend.models import Salary
+from backend.schemas import NotificationResponse
 from datetime import datetime
 from fastapi import HTTPException
 

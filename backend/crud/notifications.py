@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from models import Notifications
-from schemas import NotificationCreate
+from backend.models import Notifications
+from backend.schemas import NotificationCreate
 
 def create_notification(db: Session, data: NotificationCreate):
     obj = Notifications(**data.dict())
