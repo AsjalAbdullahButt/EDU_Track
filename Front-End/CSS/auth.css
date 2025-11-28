@@ -75,8 +75,34 @@
 .field-help { color: rgba(11,11,11,0.55); }
 
 .field-help {
-    font-size: 0.85rem;
-    height: 18px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: auto;
+}
+
+/* Align action buttons (primary + secondary) horizontally */
+.auth-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 8px;
+}
+
+/* Make the secondary action in auth forms visually consistent with primary */
+.auth-actions .btn.secondary {
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* Make both action buttons equal width and center their labels */
+.auth-actions .btn {
+    flex: 1 1 0;
+    min-width: 0; /* allow flexing in narrow containers */
+    text-align: center;
 }
 
 /* Right Panel: Welcome / Branding */
@@ -97,6 +123,15 @@
     font-size: 1.6rem;
     font-weight: 700;
 }
+
+/* Ensure text in the dark welcome panel is visible (override global h2/p colors)
+   without using !important to keep specificity manageable */
+.auth-welcome h2,
+.auth-welcome p {
+    color: var(--white);
+}
+
+.auth-welcome p { opacity: 0.95; }
 
 .app-logo {
     width: 120px;

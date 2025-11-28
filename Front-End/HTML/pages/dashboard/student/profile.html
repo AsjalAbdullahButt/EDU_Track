@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EDU Track - Your Profile</title>
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+</head>
+<body class="dashboard profile-page">
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <!-- include same sidebar used elsewhere -->
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>Your Profile</h1>
+          <p>Keep your profile up to date. Changes will be verified by the administration.</p>
+          <div id="verificationStatus" class="status-badge status-unverified" style="margin-top:8px; display:inline-block;">Unverified</div>
+        </div>
+        <!-- dashboard.js appends avatar / upload / profile buttons directly to the header -->
+      </header>
+
+      <section class="section">
+        <div class="card">
+          <form id="profileForm" class="form-grid">
+            <div class="form-row">
+              <label>Full Name</label>
+              <input type="text" id="full_name" name="full_name" disabled>
+            </div>
+
+            <div class="form-row">
+              <label>Email</label>
+              <input type="email" id="email" name="email" disabled>
+            </div>
+
+            <div class="form-row">
+              <label>Gender</label>
+              <select id="gender" name="gender">
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label>Date of Birth</label>
+              <input type="date" id="dob" name="dob">
+            </div>
+
+            <div class="form-row">
+              <label>Department</label>
+              <input type="text" id="department" name="department">
+            </div>
+
+            <div class="form-row">
+              <label>Phone</label>
+              <input type="text" id="contact" name="contact">
+            </div>
+
+            <div class="form-row full-width">
+              <label>Address</label>
+              <textarea id="address" name="address" rows="3"></textarea>
+            </div>
+
+            <div class="form-row full-width">
+              <div class="note">After you submit, administration will review your data. Once verified it will appear on your dashboard.</div>
+            </div>
+
+            <div class="form-row full-width form-actions">
+              <button type="submit" class="btn primary">Submit for Verification</button>
+              <button type="button" id="cancelBtn" class="btn secondary">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/student/profile.js" defer></script>
+  <script>
+    // Ensure only students access this page
+    protectDashboard('student');
+  </script>
+</body>
+</html>

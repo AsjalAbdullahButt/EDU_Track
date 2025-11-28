@@ -15,8 +15,12 @@ CREATE TABLE Student (
     semester INT,
     contact VARCHAR(20),
     address VARCHAR(255),
+    role VARCHAR(20) DEFAULT 'student',
+    profile_verified BOOLEAN DEFAULT FALSE,
+    verification_status VARCHAR(20) DEFAULT 'unverified',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email (email),
+    INDEX idx_role (role),
     INDEX idx_department (department),
     INDEX idx_semester (semester)
 );
@@ -31,8 +35,10 @@ CREATE TABLE Faculty (
     password VARCHAR(255) NOT NULL,
     department VARCHAR(50),
     contact VARCHAR(20),
+    role VARCHAR(20) DEFAULT 'faculty',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_email (email),
+    INDEX idx_role (role),
     INDEX idx_department (department)
 );
 
@@ -44,8 +50,10 @@ CREATE TABLE Admin (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) DEFAULT 'admin',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_email (email)
+    INDEX idx_email (email),
+    INDEX idx_role (role)
 );
 
 -- -------------------------------------------------------------------

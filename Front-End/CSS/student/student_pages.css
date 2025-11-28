@@ -57,3 +57,85 @@ body {
 }
 
 /* (content truncated for brevity) */
+
+/* -----------------------------
+   Profile Page Styling
+   ----------------------------- */
+.profile-page .card {
+  max-width: 920px;
+  margin: 18px auto;
+  padding: 22px;
+  border-radius: 12px;
+  background: var(--white);
+  box-shadow: var(--soft-shadow);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+  align-items: start;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row.full-width { grid-column: 1 / -1; }
+
+.form-row label {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--midnight);
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  border: 1px solid rgba(11,11,11,0.08);
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--whitesmoke);
+  font-size: 0.98rem;
+}
+
+.form-row textarea { resize: vertical; }
+
+.form-row .note { color: var(--gray); font-size: 0.95rem; }
+
+.form-row button { min-width: 160px; }
+
+/* Align action buttons and add spacing */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Make the secondary button in profile forms visible on white cards */
+.profile-page .form-actions .btn.secondary {
+  background: var(--whitesmoke);
+  color: var(--midnight);
+  border: 1px solid rgba(0,31,63,0.08);
+  padding: 10px 14px;
+}
+
+/* Header status badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--white);
+}
+.status-unverified { background: #7f8c8d; }
+.status-pending { background: #f39c12; }
+.status-verified { background: #27ae60; }
+.status-rejected { background: #e74c3c; }
+
+@media (max-width: 900px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .profile-page .card { padding: 16px; margin: 12px; }
+}

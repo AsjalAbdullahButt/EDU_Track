@@ -23,7 +23,12 @@ def login(payload: dict, db: Session = Depends(get_db)):
         Student.password == password
     ).first()
     if user:
-        return {"role": "student", "id": user.student_id, "name": user.full_name}
+        return {
+            "role": user.role,
+            "id": user.student_id,
+            "name": user.full_name,
+            "email": user.email
+        }
 
     # Try faculty (match email OR contact OR name)
     faculty = db.query(Faculty).filter(
@@ -33,7 +38,12 @@ def login(payload: dict, db: Session = Depends(get_db)):
         Faculty.password == password
     ).first()
     if faculty:
-        return {"role": "faculty", "id": faculty.faculty_id, "name": faculty.name}
+        return {
+            "role": faculty.role,
+            "id": faculty.faculty_id,
+            "name": faculty.name,
+            "email": faculty.email
+        }
 
     # Try admin (match email OR name)
     admin = db.query(Admin).filter(
@@ -42,6 +52,11 @@ def login(payload: dict, db: Session = Depends(get_db)):
         Admin.password == password
     ).first()
     if admin:
-        return {"role": "admin", "id": admin.admin_id, "name": admin.name}
+        return {
+            "role": admin.role,
+            "id": admin.admin_id,
+            "name": admin.name,
+            "email": admin.email
+        }
 
     raise HTTPException(status_code=401, detail="Invalid credentials")

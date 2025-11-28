@@ -150,6 +150,16 @@ p { margin-bottom: 12px; color: var(--dark-gray); }
     transform: none;
 }
 
+/* Dashboard header: ensure upload photo button has high contrast */
+.dashboard-header .user-photo .btn.secondary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: var(--white);
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-sm);
+}
+
 /* ===== ANIMATIONS ===== */
 .fade-in {
     animation: fadeInUp 0.5s ease both;

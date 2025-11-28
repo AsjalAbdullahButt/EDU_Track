@@ -1,6 +1,6 @@
 from sqlalchemy import (
     Column, Integer, String, Date, DateTime,
-    DECIMAL, ForeignKey
+    DECIMAL, ForeignKey, Boolean
 )
 from sqlalchemy.orm import relationship
 from backend.database import Base
@@ -23,6 +23,9 @@ class Student(Base):
     semester = Column(Integer)
     contact = Column(String(20))
     address = Column(String(255))
+    role = Column(String(20), default="student")
+    profile_verified = Column(Boolean, default=False)
+    verification_status = Column(String(20), default="unverified")
 
     # Relationships
     enrollments = relationship("Enrollment", back_populates="student")
@@ -44,6 +47,7 @@ class Faculty(Base):
     password = Column(String(255), nullable=False)
     department = Column(String(50))
     contact = Column(String(20))
+    role = Column(String(20), default="faculty")
 
     courses = relationship("Course", back_populates="faculty")
     feedback = relationship("Feedback", back_populates="faculty")
@@ -59,6 +63,7 @@ class Admin(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
+    role = Column(String(20), default="admin")
 
 
 # -----------------------------------------------------------

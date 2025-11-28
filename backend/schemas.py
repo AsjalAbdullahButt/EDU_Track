@@ -15,6 +15,7 @@ class StudentBase(BaseModel):
     semester: int | None = None
     contact: str | None = None
     address: str | None = None
+    role: str = "student"
 
 
 class StudentCreate(StudentBase):
@@ -23,6 +24,8 @@ class StudentCreate(StudentBase):
 
 class StudentResponse(StudentBase):
     student_id: int
+    profile_verified: bool | None = False
+    verification_status: str | None = "unverified"
 
     class Config:
         orm_mode = True
@@ -37,6 +40,7 @@ class FacultyBase(BaseModel):
     password: str
     department: str | None = None
     contact: str | None = None
+    role: str = "faculty"
 
 
 class FacultyCreate(FacultyBase):
@@ -57,6 +61,7 @@ class AdminBase(BaseModel):
     name: str
     email: str
     password: str
+    role: str = "admin"
 
 
 class AdminCreate(AdminBase):

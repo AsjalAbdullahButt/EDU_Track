@@ -34,6 +34,22 @@ document.addEventListener("DOMContentLoaded", () => {
       uploadBtn.className = 'btn secondary';
       uploadBtn.textContent = 'Upload Photo';
 
+      // Add 'Your Profile' button for students next to upload button
+      let profileBtn = null;
+      try {
+        if (user && user.role === 'student') {
+          profileBtn = document.createElement('button');
+          profileBtn.className = 'btn secondary';
+          profileBtn.id = 'yourProfileBtn';
+          profileBtn.textContent = 'Your Profile';
+          profileBtn.addEventListener('click', () => {
+            window.location.href = '/pages/dashboard/student/profile.html';
+          });
+        }
+      } catch (err) {
+        console.warn('Could not create profile button', err);
+      }
+
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/*';
@@ -65,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       photoWrap.appendChild(img);
+      if (profileBtn) photoWrap.appendChild(profileBtn);
       photoWrap.appendChild(uploadBtn);
       photoWrap.appendChild(input);
 
