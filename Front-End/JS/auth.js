@@ -11,9 +11,61 @@ const signupForm = document.querySelector("#registerForm") || document.querySele
 const users = JSON.parse(localStorage.getItem("users")) || [];
 
 // Utility to show alerts nicely
-function showAlert(message) {
-  alert(message);
+function _createToastContainer(){
+  let c = document.getElementById('globalToastContainer');
+  if (c) return c;
+  c = document.createElement('div');
+  c.id = 'globalToastContainer';
+  c.style.position = 'fixed';
+  c.style.right = '18px';
+  c.style.top = '18px';
+  c.style.zIndex = 99999;
+  c.style.display = 'flex';
+  c.style.flexDirection = 'column';
+  c.style.gap = '8px';
+  document.body.appendChild(c);
+  return c;
 }
+
+function showToast(message, type='info', timeout=4000){
+  try{
+    const container = _createToastContainer();
+    const t = document.createElement('div');
+    t.className = 'toast toast-' + type;
+    t.textContent = message;
+    t.style.padding = '10px 14px';
+    t.style.borderRadius = '8px';
+    t.style.color = '#fff';
+    t.style.minWidth = '200px';
+    t.style.boxShadow = '0 6px 18px rgba(0,0,0,0.12)';
+    t.style.fontSize = '14px';
+    t.style.opacity = '0';
+    if (type === 'success') t.style.background = '#27ae60';
+    else if (type === 'error') t.style.background = '#e74c3c';
+    else if (type === 'warning') t.style.background = '#f39c12';
+    else t.style.background = '#34495e';
+    container.appendChild(t);
+    // fade in
+    requestAnimationFrame(()=>{ t.style.transition = 'opacity 220ms ease, transform 220ms ease'; t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+    const to = setTimeout(()=>{
+      t.style.opacity = '0';
+      setTimeout(()=> t.remove(), 240);
+    }, timeout);
+    t.addEventListener('click', ()=>{ clearTimeout(to); t.remove(); });
+  }catch(e){
+    console.log(message);
+  }
+}
+
+// Backwards-compatible showAlert used throughout repo
+function showAlert(message, type='info'){
+  if (window.showToast) return window.showToast(message, type);
+  return showToast(message, type);
+}
+
+// expose globally
+window.showToast = showToast;
+window.showAlert = showAlert;
 
 // ---- SIGNUP HANDLER ----
 if (signupForm) {

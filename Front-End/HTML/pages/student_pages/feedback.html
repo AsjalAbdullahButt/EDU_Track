@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDU Track - Feedback</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
   <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
@@ -75,28 +76,83 @@
 
       <!-- Quick Actions -->
       <section class="section">
-        <h2>Quick Actions</h2>
         <div class="actions-grid">
-          <button class="action-btn" onclick="location.href='feedback_pending.html'">
-            <span class="action-icon">📋</span>
-            <span>Submit Pending Feedback</span>
-            <span class="action-badge">3 pending</span>
+          <button class="action-card" onclick="location.href='feedback_pending.html'">
+            <div class="card-left">📋</div>
+            <div class="card-body">
+              <div class="card-title">Submit Pending Feedback</div>
+              <div class="card-sub">You have <strong>3</strong> pending feedbacks</div>
+            </div>
+            <div class="card-action">→</div>
           </button>
-          <button class="action-btn" onclick="location.href='feedback_submitted.html'">
-            <span class="action-icon">📊</span>
-            <span>View Submitted Feedback</span>
-            <span class="action-badge">12 submitted</span>
+
+          <button class="action-card" onclick="location.href='feedback_submitted.html'">
+            <div class="card-left">📊</div>
+            <div class="card-body">
+              <div class="card-title">View Submitted Feedback</div>
+              <div class="card-sub">Total <strong>12</strong> submissions</div>
+            </div>
+            <div class="card-action">→</div>
           </button>
-          <button class="action-btn" onclick="startNewFeedback()">
-            <span class="action-icon">✨</span>
-            <span>New Feedback</span>
-            <span class="action-subtext">Any course</span>
+
+          <button class="action-card primary" onclick="startNewFeedback()">
+            <div class="card-left">✨</div>
+            <div class="card-body">
+              <div class="card-title">Start New Feedback</div>
+              <div class="card-sub">Share your thoughts about a course</div>
+            </div>
+            <div class="card-action">+</div>
           </button>
-          <button class="action-btn" onclick="downloadFeedbackHistory()">
-            <span class="action-icon">📥</span>
-            <span>Download History</span>
-            <span class="action-subtext">PDF Report</span>
+
+          <button class="action-card" onclick="downloadFeedbackHistory()">
+            <div class="card-left">📥</div>
+            <div class="card-body">
+              <div class="card-title">Download History</div>
+              <div class="card-sub">Export a PDF report</div>
+            </div>
+            <div class="card-action">↓</div>
           </button>
+        </div>
+
+        <!-- New Feedback Modal (moved here for structure) -->
+        <div id="newFeedbackModal" class="modal" aria-hidden="true">
+          <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+              <h3 id="modalTitle">Start New Feedback</h3>
+              <button class="close" aria-label="Close" onclick="closeNewFeedbackModal()">&times;</button>
+            </div>
+            <form id="newFeedbackForm" class="modal-body">
+              <label for="courseSelect">Course</label>
+              <select id="courseSelect" name="course" required>
+                <option value="">Select a course...</option>
+                <option value="CS301">CS301 - Database Systems</option>
+                <option value="CS302">CS302 - Operating Systems</option>
+                <option value="CS303">CS303 - Artificial Intelligence</option>
+              </select>
+
+              <label>Rating</label>
+              <div class="rating" id="ratingStars" role="radiogroup" aria-label="Rating" aria-hidden="false">
+                <button type="button" class="star" data-value="5" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="4" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="3" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="2" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="1" role="radio" aria-checked="false">★</button>
+              </div>
+              <input type="hidden" id="ratingValue" name="ratingValue" value="0">
+              <div id="feedbackLive" class="sr-only" aria-live="polite"></div>
+
+              <label for="feedbackText">Feedback</label>
+              <textarea id="feedbackText" name="message" rows="5" placeholder="Write your feedback..." required></textarea>
+
+              <div class="modal-footer">
+                <label class="inline"><input type="checkbox" id="anonymousCheck"> Submit anonymously</label>
+                <div class="modal-actions">
+                  <button type="button" class="btn secondary" onclick="closeNewFeedbackModal()">Cancel</button>
+                  <button type="submit" class="btn primary">Submit Feedback</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </section>
 
@@ -192,40 +248,11 @@
     </main>
   </div>
 
-  <!-- New Feedback Modal -->
-  <div id="newFeedbackModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Start New Feedback</h3>
-        <span class="close" onclick="closeNewFeedbackModal()">&times;</span>
-      </div>
-      <div class="modal-body">
-        <p>Select a course to provide feedback:</p>
-        <div class="modal-courses">
-          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS301'">
-            <span class="course-code">CS301</span>
-            <span class="course-name">Database Systems</span>
-          </div>
-          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS302'">
-            <span class="course-code">CS302</span>
-            <span class="course-name">Operating Systems</span>
-          </div>
-          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS303'">
-            <span class="course-code">CS303</span>
-            <span class="course-name">Artificial Intelligence</span>
-          </div>
-          <div class="modal-course-item" onclick="location.href='feedback_form.html?course=CS304'">
-            <span class="course-code">CS304</span>
-            <span class="course-name">Software Engineering</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Duplicate legacy modal removed to avoid inline pastel section (kept updated modal inside Quick Actions) -->
 
+  <script src="/static/JS/inject-favicon.js"></script>
   <script src="/static/JS/auth.js"></script>
-  <script src="../../../JS/student-api.js"></script>
-  <script src="../../../JS/dashboard.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
   <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/student/feedback.js"></script>
   <script>

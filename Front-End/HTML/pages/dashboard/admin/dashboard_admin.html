@@ -85,7 +85,28 @@
 
       <!-- New: Fee Verification Section -->
       <section class="section fee-verification">
+        <h2 class="section-title">Fee Verification</h2>
+        <div class="card fee-card">
+          <div class="card-body">
+            <table class="data-table" id="feeVerificationTable">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Amount</th>
+                  <th>Submitted On</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Filled by admin_dashboard.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
   <!-- JS -->
+  <script src="/static/JS/inject-favicon.js"></script>
+  <script src="/static/JS/auth.js"></script>
   <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/admin_dashboard.js" defer></script>
   <script src="/static/JS/dashboard.js" defer></script>

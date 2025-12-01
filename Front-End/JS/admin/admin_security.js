@@ -48,15 +48,15 @@ function populateLogs() {
 }
 
 function toggle2FA(id, checkbox) {
-  alert(`2FA toggled for user ${id}`);
+  showAlert(`2FA toggled for user ${id}`, 'info');
 }
 
 function editUser(id) {
-  alert(`Edit user ${id}`);
+  showAlert(`Edit user ${id}`, 'info');
 }
 
 function unlockUser(id) {
-  alert(`Unlocked user ${id}`);
+  showAlert(`Unlocked user ${id}`, 'success');
 }
 
 window.addEventListener('load', () => {

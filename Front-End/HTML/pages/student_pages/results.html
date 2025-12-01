@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDU Track - Results</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
   <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
@@ -38,25 +39,44 @@
         <p>Check your academic performance for each semester</p>
       </header>
 
-      <section class="section">
-        <h2>Fall 2024 Results</h2>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Course Code</th>
-              <th>Course Title</th>
-              <th>Credit Hours</th>
-              <th>Grade</th>
-              <th>GPA Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>CS301</td><td>Database Systems</td><td>3</td><td>A</td><td>4.0</td></tr>
-            <tr><td>CS302</td><td>Operating Systems</td><td>3</td><td>B+</td><td>3.5</td></tr>
-            <tr><td>MT205</td><td>Linear Algebra</td><td>3</td><td>A-</td><td>3.7</td></tr>
-          </tbody>
-        </table>
-        <p class="text-small" style="margin-top:10px;">Semester GPA: <strong>3.73</strong></p>
+      <section class="section results-summary" style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;">
+        <div class="semester-card">
+          <div class="semester-header">
+            <h3>Fall 2024</h3>
+            <p class="text-small muted">Semester GPA</p>
+          </div>
+
+          <div class="gpa-widget">
+            <svg class="gpa-ring" viewBox="0 0 120 120" width="120" height="120" aria-hidden="true">
+              <defs>
+                <linearGradient id="gpaGrad" x1="0%" x2="100%">
+                  <stop offset="0%" stop-color="#00c6ff" />
+                  <stop offset="100%" stop-color="#0072ff" />
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="60" cy="60" r="52" stroke-width="12" fill="none"></circle>
+              <circle class="ring-progress" cx="60" cy="60" r="52" stroke-width="12" fill="none" stroke="url(#gpaGrad)" stroke-linecap="round" transform="rotate(-90 60 60)"></circle>
+              <text class="gpa-value" x="60" y="66" text-anchor="middle">—</text>
+            </svg>
+          </div>
+
+          <div class="semester-details">
+            <table class="data-table compact" id="semesterTable">
+              <thead>
+                <tr><th>Course</th><th>Credits</th><th>Grade</th><th>Points</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>CS301</td><td>3</td><td>A</td><td>4.0</td></tr>
+                <tr><td>CS302</td><td>3</td><td>B+</td><td>3.5</td></tr>
+                <tr><td>MT205</td><td>3</td><td>A-</td><td>3.7</td></tr>
+              </tbody>
+            </table>
+            <div style="display:flex;gap:12px;margin-top:12px;align-items:center;">
+              <button class="btn primary" id="downloadTranscript">Transcript</button>
+              <p class="text-small muted" id="semesterGpaText">Semester GPA: <strong id="semesterGpa">3.73</strong></p>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>
@@ -65,6 +85,7 @@
   <script src="/static/JS/auth.js"></script>
   <script src="/static/JS/student-api.js"></script>
   <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/results.js"></script>
   <script>
     protectDashboard('student');
   </script>

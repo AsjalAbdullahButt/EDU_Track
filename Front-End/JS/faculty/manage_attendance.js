@@ -40,7 +40,7 @@ function toggleAttendance(course, date, idx, btn) {
 function markAllAbsent() {
   const date = document.getElementById('attendanceDate').value;
   const course = document.getElementById('courseSelect').value;
-  if(!date) return alert('Select a date first');
+  if(!date) return showAlert('Select a date first','warning');
   attendanceData[course][date].forEach(s=>s.status='Absent');
   loadAttendance();
 }

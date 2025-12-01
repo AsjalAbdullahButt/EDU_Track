@@ -25,11 +25,11 @@ function populateCourseTable() {
 }
 
 function approveCourse(id) { 
-  alert('Approved '+id); 
+  showAlert('Approved '+id, 'success'); 
 }
 
 function rejectCourse(id) { 
-  alert('Rejected '+id); 
+  showAlert('Rejected '+id, 'warning'); 
 }
 
 window.addEventListener('load', populateCourseTable);

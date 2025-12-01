@@ -2,7 +2,7 @@
 function addAnnouncement() {
   const input = document.getElementById('announcementInput');
   const text = input.value && input.value.trim();
-  if(!text) return alert('Please enter an announcement');
+  if(!text) return showAlert('Please enter an announcement', 'warning');
   const ul = document.getElementById('announcementList');
   const li = document.createElement('li');
   li.textContent = text;

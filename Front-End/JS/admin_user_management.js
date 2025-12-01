@@ -1,114 +1,195 @@
-// Extracted from admin_user_management.html
-async function fetchJSON(path, opts) {
-  const res = await fetch(path, opts);
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
+// Admin User Management - Dynamic data loading with filter tabs
+// Fetches students, faculty, and admins from backend with no hardcoding
+
+let allUsers = { students: [], faculty: [], admin: [] };
+let currentFilter = 'students';
+let pendingAction = null;
+
+async function fetchJson(path, opts = {}){
+  try{
+    const res = await fetch(path, opts);
+    if (!res.ok) throw new Error('Network error');
+    return await res.json();
+  }catch(e){
+    console.error('fetchJson error', path, e);
+    if (window.showToast) window.showToast('Failed to load: ' + path, 'error');
+    return null;
+  }
 }
 
-async function loadUsers() {
-  const userList = document.getElementById('userList');
-  userList.innerHTML = '<tr><td colspan="5">Loading...</td></tr>';
-  try {
-    const [students, faculties] = await Promise.all([
-      fetch('/students').then(r=>r.ok?r.json():[]).catch(()=>[]),
-      fetch('/faculties').then(r=>r.ok?r.json():[]).catch(()=>[])
-    ]);
+async function loadAllUsers(){
+  const role = JSON.parse(localStorage.getItem('loggedInUser') || '{}').role || '';
+  const adminHeaders = { 'Content-Type': 'application/json' };
+  if (role) adminHeaders['x-user-role'] = role;
 
-    const combined = [];
-    students.forEach(s => combined.push({ id: s.student_id, name: s.full_name, email: s.email, role: 'Student' }));
-    faculties.forEach(f => combined.push({ id: f.faculty_id, name: f.name, email: f.email, role: 'Faculty' }));
+  // Fetch in parallel
+  const [students, faculty, admins] = await Promise.all([
+    fetchJson('/students'),
+    fetchJson('/faculty'),
+    fetchJson('/admins', { headers: adminHeaders })
+  ]);
 
-    if (combined.length === 0) {
-      userList.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
-      return;
-    }
+  // Transform and store
+  allUsers.students = Array.isArray(students) ? students.map(s => ({
+    id: s.student_id,
+    name: s.full_name,
+    email: s.email,
+    role: 'Student',
+    original: s
+  })) : [];
 
-    userList.innerHTML = '';
-    combined.forEach(user => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${user.id}</td>
-        <td>${user.name}</td>
-        <td>${user.email}</td>
-        <td>${user.role}</td>
-        <td>
-          <button class="btn" onclick="editUser('${user.role}', ${user.id})">Edit</button>
-          <button class="btn danger" onclick="deleteUser('${user.role}', ${user.id})">Delete</button>
-        </td>
-      `;
-      userList.appendChild(row);
+  allUsers.faculty = Array.isArray(faculty) ? faculty.map(f => ({
+    id: f.faculty_id,
+    name: f.name,
+    email: f.email,
+    role: 'Faculty',
+    original: f
+  })) : [];
+
+  allUsers.admin = Array.isArray(admins) ? admins.map(a => ({
+    id: a.admin_id,
+    name: a.name,
+    email: a.email,
+    role: 'Admin',
+    original: a
+  })) : [];
+
+  // Render current filter
+  renderUsers(currentFilter);
+}
+
+function filterUsers(filter){
+  currentFilter = filter;
+  // Update active tab
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filter);
+  });
+  renderUsers(filter);
+}
+
+function renderUsers(filter){
+  const tbody = document.getElementById('userList');
+  const users = allUsers[filter] || [];
+
+  if (users.length === 0){
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">No ${filter} found</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = '';
+  users.forEach(user => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${user.id}</td>
+      <td>${user.name}</td>
+      <td>${user.email}</td>
+      <td>${user.role}</td>
+      <td>
+        <button class="btn secondary" onclick="editUser('${filter}', ${user.id})">Edit</button>
+        <button class="btn danger" onclick="confirmDelete('${filter}', ${user.id}, '${user.name}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function editUser(filter, id){
+  const user = allUsers[filter].find(u => u.id === id);
+  if (!user) return;
+
+  // For now, show a simple prompt flow; can be enhanced to modal form
+  if (filter === 'students'){
+    const newName = prompt('Update name:', user.name);
+    if (newName === null) return;
+    const newEmail = prompt('Update email:', user.email);
+    if (newEmail === null) return;
+
+    // Call backend
+    fetch(`/students/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ full_name: newName, email: newEmail })
+    })
+    .then(async res => {
+      if (!res.ok) throw new Error('Update failed');
+      if (window.showToast) window.showToast('Student updated', 'success');
+      loadAllUsers();
+    })
+    .catch(err => {
+      console.error(err);
+      if (window.showToast) window.showToast('Failed to update student', 'error');
     });
-  } catch (err) {
-    userList.innerHTML = '<tr><td colspan="5">Failed to load users.</td></tr>';
-    console.error(err);
+  } else if (filter === 'faculty'){
+    const newName = prompt('Update name:', user.name);
+    if (newName === null) return;
+    const newEmail = prompt('Update email:', user.email);
+    if (newEmail === null) return;
+
+    fetch(`/faculty/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newName, email: newEmail })
+    })
+    .then(async res => {
+      if (!res.ok) throw new Error('Update failed');
+      if (window.showToast) window.showToast('Faculty updated', 'success');
+      loadAllUsers();
+    })
+    .catch(err => {
+      console.error(err);
+      if (window.showToast) window.showToast('Failed to update faculty', 'error');
+    });
   }
 }
 
-function promptFields(fields, defaults={}){
-  const out = {};
-  for (const f of fields){
-    const val = prompt(`Enter ${f}`, defaults[f] ?? '');
-    if (val === null) return null;
-    out[f] = val;
-  }
-  return out;
+function confirmDelete(filter, id, name){
+  pendingAction = { filter, id };
+  const modal = document.getElementById('confirmModal');
+  const msg = document.getElementById('confirmMessage');
+  if (msg) msg.textContent = `Are you sure you want to delete ${name}? This action cannot be undone.`;
+  if (modal) modal.setAttribute('aria-hidden', 'false');
 }
 
-async function addUser(){
-  const role = prompt('Role for new user (Student / Faculty)')?.trim();
-  if (!role) return;
-  if (role.toLowerCase() === 'student'){
-    const vals = promptFields(['full_name','email','password']);
-    if (!vals) return;
-    try{
-      await fetch('/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(vals)});
-      window.createNotification?.({ message: `New student registered: ${vals.full_name}`, recipient_id: null });
-      await loadUsers();
-    }catch(e){ console.error(e); window.showToast?.('Failed to add student','error'); }
-  } else if (role.toLowerCase() === 'faculty'){
-    const vals = promptFields(['name','email','password']);
-    if (!vals) return;
-    try{
-      await fetch('/faculties', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(vals)});
-      window.createNotification?.({ message: `New faculty added: ${vals.name}`, recipient_id: null });
-      await loadUsers();
-    }catch(e){ console.error(e); window.showToast?.('Failed to add faculty','error'); }
-  } else {
-    alert('Role must be Student or Faculty');
-  }
+function closeConfirmModal(){
+  const modal = document.getElementById('confirmModal');
+  if (modal) modal.setAttribute('aria-hidden', 'true');
+  pendingAction = null;
 }
 
-async function editUser(role, id){
-  try{
-    if (role === 'Student'){
-      const current = await fetchJSON(`/students/${id}`);
-      const vals = promptFields(['full_name','email','password'], current);
-      if (!vals) return;
-      await fetch(`/students/${id}`, { method: 'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(vals)});
-      window.showToast?.('Student updated','success');
-    } else {
-      const current = await fetchJSON(`/faculties/${id}`);
-      const vals = promptFields(['name','email','password'], current);
-      if (!vals) return;
-      await fetch(`/faculties/${id}`, { method: 'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(vals)});
-      window.showToast?.('Faculty updated','success');
-    }
-    await loadUsers();
-  }catch(e){ console.error(e); window.showToast?.('Update failed','error'); }
+function confirmAction(){
+  if (!pendingAction) return;
+  const { filter, id } = pendingAction;
+  closeConfirmModal();
+
+  // Call delete endpoint
+  let endpoint = '';
+  if (filter === 'students') endpoint = `/students/${id}`;
+  else if (filter === 'faculty') endpoint = `/faculty/${id}`;
+  else if (filter === 'admin') endpoint = `/admins/${id}`;
+
+  if (!endpoint) return;
+
+  fetch(endpoint, { method: 'DELETE' })
+    .then(async res => {
+      if (!res.ok) throw new Error('Delete failed');
+      if (window.showToast) window.showToast('User deleted successfully', 'success');
+      loadAllUsers();
+    })
+    .catch(err => {
+      console.error(err);
+      if (window.showToast) window.showToast('Failed to delete user', 'error');
+    });
 }
 
-async function deleteUser(role, id){
-  if (!confirm('Are you sure you want to delete this user?')) return;
-  try{
-    if (role === 'Student') await fetch(`/students/${id}`,{ method: 'DELETE' });
-    else await fetch(`/faculties/${id}`,{ method: 'DELETE' });
-    window.showToast?.('User deleted','info');
-    await loadUsers();
-  }catch(e){ console.error(e); window.showToast?.('Delete failed','error'); }
-}
+window.addEventListener('load', function(){
+  try {
+    protectDashboard && protectDashboard('admin');
+  } catch(e){ /* ignore */ }
+  loadAllUsers();
+});
 
-window.addUser = addUser;
+window.filterUsers = filterUsers;
 window.editUser = editUser;
-window.deleteUser = deleteUser;
-
-window.addEventListener('DOMContentLoaded', loadUsers);
+window.confirmDelete = confirmDelete;
+window.closeConfirmModal = closeConfirmModal;
+window.confirmAction = confirmAction;

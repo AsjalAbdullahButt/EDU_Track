@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Logout function (called by button)
 function logout() {
   localStorage.removeItem("loggedInUser");
-  alert("You have been logged out.");
+  showAlert("You have been logged out.", 'info');
   // Redirect to the login page relative to dashboard pages
   window.location.href = "../login.html";
 }
@@ -181,10 +181,10 @@ function updateFeeStatus(feeId, status) {
     })
     .then(r => {
       if (!r.ok) throw new Error('Failed');
-      alert('Fee status updated');
+      showAlert('Fee status updated', 'success');
       initAdminFeeVerification();
     })
-    .catch(err => { console.error(err); alert('Update failed'); });
+    .catch(err => { console.error(err); showAlert('Update failed', 'error'); });
 }
 
 // Admin: User management (students + faculties)
@@ -270,11 +270,11 @@ function initFacultyManageAttendance() {
   }
 
   function saveAttendance(){
-    const date = dateInput.value; if(!date) return alert('Select date');
+  const date = dateInput.value; if(!date) return showAlert('Select date','warning');
     const courseName = courseSelect.value;
     fetch('/courses').then(r=>r.json()).then(courses => {
       const course = courses.find(c=> courseName.includes(c.course_name) || courseName.includes(c.course_code));
-      if (!course) return alert('Course not found');
+      if (!course) return showAlert('Course not found','warning');
       const courseId = course.course_id;
       const rows = Array.from(tbody.querySelectorAll('tr'));
       const promises = rows.map(r=>{
@@ -283,7 +283,7 @@ function initFacultyManageAttendance() {
         const payload = { student_id: studentId, course_id: courseId, date: date, status: status };
         return fetch('/attendance', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
       });
-      Promise.all(promises).then(()=> alert('Attendance saved'));
+      Promise.all(promises).then(()=> showAlert('Attendance saved','success'));
     });
   }
 
@@ -300,7 +300,7 @@ function initFacultyAnnouncements(){
     const message = form.querySelector('textarea[name=message]').value;
     const payload = { message, type: 'announcement' };
     fetch('/notifications', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
-      .then(r=>{ if(r.ok) { alert('Announcement posted'); form.reset(); } else alert('Post failed'); });
+      .then(r=>{ if(r.ok) { showAlert('Announcement posted','success'); form.reset(); } else showAlert('Post failed','error'); });
   });
 }
 
@@ -320,7 +320,7 @@ function initFacultyGrades(){
       const enroll = enrolls.find(x=>x.enrollment_id==id);
       if (!enroll) return;
       const payload = { student_id: enroll.student_id, course_id: enroll.course_id, marks_obtained: marks || null, grade: grade || null };
-      fetch('/grades', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }).then(r=>{ if(r.ok) alert('Saved'); else alert('Save failed'); });
+      fetch('/grades', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }).then(r=>{ if(r.ok) showAlert('Saved','success'); else showAlert('Save failed','error'); });
     }));
   });
 }

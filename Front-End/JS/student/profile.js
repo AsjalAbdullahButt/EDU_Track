@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function(){
       return res.json();
     })
     .then(data => {
-      alert('Profile submitted for verification. An admin will verify your details shortly.');
+      showAlert('Profile submitted for verification. An admin will verify your details shortly.', 'success');
       // Update local session copy if needed
       const session = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
       session.name = data.full_name || session.name;
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function(){
     })
     .catch(err => {
       console.error(err);
-      alert('Failed to submit profile: ' + (err.message || 'Server error'));
+      showAlert('Failed to submit profile: ' + (err.message || 'Server error'), 'error');
     });
   });
 

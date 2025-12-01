@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, index * 100);
 
         const btn = tr.querySelector('.btn-details');
-        if (btn) btn.addEventListener('click', () => alert(`Opening details for ${course.course_name}`));
+        if (btn) btn.addEventListener('click', () => showAlert(`Opening details for ${course.course_name}`, 'info'));
       });
     })
     .catch(() => {

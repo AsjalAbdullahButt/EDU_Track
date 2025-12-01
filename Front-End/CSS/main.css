@@ -300,6 +300,24 @@ p { margin-bottom: 12px; color: var(--dark-gray); }
     margin: 0;
 }
 
+/* Header and sidebar logo circular styles */
+.header-logo, .sidebar-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Small variant used in compact headers */
+.header-logo.small { width: 36px; height: 36px; }
+
+/* Ensure the logo-section aligns nicely */
+.logo-section { display:flex; align-items:center; gap:12px; }
+.logo-section h2 { margin:0; font-size:1.1rem; }
+
 .card-body {
     color: var(--dark-gray);
 }

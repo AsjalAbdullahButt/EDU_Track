@@ -9,30 +9,33 @@ function continueFeedback(courseCode) {
 }
 
 function viewDraft(courseCode) {
-  alert(`Viewing draft for ${courseCode}...`);
+  if (typeof window.showToast === 'function') return window.showToast(`Viewing draft for ${courseCode}...`, 'info');
+  if (typeof window.showAlert === 'function') return window.showAlert(`Viewing draft for ${courseCode}...`, 'info');
   // In real implementation: show draft preview modal
 }
 
 function remindLater(courseCode) {
-  alert(`Reminder set for ${courseCode}. You'll be notified in 2 days.`);
+  if (typeof window.showToast === 'function') return window.showToast(`Reminder set for ${courseCode}. You'll be notified in 2 days.`, 'info');
+  if (typeof window.showAlert === 'function') return window.showAlert(`Reminder set for ${courseCode}. You'll be notified in 2 days.`, 'info');
   // In real implementation: API call to set reminder
 }
 
 function submitAllFeedback() {
-  if (confirm('Are you sure you want to submit feedback for all pending courses? This will use default ratings for courses without feedback.')) {
-    alert('Submitting feedback for all pending courses...');
-    // In real implementation: batch submission logic
-  }
+  // Demo: immediate batch submission (replace with modal confirm later)
+  if (typeof window.showToast === 'function') window.showToast('Submitting feedback for all pending courses...', 'info');
+  else if (typeof window.showAlert === 'function') window.showAlert('Submitting feedback for all pending courses...', 'info');
+  // In real implementation: batch submission logic
 }
 
 function submitQuickFeedback() {
   const selectedCourses = document.querySelectorAll('input[name="quickCourses"]:checked');
   if (selectedCourses.length === 0) {
-    alert('Please select at least one course to submit feedback.');
+    if (typeof window.showToast === 'function') return window.showToast('Please select at least one course to submit feedback.', 'error');
+    if (typeof window.showAlert === 'function') return window.showAlert('Please select at least one course to submit feedback.', 'error');
     return;
   }
-  
-  alert(`Submitting quick feedback for ${selectedCourses.length} courses...`);
+  if (typeof window.showToast === 'function') window.showToast(`Submitting quick feedback for ${selectedCourses.length} courses...`, 'info');
+  else if (typeof window.showAlert === 'function') window.showAlert(`Submitting quick feedback for ${selectedCourses.length} courses...`, 'info');
   // In real implementation: process quick feedback submission
 }
 

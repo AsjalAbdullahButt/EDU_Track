@@ -35,11 +35,11 @@ async function addNotification(){
   const message = document.getElementById('messageInput').value.trim();
   const category = document.getElementById('categoryInput').value;
   const target = document.getElementById('targetInput').value;
-  if(!message || !category || !target){ alert('Please fill required fields'); return; }
+  if(!message || !category || !target){ showAlert('Please fill required fields', 'warning'); return; }
   const payload = { message, type: category, recipient_id: target === 'All' ? null : (target === 'Students' ? 0 : -1) };
   const r = await fetch('/notifications',{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-  if(r.ok){ alert('Added'); populateNotifications(); }
-  else alert('Failed to add');
+  if(r.ok){ showAlert('Added','success'); populateNotifications(); }
+  else showAlert('Failed to add','error');
 }
 
 window.addEventListener('load', populateNotifications);

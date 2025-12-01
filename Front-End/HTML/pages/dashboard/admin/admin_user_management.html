@@ -4,20 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDU Track - Admin User Management</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
   <link rel="stylesheet" href="/static/CSS/admin/admin_user_management.css">
 </head>
 <body>
-  <div class="layout-wrapper">
+  <div class="page-layout">
     <aside class="sidebar">
       <div class="logo-section">
         <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
-        <h2>EDU Track</h2>
+        <h2 class="sidebar-title">EDU Track</h2>
       </div>
-<nav class="nav-links">
-        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link active">Dashboard</a>
-        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+      <nav class="nav-links">
+        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link active">User Management</a>
         <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
         <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
         <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
@@ -32,36 +33,63 @@
 
     <main class="main-content">
       <header class="dashboard-header">
-        <h1>User Management</h1>
-        <p>Manage all users in the system</p>
+        <h1 class="dashboard-title">User Management</h1>
+        <p class="dashboard-subtitle">Manage all users in the system</p>
       </header>
 
-      <section class="container-wide">
-        <div class="user-actions">
-          <button class="btn primary" onclick="addUser()">Add New User</button>
-        </div>
-        
-        <!-- User Table -->
-        <table class="user-table">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="userList">
-            <!-- User entries will go here -->
-          </tbody>
-        </table>
+      <!-- Filter Tabs -->
+      <section class="filter-tabs">
+        <button class="tab-btn active" data-filter="students" onclick="filterUsers('students')">Students</button>
+        <button class="tab-btn" data-filter="faculty" onclick="filterUsers('faculty')">Faculty</button>
+        <button class="tab-btn" data-filter="admin" onclick="filterUsers('admin')">Admin Members</button>
       </section>
-        </main>
+
+      <!-- User Table Section -->
+      <section class="section user-table-container">
+        <div class="card">
+          <table class="data-table" id="userTable">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userList">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Confirm modal for delete actions -->
+  <div id="confirmModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal-header">
+        <h3 id="confirmTitle">Confirm Action</h3>
+        <button class="close" aria-label="Close" onclick="closeConfirmModal()">&times;</button>
       </div>
+      <div class="modal-body">
+        <p id="confirmMessage">Are you sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" onclick="closeConfirmModal()">Cancel</button>
+        <button type="button" class="btn danger" id="confirmBtn" onclick="confirmAction()">Delete</button>
+      </div>
+    </div>
+  </div>
 
-      <script src="/static/JS/admin_user_management.js" defer></script>
-
+  <script src="/static/JS/inject-favicon.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/admin_user_management.js" defer></script>
   <script src="/static/JS/dashboard.js" defer></script>
+  <script>
+    protectDashboard('admin');
+  </script>
 </body>
 </html>

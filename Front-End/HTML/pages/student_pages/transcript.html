@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EDU Track - Fees</title>
+  <title>EDU Track - Transcript</title>
   <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
   <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
 </head>
-<body class="fees">
+<body class="transcript">
 
   <div class="layout-wrapper">
     <aside class="sidebar">
@@ -19,11 +19,11 @@
       </div>
 
       <nav class="nav-links">
-        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/dashboard/dashboard_student.html">Dashboard</a>
         <a href="/pages/student_pages/courses.html">Courses</a>
         <a href="/pages/student_pages/attendance.html">Attendance</a>
         <a href="/pages/student_pages/results.html">Results</a>
-        <a href="/pages/student_pages/fees.html" class="active">Fees</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
         <a href="/pages/student_pages/notifications.html">Notifications</a>
         <a href="/pages/student_pages/feedback.html">Feedback</a>
       </nav>
@@ -35,42 +35,39 @@
 
     <main class="main-content">
       <header class="dashboard-header">
-        <h1>Fee Management</h1>
-        <p>View your fee status, transactions, and download receipts</p>
+        <h1>Transcript</h1>
+        <p>All semesters — semester-wise GPA and cumulative CGPA</p>
       </header>
 
       <section class="section">
-        <h2>Fee Summary</h2>
-        <table class="data-table">
+        <div class="transcript-summary" id="transcriptSummary">
+          <div>
+            <h3 id="studentName">—</h3>
+            <p class="muted" id="studentEmail">—</p>
+          </div>
+          <div style="text-align:right;">
+            <p class="muted">Cumulative CGPA</p>
+            <h2 id="cgpaValue">—</h2>
+            <button class="btn primary" id="printTranscript">Print / Save PDF</button>
+          </div>
+        </div>
+
+        <table class="data-table" id="transcriptTable">
           <thead>
-            <tr>
-              <th>Semester</th>
-              <th>Total Fee</th>
-              <th>Paid Amount</th>
-              <th>Balance</th>
-              <th>Status</th>
-            </tr>
+            <tr><th>Semester</th><th>Course</th><th>Credits</th><th>Grade</th><th>Points</th></tr>
           </thead>
           <tbody>
-            <tr><td>Fall 2024</td><td>120,000 PKR</td><td>120,000 PKR</td><td>0</td><td><span style="color:green;font-weight:600;">Paid</span></td></tr>
-            <tr><td>Spring 2025</td><td>125,000 PKR</td><td>100,000 PKR</td><td>25,000 PKR</td><td><span style="color:crimson;font-weight:600;">Pending</span></td></tr>
+            <!-- filled by JS -->
           </tbody>
         </table>
-
-        <div style="margin-top:20px;">
-          <button class="btn primary">Pay Remaining Fee</button>
-          <button class="btn secondary">Download Receipt</button>
-        </div>
       </section>
     </main>
   </div>
 
   <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/auth.js"></script>
-  <script src="/static/JS/student-api.js"></script>
   <script src="/static/JS/dashboard.js"></script>
-  <script>
-    protectDashboard('student');
-  </script>
+  <script src="/static/JS/student/transcript.js"></script>
+  <script>protectDashboard('student');</script>
 </body>
 </html>

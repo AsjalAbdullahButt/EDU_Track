@@ -100,6 +100,15 @@ if os.path.isdir(FRONTEND_STATIC):
     # Serve all frontend assets (CSS/JS/Images) under /static
     app.mount("/static", StaticFiles(directory=FRONTEND_STATIC), name="static")
 
+# Serve a favicon at the root so browsers show the EDU logo in the tab
+@app.get('/favicon.ico')
+def favicon():
+    fav_path = os.path.join(FRONTEND_STATIC, 'Images', 'EDU-Logo.png')
+    if os.path.isfile(fav_path):
+        return FileResponse(fav_path)
+    # fallback to index if not found
+    return FileResponse(index_path) 
+
 # Catch-all route to serve frontend HTML files.
 # This allows requests like `/pages/login.html` to be served.
 # Importantly: this does NOT fallback to index.html, preventing interference
