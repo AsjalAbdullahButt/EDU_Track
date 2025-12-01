@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function(){
     .then(data => {
       // Prefer server data, but fall back to session (useful right after registration)
       const session = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+      document.getElementById('student_id').value = data.student_id || session.id || '';
       document.getElementById('full_name').value = data.full_name || session.name || '';
       document.getElementById('email').value = data.email || session.email || '';
       if (data.gender) document.getElementById('gender').value = data.gender;
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function(){
       console.warn('Profile load failed, falling back to session', err);
       // If server call fails (e.g., newly registered user), populate from session
       const session = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+      document.getElementById('student_id').value = session.id || '';
       document.getElementById('full_name').value = session.name || '';
       document.getElementById('email').value = session.email || '';
     });

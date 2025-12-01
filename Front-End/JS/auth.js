@@ -73,7 +73,7 @@ if (signupForm) {
     e.preventDefault();
     const name = signupForm.fullname.value.trim();
     const email = (signupForm.email && signupForm.email.value) ? signupForm.email.value.trim() : '';
-    const roll = signupForm.roll.value.trim();
+    const contact = (signupForm.contact && signupForm.contact.value) ? signupForm.contact.value.trim() : '';
     const password = signupForm.password.value.trim();
     const confirm = signupForm.confirm.value.trim();
 
@@ -84,7 +84,7 @@ if (signupForm) {
       return;
     }
 
-    if (!name || !roll || !password) {
+    if (!name || !email || !password) {
       showAlert("All fields are required!");
       return;
     }
@@ -99,7 +99,7 @@ if (signupForm) {
       full_name: name,
       email: email,
       password: password,
-      contact: roll
+      contact: contact || null
     };
 
     fetch('/students/', {
