@@ -142,7 +142,7 @@ function renderUsers(filter){
   });
 }
 
-function editUser(filter, id){
+async function editUser(filter, id){
   const user = allUsers[filter].find(u => u.id === id);
   if (!user) return;
 
@@ -152,40 +152,87 @@ function editUser(filter, id){
     const newEmail = prompt('Update email:', user.email);
     if (newEmail === null) return;
 
-    fetch(`/students/${id}`, {
+    // StudentCreate schema requires: full_name, email, password, and optional fields
+    // Use original data as base to preserve other fields like password
+    const payload = {
+      full_name: newName,
+      email: newEmail,
+      password: user.original.password, // Keep existing password
+      gender: user.original.gender || null,
+      dob: user.original.dob || null,
+      department: user.original.department || null,
+      semester: user.original.semester || null,
+      contact: user.original.contact || null,
+      address: user.original.address || null,
+      role: user.original.role || 'student'
+    };
+
+    const result = await fetchJson(`/students/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ full_name: newName, email: newEmail })
-    })
-    .then(async res => {
-      if (!res.ok) throw new Error('Update failed');
-      if (window.showToast) window.showToast('Student updated', 'success');
-      loadAllUsers();
-    })
-    .catch(err => {
-      console.error(err);
-      if (window.showToast) window.showToast('Failed to update student', 'error');
+      body: JSON.stringify(payload)
     });
+
+    if (result){
+      if (window.showToast) window.showToast('Student updated successfully', 'success');
+      loadAllUsers();
+    } else {
+      if (window.showToast) window.showToast('Failed to update student', 'error');
+    }
   } else if (filter === 'faculty'){
     const newName = prompt('Update name:', user.name);
     if (newName === null) return;
     const newEmail = prompt('Update email:', user.email);
     if (newEmail === null) return;
 
-    fetch(`/faculties/${id}`, {
+    // FacultyCreate schema requires: name, email, password, and optional fields
+    const payload = {
+      name: newName,
+      email: newEmail,
+      password: user.original.password, // Keep existing password
+      department: user.original.department || null,
+      contact: user.original.contact || null,
+      role: user.original.role || 'faculty'
+    };
+
+    const result = await fetchJson(`/faculties/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newName, email: newEmail })
-    })
-    .then(async res => {
-      if (!res.ok) throw new Error('Update failed');
-      if (window.showToast) window.showToast('Faculty updated', 'success');
-      loadAllUsers();
-    })
-    .catch(err => {
-      console.error(err);
-      if (window.showToast) window.showToast('Failed to update faculty', 'error');
+      body: JSON.stringify(payload)
     });
+
+    if (result){
+      if (window.showToast) window.showToast('Faculty updated successfully', 'success');
+      loadAllUsers();
+    } else {
+      if (window.showToast) window.showToast('Failed to update faculty', 'error');
+    }
+  } else if (filter === 'admin'){
+    const newName = prompt('Update name:', user.name);
+    if (newName === null) return;
+    const newEmail = prompt('Update email:', user.email);
+    if (newEmail === null) return;
+
+    // AdminCreate schema requires: name, email, password
+    const payload = {
+      name: newName,
+      email: newEmail,
+      password: user.original.password, // Keep existing password
+      role: user.original.role || 'admin'
+    };
+
+    const result = await fetchJson(`/admins/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (result){
+      if (window.showToast) window.showToast('Admin updated successfully', 'success');
+      loadAllUsers();
+    } else {
+      if (window.showToast) window.showToast('Failed to update admin', 'error');
+    }
   }
 }
 
