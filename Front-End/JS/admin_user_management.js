@@ -4,6 +4,7 @@
 let allUsers = { students: [], faculty: [], admin: [] };
 let currentFilter = 'students';
 let pendingAction = null;
+let userListRefreshInterval = null;
 
 async function fetchJson(path, opts = {}){
   try{
@@ -97,14 +98,12 @@ function editUser(filter, id){
   const user = allUsers[filter].find(u => u.id === id);
   if (!user) return;
 
-  // For now, show a simple prompt flow; can be enhanced to modal form
   if (filter === 'students'){
     const newName = prompt('Update name:', user.name);
     if (newName === null) return;
     const newEmail = prompt('Update email:', user.email);
     if (newEmail === null) return;
 
-    // Call backend
     fetch(`/students/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -161,7 +160,6 @@ function confirmAction(){
   const { filter, id } = pendingAction;
   closeConfirmModal();
 
-  // Call delete endpoint
   let endpoint = '';
   if (filter === 'students') endpoint = `/students/${id}`;
   else if (filter === 'faculty') endpoint = `/faculty/${id}`;
@@ -181,15 +179,42 @@ function confirmAction(){
     });
 }
 
+// Auto-refresh user list every 8 seconds
+function startUserListRefresh(intervalMs = 8000){
+  if (userListRefreshInterval) clearInterval(userListRefreshInterval);
+  userListRefreshInterval = setInterval(() => loadAllUsers(), intervalMs);
+}
+
+// Stop the refresh
+function stopUserListRefresh(){
+  if (userListRefreshInterval) clearInterval(userListRefreshInterval);
+  userListRefreshInterval = null;
+}
+
+// Initialization
 window.addEventListener('load', function(){
   try {
     protectDashboard && protectDashboard('admin');
   } catch(e){ /* ignore */ }
   loadAllUsers();
+  startUserListRefresh(8000);
 });
 
+// Stop refresh when page is unloaded
+window.addEventListener('beforeunload', stopUserListRefresh);
+
+// Pause when tab hidden, resume when visible
+document.addEventListener('visibilitychange', function(){
+  if (document.hidden) stopUserListRefresh();
+  else startUserListRefresh(8000);
+});
+
+// Expose functions to window
 window.filterUsers = filterUsers;
 window.editUser = editUser;
 window.confirmDelete = confirmDelete;
 window.closeConfirmModal = closeConfirmModal;
 window.confirmAction = confirmAction;
+window.loadAllUsers = loadAllUsers;
+window.startUserListRefresh = startUserListRefresh;
+window.stopUserListRefresh = stopUserListRefresh;
