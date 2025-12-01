@@ -74,6 +74,21 @@ app.add_middleware(
 Base.metadata.create_all(bind=engine)
 
 
+# Register routers (ensure API routes are registered before the frontend catch-all)
+app.include_router(student_router.router)
+app.include_router(faculty_router.router)
+app.include_router(admin_router.router)
+app.include_router(course_router.router)
+app.include_router(enrollment_router.router)
+app.include_router(attendance_router.router)
+app.include_router(grades_router.router)
+app.include_router(fee_router.router)
+app.include_router(notifications_router.router)
+app.include_router(feedback_router.router)
+app.include_router(salaries_router.router)
+app.include_router(auth_router.router)
+
+
 @app.on_event("startup")
 def check_database_connection():
     try:
@@ -134,17 +149,3 @@ def serve_frontend_file(full_path: str):
     # This prevents catching dashboard redirects and returning index.html
     from fastapi import HTTPException
     raise HTTPException(status_code=404, detail="Not Found")
-
-# Register routers
-app.include_router(student_router.router)
-app.include_router(faculty_router.router)
-app.include_router(admin_router.router)
-app.include_router(course_router.router)
-app.include_router(enrollment_router.router)
-app.include_router(attendance_router.router)
-app.include_router(grades_router.router)
-app.include_router(fee_router.router)
-app.include_router(notifications_router.router)
-app.include_router(feedback_router.router)
-app.include_router(salaries_router.router)
-app.include_router(auth_router.router)

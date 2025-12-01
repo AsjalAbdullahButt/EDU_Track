@@ -26,7 +26,7 @@
 		</header>
 
 		<section class="filters">
-			<form id="reportFilters" class="filter-form" aria-label="Report filters">
+			<form id="reportFilters" class="filter-form" aria-label="Report filters" onsubmit="return false;">
 
 				<div class="filter-group">
 					<label for="filterFrom">From</label>
@@ -42,10 +42,7 @@
 					<label for="filterCourse">Course</label>
 					<select id="filterCourse" name="course">
 						<option value="">All</option>
-						<option value="web-dev">Web Development</option>
-						<option value="data-science">Data Science</option>
-						<option value="design">UI/UX Design</option>
-						<option value="marketing">Digital Marketing</option>
+						<!-- Populated dynamically from backend -->
 					</select>
 				</div>
 
@@ -60,7 +57,7 @@
 				</div>
 
 				<div class="filter-actions">
-					<button type="submit" id="applyFilters" class="btn primary">Apply</button>
+					<button type="button" id="applyFilters" class="btn primary">Apply</button>
 					<button type="button" id="clearFilters" class="btn">Clear</button>
 				</div>
 
@@ -114,31 +111,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td data-label="#">1</td>
-							<td data-label="Student">John Smith</td>
-							<td data-label="Course">Web Development</td>
-							<td data-label="Enrolled On">03/15/2024</td>
-							<td data-label="Status"><span class="status-active">Active</span></td>
-							<td data-label="Progress">65%</td>
-						</tr>
-						<tr>
-							<td data-label="#">2</td>
-							<td data-label="Student">Sarah Johnson</td>
-							<td data-label="Course">Data Science</td>
-							<td data-label="Enrolled On">02/28/2024</td>
-							<td data-label="Status"><span class="status-completed">Completed</span></td>
-							<td data-label="Progress">100%</td>
-						</tr>
+					<!-- Populated dynamically by JS -->
 					</tbody>
 				</table>
 
 				<nav class="pagination">
-					<button class="active">1</button>
-					<button>2</button>
-					<button>3</button>
-					<button>4</button>
-					<button>5</button>
+				<!-- Pagination populated by JS -->
 				</nav>
 			</div>
 		</section>

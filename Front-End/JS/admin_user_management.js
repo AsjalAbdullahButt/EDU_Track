@@ -7,13 +7,54 @@ let pendingAction = null;
 let userListRefreshInterval = null;
 
 async function fetchJson(path, opts = {}){
+  // Robust fetch helper: try relative URL, then fallback to localhost:8000 if needed.
   try{
-    const res = await fetch(path, opts);
-    if (!res.ok) throw new Error('Network error');
-    return await res.json();
+    const base = window.API_BASE || '';
+    // try candidates: path and path + '/'
+    const candidates = path.startsWith('http') ? [path] : [path, path.endsWith('/') ? path : path + '/'];
+    for (const p of candidates){
+      const url = p.startsWith('http') ? p : (base ? base + p : p);
+      try{
+        const res = await fetch(url, opts);
+        if (!res.ok) {
+          const text = await res.text().catch(()=>res.statusText || '');
+          throw new Error(`HTTP ${res.status}: ${text}`);
+        }
+        return await res.json();
+      }catch(err){
+        // try next candidate
+        console.debug('[fetchJson] candidate failed', url, err.message || err);
+      }
+    }
+    throw new Error('All candidates failed');
   }catch(e){
+    // If we failed and path is relative, try explicit localhost fallback (common dev setup)
+    if (!path.startsWith('http')){
+      try{
+        const base2 = 'http://127.0.0.1:8000';
+        const candidates2 = [path, path.endsWith('/') ? path : path + '/'];
+        for (const p of candidates2){
+          const fallback = base2 + p;
+          try{
+            const res2 = await fetch(fallback, opts);
+            if (!res2.ok){
+              const txt2 = await res2.text().catch(()=>res2.statusText || '');
+              throw new Error(`HTTP ${res2.status}: ${txt2}`);
+            }
+            return await res2.json();
+          }catch(e2){
+            console.debug('[fetchJson] fallback candidate failed', fallback, e2.message || e2);
+          }
+        }
+        throw new Error('Fallback candidates failed');
+      }catch(e2){
+        console.error('fetchJson failed (both attempts)', path, e, e2);
+        if (window.showToast) window.showToast(`Failed to load: ${path} (${e2.message || e.message})`, 'error');
+        return null;
+      }
+    }
     console.error('fetchJson error', path, e);
-    if (window.showToast) window.showToast('Failed to load: ' + path, 'error');
+    if (window.showToast) window.showToast(`Failed to load: ${path} (${e.message})`, 'error');
     return null;
   }
 }
@@ -26,9 +67,16 @@ async function loadAllUsers(){
   // Fetch in parallel
   const [students, faculty, admins] = await Promise.all([
     fetchJson('/students'),
-    fetchJson('/faculty'),
+    fetchJson('/faculties'),
     fetchJson('/admins', { headers: adminHeaders })
   ]);
+
+  // Diagnostic logs to help debug why records may not appear
+  try{
+    console.debug('[admin_user_management] fetched students:', Array.isArray(students) ? students.length : students);
+    console.debug('[admin_user_management] fetched faculties:', Array.isArray(faculty) ? faculty.length : faculty);
+    console.debug('[admin_user_management] fetched admins:', Array.isArray(admins) ? admins.length : admins);
+  }catch(e){ console.warn('Debug log failed', e); }
 
   // Transform and store
   allUsers.students = Array.isArray(students) ? students.map(s => ({
@@ -73,7 +121,7 @@ function renderUsers(filter){
   const users = allUsers[filter] || [];
 
   if (users.length === 0){
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;">No ${filter} found</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999; padding:20px;"><strong>No ${filter} found</strong><div style="font-size:12px; color:#666; margin-top:6px;">If you recently registered users, ensure the server is running and registrations were persisted.</div></td></tr>`;
     return;
   }
 
@@ -124,7 +172,7 @@ function editUser(filter, id){
     const newEmail = prompt('Update email:', user.email);
     if (newEmail === null) return;
 
-    fetch(`/faculty/${id}`, {
+    fetch(`/faculties/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: newName, email: newEmail })
@@ -162,7 +210,7 @@ function confirmAction(){
 
   let endpoint = '';
   if (filter === 'students') endpoint = `/students/${id}`;
-  else if (filter === 'faculty') endpoint = `/faculty/${id}`;
+  else if (filter === 'faculty') endpoint = `/faculties/${id}`;
   else if (filter === 'admin') endpoint = `/admins/${id}`;
 
   if (!endpoint) return;
