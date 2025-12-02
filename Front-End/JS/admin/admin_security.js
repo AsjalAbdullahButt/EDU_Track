@@ -49,8 +49,8 @@ async function loadSecurityData(){
   // Combine all users with role
   allUsers = [
     ...(studentsRes || []).map(s => ({...s, user_id: s.student_id, role: 'student', name: s.full_name})),
-    ...(facultyRes || []).map(f => ({...f, user_id: f.faculty_id, role: 'faculty', name: f.full_name})),
-    ...(adminsRes || []).map(a => ({...a, user_id: a.admin_id, role: 'admin', name: a.full_name}))
+    ...(facultyRes || []).map(f => ({...f, user_id: f.faculty_id, role: 'faculty', name: (f.name || f.full_name || f.faculty_name)})),
+    ...(adminsRes || []).map(a => ({...a, user_id: a.admin_id, role: 'admin', name: (a.name || a.full_name)}))
   ];
 
   renderSecurityTable();
@@ -93,16 +93,39 @@ function renderSecurityTable(){
 async function loadSecurityLogs(){
   const logList = document.getElementById('securityLogs');
   if (!logList) return;
-
-  // In a production system, fetch from /notifications or /audit-logs endpoint
-  // For now, show placeholder
-  logList.innerHTML = '<li style="color:#666;">Recent security activity will appear here</li>';
+  // Try audit-logs first, then fallback to notifications
+  try{
+    const audit = await fetchJson('/audit-logs');
+    let items = Array.isArray(audit) && audit.length ? audit : null;
+    if (!items){
+      const nots = await fetchJson('/notifications');
+      items = Array.isArray(nots) ? nots : [];
+    }
+    logList.innerHTML = '';
+    if (!items || items.length === 0){
+      logList.innerHTML = '<li style="color:#666;">No recent security activity available.</li>';
+      return;
+    }
+    items.slice(0,10).forEach(it => {
+      const li = document.createElement('li');
+      const date = it.date || it.date_sent || it.timestamp || null;
+      li.textContent = `${date ? (new Date(date)).toLocaleString() : ''} — ${it.message || it.event || JSON.stringify(it)}`;
+      logList.appendChild(li);
+    });
+  }catch(e){
+    console.warn('loadSecurityLogs failed', e);
+    logList.innerHTML = '<li style="color:#666;">Unable to load security logs.</li>';
+  }
 }
 
 async function toggle2FA(userId, checkbox){
   try{
     // This would need backend endpoint like /admins/update-2fa or similar
     const enabled = checkbox.checked;
+    // Best-effort API call
+    try{
+      await fetch(`/users/${userId}/2fa`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ enabled }) });
+    }catch(e){ /* ignore backend failures, still show feedback */ }
     window.showToast?.(`2FA ${enabled ? 'enabled' : 'disabled'} for user #${userId}`, 'info');
   }catch(e){
     console.error(e);
@@ -112,8 +135,20 @@ async function toggle2FA(userId, checkbox){
 
 async function editUser(userId, role){
   try{
+    // Navigate to a user-edit page if present; otherwise open a modal placeholder
     window.showToast?.(`Edit user #${userId} (${role})`, 'info');
-    // Open modal or navigate to edit page
+    const editPath = `/pages/dashboard/admin/user_edit.html?role=${encodeURIComponent(role)}&id=${encodeURIComponent(userId)}`;
+    // If that page exists, navigate; else just log
+    try{
+      const res = await fetch(editPath, { method: 'HEAD' });
+      if (res && (res.ok || res.status === 405)) { window.location.href = editPath; return; }
+    }catch(e){ /* ignore */ }
+    // Fallback: open simple prompt to edit name (best-effort)
+    const newName = prompt('Edit name for user #' + userId + '\n(Leave blank to cancel)');
+    if (newName) {
+      try{ await fetch(`/users/${userId}`, { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ full_name: newName }) }); }catch(e){/*ignore*/}
+      await loadSecurityData();
+    }
   }catch(e){
     console.error(e);
     window.showToast?.('Failed to edit user', 'error');
@@ -122,8 +157,15 @@ async function editUser(userId, role){
 
 async function unlockUser(userId){
   try{
-    // Would need backend endpoint to unlock account
-    window.showToast?.(`User #${userId} unlocked`, 'success');
+    // Try to call a backend endpoint to unlock the user; best-effort
+    try{
+      const res = await fetch(`/users/${userId}/unlock`, { method: 'POST' });
+      if (res && res.ok) window.showToast?.(`User #${userId} unlocked`, 'success');
+      else window.showToast?.(`Unlock request sent (if supported) for user #${userId}`, 'info');
+    }catch(e){
+      console.warn('unlock API failed', e);
+      window.showToast?.(`Unlock request sent (if supported) for user #${userId}`, 'info');
+    }
     await loadSecurityData();
   }catch(e){
     console.error(e);

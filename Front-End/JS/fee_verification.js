@@ -81,7 +81,18 @@ async function openReceipt(feeId){
     const fee = await fetchJson(`/fees/${feeId}`);
     if(!fee){ window.showToast?.('Fee not found','error'); return; }
     currentFee = fee;
-    document.getElementById('receiptImage').src = fee.receipt_url || fee.receipt || '/static/Images/sample_receipt1.png';
+    const imgEl = document.getElementById('receiptImage');
+    const noRec = document.getElementById('noReceipt');
+    const src = fee.receipt_url || fee.receipt || null;
+    if (src) {
+      imgEl.style.display = 'block';
+      noRec.style.display = 'none';
+      imgEl.src = src;
+    } else {
+      imgEl.style.display = 'none';
+      noRec.style.display = 'block';
+      imgEl.src = '';
+    }
     document.getElementById('receiptModal').style.display = 'grid';
   }catch(e){ console.error(e); window.showToast?.('Failed to open receipt','error'); }
 }

@@ -1,115 +1,146 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Admin — Salary Payments</title>
-	<link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
-	<link rel="stylesheet" href="/static/CSS/main.css">
-	<link rel="stylesheet" href="/static/CSS/salary_payments.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Salary Payments | EDU Track</title>
+
+  <!-- external project CSS -->
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/salary_payments.css">
 </head>
-<body>
-	<!-- ...existing code... -->
+<body class="dashboard">
 
-	<main class="admin-salary-page" data-api="/api/admin/salaries">
-		<header class="salary-header">
-			<h1>Faculty Salary Payments</h1>
-			<div class="salary-actions">
-				<button id="exportCsv" class="btn">Export CSV</button>
-				<button id="exportPdf" class="btn">Export PDF</button>
-			</div>
-		</header>
+  <div class="layout-wrapper">
 
-		<section class="filters">
-			<form id="salaryFilters" class="filter-form" aria-label="Salary filters">
-				<div class="filter-row">
-					<label>
-						From
-						<input type="date" id="filterFrom" name="from" />
-					</label>
-					<label>
-						To
-						<input type="date" id="filterTo" name="to" />
-					</label>
-					<label>
-						Department
-						<select id="filterDept" name="department">
-							<option value="">All</option>
-							<!-- JS will populate department options -->
-						</select>
-					</label>
-					<label>
-						Status
-						<select id="filterStatus" name="status">
-							<option value="">All</option>
-							<option value="paid">Paid</option>
-							<option value="pending">Pending</option>
-							<option value="overdue">Overdue</option>
-						</select>
-					</label>
-					<button type="submit" id="applyFilters" class="btn primary">Apply</button>
-					<button type="button" id="clearFilters" class="btn">Clear</button>
-				</div>
-			</form>
-		</section>
+    <!-- SIDEBAR (uses classes defined in dashboards.css) -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
 
-		<section class="summary-cards">
-			<div class="card">
-				<div class="card-title">Total Payments</div>
-				<div id="totalPayments" class="card-value">—</div>
-			</div>
-			<div class="card">
-				<div class="card-title">Paid</div>
-				<div id="paidCount" class="card-value">—</div>
-			</div>
-			<div class="card">
-				<div class="card-title">Pending</div>
-				<div id="pendingCount" class="card-value">—</div>
-			</div>
-			<div class="card">
-				<div class="card-title">Overdue</div>
-				<div id="overdueCount" class="card-value">—</div>
-			</div>
-		</section>
+      <nav class="nav-links">
+        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+        <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+        <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link active">Salary Payments</a>
+        <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+        <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
+      </nav>
 
-		<section class="salary-visuals">
-			<div class="chart-card">
-				<h2>Salary Payment Trend</h2>
-				<canvas id="salaryChart" width="600" height="300" aria-label="Salary trend chart"></canvas>
-			</div>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
 
-			<div class="table-card">
-				<h2>Payments</h2>
-				<div class="table-actions">
-					<label>
-						Search
-						<input type="search" id="tableSearch" placeholder="Search by faculty or department" />
-					</label>
-				</div>
-				<table id="salaryTable" class="salary-table">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Faculty</th>
-							<th>Department</th>
-							<th>Payment Date</th>
-							<th>Status</th>
-							<th>Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- JS will inject rows here -->
-					</tbody>
-				</table>
-				<nav class="pagination" id="salaryPagination" aria-label="Salary pagination">
-					<!-- JS will render pagination controls -->
-				</nav>
-			</div>
-		</section>
-	</main>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <div class="admin-salary-page" data-api="/api/admin/salaries">
+        <header class="salary-header">
+          <h1>Faculty Salary Payments</h1>
+          <div class="salary-actions">
+            <button id="exportCsv" class="btn">Export CSV</button>
+            <button id="exportPdf" class="btn">Export PDF</button>
+          </div>
+        </header>
 
-	<!-- ...existing code... -->
+        <section class="filters">
+          <form id="salaryFilters" class="filter-form" aria-label="Salary filters">
+            <div class="filter-row">
+              <label>
+                From
+                <input type="date" id="filterFrom" name="from" />
+              </label>
+              <label>
+                To
+                <input type="date" id="filterTo" name="to" />
+              </label>
+              <label>
+                Department
+                <select id="filterDept" name="department">
+                  <option value="">All</option>
+                  <!-- JS will populate department options -->
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="filterStatus" name="status">
+                  <option value="">All</option>
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                  <option value="overdue">Overdue</option>
+                </select>
+              </label>
+              <button type="submit" id="applyFilters" class="btn primary">Apply</button>
+              <button type="button" id="clearFilters" class="btn">Clear</button>
+            </div>
+          </form>
+        </section>
 
-	<script src="/static/JS/salary_payments.js" defer></script>
+        <section class="summary-cards">
+          <div class="card">
+            <div class="card-title">Total Payments</div>
+            <div id="totalPayments" class="card-value">—</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Paid</div>
+            <div id="paidCount" class="card-value">—</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Pending</div>
+            <div id="pendingCount" class="card-value">—</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Overdue</div>
+            <div id="overdueCount" class="card-value">—</div>
+          </div>
+        </section>
+
+        <section class="salary-visuals">
+          <div class="chart-card">
+            <h2>Salary Payment Trend</h2>
+            <canvas id="salaryChart" width="600" height="300" aria-label="Salary trend chart"></canvas>
+          </div>
+
+          <div class="table-card">
+            <h2>Payments</h2>
+            <div class="table-actions">
+              <label>
+                Search
+                <input type="search" id="tableSearch" placeholder="Search by faculty or department" />
+              </label>
+            </div>
+            <table id="salaryTable" class="salary-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Faculty</th>
+                  <th>Department</th>
+                  <th>Payment Date</th>
+                  <th>Status</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS will inject rows here -->
+              </tbody>
+            </table>
+            <nav class="pagination" id="salaryPagination" aria-label="Salary pagination">
+              <!-- JS will render pagination controls -->
+            </nav>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/admin/salary_payments.js" defer></script>
 </body>
 </html>

@@ -44,54 +44,14 @@
       <!-- Attendance Section -->
       <section class="section">
         <h2>Your Current Attendance</h2>
-
-        <div class="attendance-circles">
-          <!-- Circle 1 -->
-          <div class="circle-card">
-            <div class="circle-progress animated" 
-                 style="--final:93; --value:93;" 
-                 data-value="93"></div>
-            <h3>Database Systems</h3>
-            <p class="text-small">28 / 30 Classes</p>
-          </div>
-
-          <!-- Circle 2 -->
-          <div class="circle-card">
-            <div class="circle-progress animated" 
-                 style="--final:89; --value:89;" 
-                 data-value="89"></div>
-            <h3>Operating Systems</h3>
-            <p class="text-small">25 / 28 Classes</p>
-          </div>
-
-          <!-- Circle 3 -->
-          <div class="circle-card">
-            <div class="circle-progress animated" 
-                 style="--final:92; --value:92;" 
-                 data-value="92"></div>
-            <h3>Artificial Intelligence</h3>
-            <p class="text-small">24 / 26 Classes</p>
-          </div>
-
-          <!-- Circle 4 -->
-          <div class="circle-card">
-            <div class="circle-progress animated" 
-                 style="--final:96; --value:96;" 
-                 data-value="96"></div>
-            <h3>Software Engineering</h3>
-            <p class="text-small">27 / 28 Classes</p>
-          </div>
-        </div>
+        <div id="attendanceGridContainer"></div>
       </section>
     </main>
   </div>
 
   <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/auth.js"></script>
-  <script src="/static/JS/student-api.js"></script>
   <script src="/static/JS/dashboard.js"></script>
-  <script>
-    protectDashboard('student');
-  </script>
+  <script src="/static/JS/student/attendance.js" defer></script>
 </body>
 </html>

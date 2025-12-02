@@ -63,38 +63,16 @@
           <th>Feedback</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Database Systems</td>
-          <td>5</td>
-          <td>Excellent teaching and clear explanations.</td>
-        </tr>
-        <tr>
-          <td>Database Systems</td>
-          <td>4</td>
-          <td>Very helpful, but pace could be faster.</td>
-        </tr>
-        <tr>
-          <td>AI</td>
-          <td>5</td>
-          <td>Loved the practical examples and exercises.</td>
-        </tr>
-        <tr>
-          <td>AI</td>
-          <td>3</td>
-          <td>Some topics were unclear, need more examples.</td>
-        </tr>
-        <tr>
-          <td>Software Design</td>
-          <td>4</td>
-          <td>Good course content and structured lectures.</td>
-        </tr>
+      <tbody id="feedbackTableBody">
+        <!-- rows populated dynamically from /feedback -->
       </tbody>
     </table>
   </main>
 
 </div>
 
+<script src="/static/JS/session-protection.js"></script>
+<script src="/static/JS/auth.js"></script>
 <script src="/static/JS/faculty/view_feedback.js" defer></script>
 <script src="/static/JS/dashboard.js" defer></script>
 </body>

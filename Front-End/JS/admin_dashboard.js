@@ -132,32 +132,50 @@ async function loadAdminDashboard(){
       pendingFees.forEach(f => {
         const tr = document.createElement('tr');
         const name = f.student_id ? ('Student #' + f.student_id) : 'Unknown';
+        const amount = Number(f.total_amount || 0);
         tr.innerHTML = `
           <td>${name}</td>
-          <td>${Number(f.total_amount || 0).toLocaleString()}</td>
+          <td data-amount="${amount}">${amount.toLocaleString()}</td>
           <td>${f.due_date ? (new Date(f.due_date)).toLocaleDateString() : '—'}</td>
           <td>${f.status || 'Pending'}</td>
-          <td><button class=\"btn verify\" data-fee-id=\"${f.fee_id}\">Verify</button></td>
+          <td><button class="btn verify" data-fee-id="${f.fee_id}" data-fee-amount="${amount}">Verify</button></td>
         `;
         tbody.appendChild(tr);
       });
 
       // attach handlers for verify buttons
       tbody.querySelectorAll('button.verify').forEach(btn => {
-        btn.addEventListener('click', async (e)=>{
+            btn.addEventListener('click', async (e)=>{
           const feeId = e.target.dataset.feeId;
+          const amount = Number(e.target.dataset.feeAmount || 0);
           if (!feeId) return;
-          // demo: call backend to mark as paid/verified if endpoint exists; for now just optimistic UI
           e.target.disabled = true; e.target.textContent = 'Verifying…';
           try{
-            // Try to call a payment/verification endpoint if available
-            const res = await fetch(`/fees/${feeId}`, { method: 'PUT', headers: {'Content-Type':'application/json', 'x-user-role': role }, body: JSON.stringify({ status: 'Paid', amount_paid: 0 }) });
+            // Attempt to mark as paid; backend may accept PUT or PATCH
+            const body = { status: 'Paid', amount_paid: amount };
+            const res = await fetch(`/fees/${feeId}`, { method: 'PUT', headers: {'Content-Type':'application/json', 'x-user-role': role }, body: JSON.stringify(body) });
             if (res && res.ok){
               e.target.textContent = 'Verified';
               if (window.showToast) window.showToast('Fee verified', 'success');
+              // Refresh dashboard to update counts
+              setTimeout(() => loadAdminDashboard(), 800);
             } else {
-              e.target.disabled = false; e.target.textContent = 'Verify';
-              if (window.showToast) window.showToast('Failed to verify fee', 'error');
+              // Try PATCH as fallback
+              try{
+                const res2 = await fetch(`/fees/${feeId}`, { method: 'PATCH', headers: {'Content-Type':'application/json', 'x-user-role': role }, body: JSON.stringify(body) });
+                if (res2 && res2.ok){
+                  e.target.textContent = 'Verified';
+                  if (window.showToast) window.showToast('Fee verified (patched)', 'success');
+                  setTimeout(() => loadAdminDashboard(), 800);
+                } else {
+                  e.target.disabled = false; e.target.textContent = 'Verify';
+                  if (window.showToast) window.showToast('Failed to verify fee', 'error');
+                }
+              }catch(e2){
+                console.error('patch verify error', e2);
+                e.target.disabled = false; e.target.textContent = 'Verify';
+                if (window.showToast) window.showToast('Failed to verify fee', 'error');
+              }
             }
           }catch(err){
             console.error('verify error', err);

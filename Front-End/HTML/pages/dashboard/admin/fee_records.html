@@ -4,15 +4,107 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EDU Track - Fee Records</title>
-  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
-  <link rel="stylesheet" href="/static/CSS/main.css">
-  <link rel="stylesheet" href="/static/CSS/dashboards.css">
-  <link rel="stylesheet" href="/static/CSS/fee_records.css">
+  <link rel="stylesheet" href="../../../../CSS/main.css">
+  <link rel="stylesheet" href="../../../../CSS/dashboards.css">
+  <style>
+    .filter-section {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-section input,
+    .filter-section select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(11,11,11,0.2);
+      font-size: 0.95rem;
+    }
+
+    .fee-table th,
+    .fee-table td {
+      padding: 12px 20px;
+      text-align: left;
+    }
+
+    .fee-table th {
+      font-weight: bold;
+    }
+
+    .fee-table td.status-paid {
+      color: green;
+      font-weight: 600;
+    }
+
+    .fee-table td.status-missing {
+      color: red;
+      font-weight: 600;
+    }
+
+    .fee-table tr:nth-child(even) {
+      background-color: #e0f0ec; /* subtle mint for alternate rows */
+    }
+  </style>
 </head>
 <body>
   <div class="layout-wrapper">
-    <script src="/static/JS/admin/fee_records.js" defer></script>
-    <script src="/static/JS/dashboard.js" defer></script>
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="../../../../Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+      <nav class="nav-links">
+        <a href="dashboard_admin.html" class="nav-link active">Dashboard</a>
+        <a href="admin_students.html" class="nav-link">Student Record</a>
+        <a href="admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="fee_records.html" class="nav-link">Fee Records</a>
+        <a href="notifications.html" class="nav-link">Notifications</a>
+        <a href="fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="admin_security.html" class="nav-link">Security Settings</a>
+        <a href="admin_faculty.html" class="nav-link active">Faculty Record</a>
+      </nav>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Fee Records</h1>
+        <p>View all student fee payments and missing payments</p>
+      </header>
+
+      <section class="container-wide">
+        <div class="filter-section">
+          <input type="text" id="filterName" placeholder="Search by Name" oninput="applyFilters()">
+          <select id="filterDepartment" onchange="applyFilters()">
+            <option value="">All Departments</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+          </select>
+          <select id="filterMonth" onchange="applyFilters()">
+            <option value="">All Months</option>
+            <option value="January">January</option>
+            <option value="February">February</option>
+            <option value="March">March</option>
+          </select>
+          <select id="filterStatus" onchange="applyFilters()">
+            <option value="">All Status</option>
+            <option value="Paid">Paid</option>
+            <option value="Missing">Missing</option>
+          </select>
+        </div>
+
+        <table class="fee-table">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Month</th>
               <th>Amount</th>
               <th>Status</th>
             </tr>
@@ -25,6 +117,82 @@
     </main>
   </div>
 
-  <script src="/static/JS/dashboard.js" defer></script>
+  <script>
+    // Load fee records from backend and render table; provide client-side filters
+    let feeData = [];
+    let studentIndex = new Map();
+
+    function monthNameFromDate(dstr){
+      if (!dstr) return '';
+      try{ const d = new Date(dstr); return d.toLocaleString(undefined, { month: 'long' }); }catch(e){ return dstr; }
+    }
+
+    function populateFeeTable(data) {
+      const tbody = document.getElementById('feeList');
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        const student = studentIndex.get(item.student_id) || { student_id: item.student_id, full_name: ('Student #' + item.student_id), department: item.department || '—' };
+        const month = item.month || monthNameFromDate(item.due_date) || '';
+        const amount = Number(item.total_amount ?? item.amount ?? 0);
+        const status = item.status || (amount > 0 ? 'Paid' : 'Missing');
+        row.innerHTML = `
+          <td>${student.student_id || student.studentId || ''}</td>
+          <td>${student.full_name || student.name || ''}</td>
+          <td>${student.department || '—'}</td>
+          <td>${month}</td>
+          <td>${amount.toLocaleString()}</td>
+          <td class="status-${String(status).toLowerCase()}">${status}</td>
+        `;
+        tbody.appendChild(row);
+      });
+      if (!data.length) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#666;padding:18px;">No fee records found.</td></tr>';
+    }
+
+    function applyFilters() {
+      const nameFilter = document.getElementById('filterName').value.toLowerCase();
+      const departmentFilter = document.getElementById('filterDepartment').value;
+      const monthFilter = document.getElementById('filterMonth').value;
+      const statusFilter = document.getElementById('filterStatus').value;
+
+      const filtered = feeData.filter(f => {
+        const student = studentIndex.get(f.student_id) || {};
+        const studentName = (student.full_name || student.name || '').toLowerCase();
+        const dept = student.department || f.department || '';
+        const month = f.month || monthNameFromDate(f.due_date) || '';
+        const status = f.status || (Number(f.total_amount ?? f.amount ?? 0) > 0 ? 'Paid' : 'Missing');
+        return (!nameFilter || studentName.includes(nameFilter)) &&
+               (!departmentFilter || dept === departmentFilter) &&
+               (!monthFilter || month === monthFilter) &&
+               (!statusFilter || status === statusFilter);
+      });
+
+      populateFeeTable(filtered);
+    }
+
+    async function loadFeeRecords(){
+      try{
+        const [feesRes, studentsRes] = await Promise.all([fetch('/fees'), fetch('/students')]);
+        const fees = feesRes.ok ? await feesRes.json() : [];
+        const students = studentsRes.ok ? await studentsRes.json() : [];
+        studentIndex = new Map((students || []).map(s => [s.student_id || s.id || s.studentId, s]));
+        feeData = (fees || []).map(f => ({
+          ...f,
+          total_amount: f.total_amount ?? f.amount
+        }));
+        populateFeeTable(feeData);
+      }catch(e){
+        console.error('loadFeeRecords failed', e);
+        document.getElementById('feeList').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#666;padding:18px;">Unable to load fee records.</td></tr>';
+      }
+    }
+
+    function logout(){
+      try{ localStorage.removeItem('loggedInUser'); }catch(e){}
+      window.location.href = '/pages/login.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => loadFeeRecords());
+  </script>
 </body>
 </html>

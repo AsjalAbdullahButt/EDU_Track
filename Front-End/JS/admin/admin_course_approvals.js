@@ -47,7 +47,7 @@ async function loadCourses(){
   ]);
 
   allCourses = coursesRes || [];
-  allFaculty = Object.fromEntries((facultyRes||[]).map(f=>[f.faculty_id, f.full_name]));
+  allFaculty = Object.fromEntries((facultyRes||[]).map(f=>[f.faculty_id, (f.name || f.full_name || f.faculty_name)]));
 
   renderCourseTable();
 }

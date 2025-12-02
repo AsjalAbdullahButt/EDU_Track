@@ -42,13 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const semesters = Object.keys(bySem).sort().map(sem => ({ semester: sem, courses: bySem[sem] }));
         renderRows(semesters);
       } else {
-        throw new Error('no grades');
-      }
-    })
-    .catch(() => {
-      // fallback: try to read a table on results page if loaded in same window, else show placeholder
-      renderRows([{ semester: 'Fall 2024', courses: [ { code: 'CS301', credits:3, grade:'A', points:4.0 }, { code:'CS302', credits:3, grade:'B+', points:3.5 } ] }]);
-    });
+          throw new Error('no grades');
+        }
+      })
+      .catch((err) => {
+        console.warn('grades fetch failed', err);
+        // Show a clear message when no grades are available
+        tableBody.innerHTML = '';
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="5" style="text-align:center;color:#666;padding:14px;">No grades available at this time.</td>';
+        tableBody.appendChild(tr);
+        if (cgpaEl) cgpaEl.textContent = '—';
+      });
 
   const printBtn = document.getElementById('printTranscript');
   if (printBtn) printBtn.addEventListener('click', () => window.print());

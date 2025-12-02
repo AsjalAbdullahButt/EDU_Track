@@ -100,6 +100,53 @@ window.addEventListener('load', function() {
   }
 });
 
+// Update feedback overview stats (total submitted, average rating if available, pending feedbacks)
+async function updateFeedbackStats(){
+  try{
+    const session = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+    // Fetch all feedbacks and enrollments
+    const [allFeedbacksRes, enrollRes] = await Promise.all([fetch('/feedback'), fetch('/enrollments')]);
+    if (!allFeedbacksRes.ok) throw new Error('Failed to load feedbacks');
+    if (!enrollRes.ok) throw new Error('Failed to load enrollments');
+    const allFeedbacks = await allFeedbacksRes.json();
+    const enrollments = await enrollRes.json();
+
+    // Filter by current student if session present
+    const myId = session && session.id ? session.id : null;
+    const myFeedbacks = myId ? allFeedbacks.filter(f => f.student_id === myId) : allFeedbacks;
+
+    const submittedCount = myFeedbacks.length;
+    // average rating if present on items
+    const ratings = myFeedbacks.map(f => Number(f.rating)).filter(r => !isNaN(r) && r > 0);
+    const avg = ratings.length ? (ratings.reduce((a,b)=>a+b,0)/ratings.length) : null;
+
+    // pending = enrolled courses for this student that don't have feedback yet
+    let pending = 0;
+    if (myId){
+      const myEnroll = enrollments.filter(e => e.student_id === myId);
+      const enrolledCourseIds = new Set(myEnroll.map(e=>e.course_id));
+      const submittedCourseIds = new Set(myFeedbacks.map(f=>f.course_id));
+      pending = Array.from(enrolledCourseIds).filter(cid => !submittedCourseIds.has(cid)).length;
+    }
+
+    // update DOM if elements exist
+    const elCount = document.getElementById('feedbackCount'); if (elCount) elCount.textContent = submittedCount;
+    const elAvg = document.getElementById('feedbackAverage'); if (elAvg) elAvg.textContent = avg ? (Math.round(avg*10)/10) : '—';
+    const elPend = document.getElementById('feedbackPending'); if (elPend) elPend.textContent = pending;
+    const cardPend = document.getElementById('cardPendingCount'); if (cardPend) cardPend.textContent = pending;
+    const cardTot = document.getElementById('cardTotalCount'); if (cardTot) cardTot.textContent = submittedCount;
+    const pendingCountSmall = document.getElementById('pendingCount'); if (pendingCountSmall) pendingCountSmall.textContent = pending;
+    const totalSubmittedSmall = document.getElementById('totalSubmittedCount'); if (totalSubmittedSmall) totalSubmittedSmall.textContent = submittedCount;
+  }catch(err){
+    console.warn('updateFeedbackStats failed', err);
+  }
+}
+
+// Call update on load
+document.addEventListener('DOMContentLoaded', () => {
+  try{ updateFeedbackStats(); }catch(e){}
+});
+
 // Rating star handlers
 document.addEventListener('click', function(e){
   if (e.target && e.target.matches('#ratingStars .star')){
@@ -159,15 +206,52 @@ document.addEventListener('submit', function(e){
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
 
     const session = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-    const payload = {
-      student_id: session.id,
-      course_code: course,
-      message: message,
-      rating: rating || null,
-      anonymous: !!anonymous
-    };
+      // Need to resolve course_code -> course_id and faculty_id before sending
+      try {
+        const coursesRes = await fetch('/courses/');
+        if (!coursesRes.ok) throw new Error('Could not fetch courses');
+        const courses = await coursesRes.json();
+        const matched = courses.find(c => (c.course_code || c.course_code === course) ? (c.course_code === course) : (c.course_name === course));
+        if (!matched) {
+          throw new Error('Selected course not found on server');
+        }
+        const payload = {
+          student_id: session.id,
+          faculty_id: matched.faculty_id || matched.faculty || null,
+          course_id: matched.course_id,
+          message: message
+        };
 
-    fetch('/feedback', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload) })
+        const feedbackRes = await fetch('/feedback', { method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+        if (!feedbackRes.ok) {
+          const txt = await feedbackRes.text().catch(()=>null);
+          throw new Error(txt || 'Server error');
+        }
+        const data = await feedbackRes.json().catch(()=>null);
+      
+        // success flow
+        try {
+          const list = document.querySelector('.activity-timeline');
+          if (list){
+            const item = document.createElement('div'); item.className = 'timeline-item is-visible';
+            const marker = document.createElement('div'); marker.className = 'timeline-marker pending';
+            const content = document.createElement('div'); content.className = 'timeline-content';
+            const title = data && data.course_code ? data.course_code : course;
+            const dt = (new Date()).toLocaleString();
+            content.innerHTML = `<div class="timeline-header"><span class="course-badge">${title}</span><span class="timeline-date">${dt}</span></div><h4>${title}</h4><p>Submitted feedback ${rating ? 'with '+rating+'⭐ rating':''}</p><div class="timeline-preview">${message.substring(0,200)}</div>`;
+            item.appendChild(marker); item.appendChild(content);
+            list.insertBefore(item, list.firstChild);
+          }
+        } catch (err) { console.warn('append timeline failed', err); }
+      
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
+        closeNewFeedbackModal();
+        toast('Thank you — your feedback was submitted.', 'success');
+      } catch (err) {
+        console.error('Feedback submit failed', err);
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
+        toast('Failed to submit feedback: ' + (err.message || 'Server error'), 'error');
+      }
       .then(async res => {
         if (!res.ok) {
           const txt = await res.text().catch(()=>null);

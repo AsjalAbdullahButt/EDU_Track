@@ -20,41 +20,36 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Simulated notifications (can later come from DB)
-const notifications = [
-  "Your AI assignment has been graded.",
-  "Next Software Engineering class rescheduled to 2 PM.",
-  "Fee reminder: Due by 25th Oct 2025.",
-];
-
 const notifContainer = document.querySelector(".notification-list");
 if (notifContainer) {
   notifContainer.innerHTML = "";
   const logged = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
   fetch('/notifications')
-    .then(res => res.json())
-    .then(data => {
-      let rows = data;
-      if (logged && logged.role === 'student') rows = data.filter(n => n.recipient_id === logged.id);
-      notifContainer.innerHTML = '';
-      rows.forEach(n => {
-        const li = document.createElement('li');
-        li.textContent = `${new Date(n.date_sent).toLocaleString()} — ${n.message}`;
-        notifContainer.appendChild(li);
-      });
+    .then(res => {
+      if (!res.ok) throw new Error('network');
+      return res.json();
     })
-    .catch(() => {
-      // fallback to static demo messages
-      const notifications = [
-        "Your AI assignment has been graded.",
-        "Next Software Engineering class rescheduled to 2 PM.",
-        "Fee reminder: Due by 25th Oct 2025.",
-      ];
+    .then(data => {
+      let rows = Array.isArray(data) ? data : [];
+      if (logged && logged.role === 'student') rows = rows.filter(n => n.recipient_id === logged.id);
       notifContainer.innerHTML = '';
-      notifications.forEach((msg) => {
+      if (rows.length === 0) {
         const li = document.createElement('li');
-        li.textContent = msg;
+        li.textContent = 'No notifications at this time.';
         notifContainer.appendChild(li);
-      });
+      } else {
+        rows.forEach(n => {
+          const li = document.createElement('li');
+          li.textContent = `${n.date_sent ? new Date(n.date_sent).toLocaleString() : ''} — ${n.message || ''}`;
+          notifContainer.appendChild(li);
+        });
+      }
+    })
+    .catch((err) => {
+      console.warn('Failed to load notifications', err);
+      notifContainer.innerHTML = '';
+      const li = document.createElement('li');
+      li.textContent = 'Unable to load notifications.';
+      notifContainer.appendChild(li);
     });
 }

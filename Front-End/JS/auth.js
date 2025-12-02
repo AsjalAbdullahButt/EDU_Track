@@ -7,8 +7,7 @@
 const loginForm = document.querySelector("#loginForm") || document.querySelector(".auth-form");
 const signupForm = document.querySelector("#registerForm") || document.querySelector("form[novalidate]");
 
-// Simulated database (for demo only)
-const users = JSON.parse(localStorage.getItem("users")) || [];
+// NOTE: auth now requires server-side validation; do NOT rely on local demo users
 
 // Utility to show alerts nicely
 function _createToastContainer(){
@@ -207,17 +206,8 @@ if (loginForm) {
     })
     .catch(err => {
       console.error('Login error', err);
-      // Fallback to local cache (demo)
-      const existingUser = users.find(
-        (u) => (u.name === username || u.roll === username) && u.password === password
-      );
-      if (existingUser) {
-        localStorage.setItem("loggedInUser", JSON.stringify(existingUser));
-        showAlert(`Welcome back, ${existingUser.name}! (offline)`);
-        window.location.href = "/pages/dashboard/dashboard_student.html";
-      } else {
-        showAlert("Invalid credentials. Please try again.");
-      }
+      // Do not fallback to local demo cache — require server auth
+      showAlert("Invalid credentials or server unreachable. Please try again.");
     });
   });
 }

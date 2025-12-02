@@ -15,6 +15,19 @@ document.addEventListener("DOMContentLoaded", () => {
       let rows = data;
       if (logged && logged.role === 'student') rows = data.filter(f => f.student_id === logged.id);
 
+      // Update summary cards if present
+      try{
+        const totalElem = document.getElementById('totalFees');
+        const paidElem = document.getElementById('paidFees');
+        const pendingElem = document.getElementById('pendingFees');
+        const total = rows.reduce((s, r) => s + Number(r.total_amount || 0), 0);
+        const paid = rows.reduce((s, r) => s + Number(r.amount_paid || 0), 0);
+        const pending = total - paid;
+        if (totalElem) totalElem.textContent = (total || 0).toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
+        if (paidElem) paidElem.textContent = (paid || 0).toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
+        if (pendingElem) pendingElem.textContent = (pending || 0).toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
+      }catch(e){ console.warn('Failed to update fee summary', e); }
+
       rows.forEach((fee) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -36,7 +49,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const btn = tr.querySelector('.btn-view');
-        if (btn) btn.addEventListener('click', () => alert('Your receipt is being downloaded (demo).'));
+        if (btn) btn.addEventListener('click', async () => {
+          try {
+            const res = await fetch(`/fees/${fee.fee_id}`);
+            if (!res.ok) throw new Error('Could not fetch fee details');
+            const detail = await res.json();
+            // open printable receipt in new window
+            const html = `<!doctype html><html><head><meta charset=\"utf-8\"><title>Receipt</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:20px}h2{margin-bottom:6px}table{width:100%;border-collapse:collapse}td,th{padding:8px;border:1px solid #ddd}</style></head><body>` +
+              `<h2>Payment Receipt</h2><p><strong>Fee ID:</strong> ${detail.fee_id}</p>` +
+              `<p><strong>Student ID:</strong> ${detail.student_id}</p>` +
+              `<table><tr><th>Total</th><th>Paid</th><th>Status</th></tr><tr><td>${detail.total_amount}</td><td>${detail.amount_paid}</td><td>${detail.status}</td></tr></table>` +
+              `<p>Due Date: ${detail.due_date || ''}</p><p>Generated: ${new Date().toLocaleString()}</p>` +
+              `</body></html>`;
+            const w = window.open('', '_blank');
+            if (w) {
+              w.document.open();
+              w.document.write(html);
+              w.document.close();
+              // trigger print optionally
+              setTimeout(()=>{ try{ w.print(); }catch(e){} }, 500);
+            } else {
+              showAlert('Popup blocked. Please allow popups to view receipts.', 'warning');
+            }
+          } catch (err) {
+            console.error(err);
+            showAlert('Unable to fetch receipt: ' + (err.message || ''), 'error');
+          }
+        });
       });
     })
     .catch(() => {

@@ -40,36 +40,14 @@
       </header>
 
       <section class="section">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Course Code</th>
-              <th>Course Title</th>
-              <th>Instructor</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>CS301</td><td>Database Systems</td><td>Sir Zeeshan Nazar</td><td>Enrolled</td></tr>
-            <tr><td>CS303</td><td>Artificial Intelligence</td><td>Dr. Adeel Abbas</td><td>Enrolled</td></tr>
-            <tr><td>CS304</td><td>Software Engineering</td><td>Miss Sana Malik</td><td>Dropped</td></tr>
-          </tbody>
-        </table>
-
-        <div style="margin-top:16px;">
-          <button class="btn primary">Add New Course</button>
-          <button class="btn secondary">Drop Selected</button>
-        </div>
+        <div id="enrolledCoursesContainer"></div>
       </section>
     </main>
   </div>
 
   <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/auth.js"></script>
-  <script src="/static/JS/student-api.js"></script>
   <script src="/static/JS/dashboard.js"></script>
-  <script>
-    protectDashboard('student');
-  </script>
+  <script src="/static/JS/student/courses.js" defer></script>
 </body>
 </html>

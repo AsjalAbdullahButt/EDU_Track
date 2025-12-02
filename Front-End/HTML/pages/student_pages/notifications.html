@@ -40,12 +40,7 @@
     </header>
 
     <section class="section">
-      <ul class="notification-list">
-        <li>📢 Midterm exams start on November 5.</li>
-        <li>💰 Fee due reminder: Pay before November 1.</li>
-        <li>🎓 Course evaluation forms are open now.</li>
-        <li>🗓️ Registration for Spring 2025 opens Dec 15.</li>
-      </ul>
+      <div id="notificationsContainer"></div>
     </section>
   </main>
 
@@ -53,8 +48,6 @@
 
   <script src="/static/JS/session-protection.js"></script>
   <script src="/static/JS/dashboard.js" defer></script>
-  <script>
-    protectDashboard('student');
-  </script>
+  <script src="/static/JS/student/notifications.js" defer></script>
 </body>
 </html>

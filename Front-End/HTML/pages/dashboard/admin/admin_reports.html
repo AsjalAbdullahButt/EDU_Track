@@ -37,12 +37,41 @@
     </header>
 
     <section class="section container-wide">
-      <p>This is a placeholder for administrative reports.</p>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Students</h3>
+          <p class="stat-value" id="totalStudents">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Faculty</h3>
+          <p class="stat-value" id="totalFaculty">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Courses</h3>
+          <p class="stat-value" id="totalCourses">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Enrollments</h3>
+          <p class="stat-value" id="totalEnrollments">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Avg Enrollments/Course</h3>
+          <p class="stat-value" id="avgEnrollments">0</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 30px;">Courses by Department</h3>
+      <div id="departmentStatsContainer"></div>
+
+      <h3 style="margin-top: 30px;">Enrollment Trends</h3>
+      <div id="enrollmentTrendsContainer"></div>
     </section>
   </main>
 
   </div>
 
-  <script src="/static/JS/dashboard.js" defer></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/admin/admin_reports.js" defer></script>
 </body>
 </html>
