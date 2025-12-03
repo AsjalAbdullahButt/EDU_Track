@@ -122,10 +122,15 @@ function renderCourseTable() {
       <td><span class="credits-badge">${course.credit_hours || 0}</span></td>
       <td><span class="seats-status ${seatsAvailable ? 'seats-available' : 'seats-full'}">${seatsText}</span></td>
       <td class="action-cell">
-        <button class="enroll-btn" 
+        <button class="btn-small btn-blue-light enroll-btn" 
                 onclick="enrollInCourse(${course.course_id}, '${course.course_code}')"
                 ${!seatsAvailable ? 'disabled' : ''}>
-          ${seatsAvailable ? 'Enroll' : 'Full'}
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
+            </svg>
+          </span>
+          <span>${seatsAvailable ? 'Enroll' : 'Full'}</span>
         </button>
       </td>
     `;

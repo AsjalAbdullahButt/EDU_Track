@@ -13,6 +13,10 @@ def create_fee(db: Session, data: FeeCreate):
 def get_fees(db: Session):
     return db.query(Fee).all()
 
+def get_student_fees(db: Session, student_id: int):
+    """Get all fees for a specific student"""
+    return db.query(Fee).filter(Fee.student_id == student_id).all()
+
 def get_fee(db: Session, fee_id: int):
     return db.query(Fee).filter(Fee.fee_id == fee_id).first()
 

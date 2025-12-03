@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from backend.models import Attendance
+from backend.models import Attendance, Enrollment
 from backend.schemas import AttendanceCreate
 
 def create_attendance(db: Session, data: AttendanceCreate):
@@ -12,6 +12,15 @@ def create_attendance(db: Session, data: AttendanceCreate):
 
 def get_attendances(db: Session):
     return db.query(Attendance).all()
+
+def get_student_attendance(db: Session, student_id: int):
+    """Get attendance records for a student's enrolled courses only"""
+    return db.query(Attendance).join(Enrollment).filter(
+        Attendance.student_id == student_id,
+        Enrollment.student_id == student_id,
+        Attendance.course_id == Enrollment.course_id,
+        Enrollment.status == "Active"
+    ).all()
 
 def get_attendance(db: Session, attendance_id: int):
     return db.query(Attendance).filter(Attendance.attendance_id == attendance_id).first()

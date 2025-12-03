@@ -14,6 +14,11 @@ def create_course(data: CourseCreate, db: Session = Depends(get_db)):
 def list_courses(db: Session = Depends(get_db)):
     return course_crud.get_courses(db)
 
+@router.get("/student/{student_id}", response_model=list[CourseResponse])
+def get_student_courses(student_id: int, db: Session = Depends(get_db)):
+    """Get all courses a student is enrolled in"""
+    return course_crud.get_student_enrolled_courses(db, student_id)
+
 @router.get("/{course_id}", response_model=CourseResponse)
 def get_course(course_id: int, db: Session = Depends(get_db)):
     c = course_crud.get_course(db, course_id)

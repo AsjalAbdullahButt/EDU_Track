@@ -48,21 +48,22 @@ async function loadFees() {
     return;
   }
 
-  // Fetch fees for this student
-  const feesRes = await fetchJson(`/fees`);
-  const fees = (feesRes || []).filter(f => f.student_id === studentId);
+  // Fetch fees for this student using the correct endpoint
+  const feesRes = await fetchJson(`/fees/student/${studentId}`);
+  const fees = feesRes || [];
 
   // Calculate totals
-  const totalFees = fees.reduce((sum, f) => sum + (f.amount || 0), 0);
-  const paidFees = fees.reduce((sum, f) => sum + (f.paid_amount || 0), 0);
+  const totalFees = fees.reduce((sum, f) => sum + (parseFloat(f.total_amount) || 0), 0);
+  const paidFees = fees.reduce((sum, f) => sum + (parseFloat(f.amount_paid) || 0), 0);
   const pendingFees = totalFees - paidFees;
+  const paymentPercentage = totalFees > 0 ? Math.round((paidFees / totalFees) * 100) : 0;
 
-  // Update summary
+  // Update summary with enhanced styling
   document.getElementById('totalFees').textContent = totalFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
   document.getElementById('paidFees').textContent = paidFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
   document.getElementById('pendingFees').textContent = pendingFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
 
-  // Render fees table
+  // Render enhanced fee overview with circular progress
   const container = document.getElementById('feesTableContainer');
   if (!container) return;
 
@@ -71,42 +72,101 @@ async function loadFees() {
     return;
   }
 
-  const table = document.createElement('table');
-  table.className = 'fees-table';
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Fee ID</th>
-        <th>Description</th>
-        <th>Amount</th>
-        <th>Paid Amount</th>
-        <th>Due Date</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${fees.map(f => {
-        const status = f.paid_amount >= f.amount ? 'Paid' : 'Pending';
-        const statusClass = status === 'Paid' ? 'status-paid' : 'status-pending';
-        return `
-          <tr>
-            <td>${f.fee_id}</td>
-            <td>${f.description || 'Tuition'}</td>
-            <td>${(f.amount || 0).toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</td>
-            <td>${(f.paid_amount || 0).toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</td>
-            <td>${new Date(f.due_date).toLocaleDateString()}</td>
-            <td><span class="status-badge ${statusClass}">${status}</span></td>
-            <td>
-              ${status === 'Pending' ? `<a href="/pages/student_pages/pay_fee.html?fee_id=${f.fee_id}" class="btn-small btn-primary">Pay Now</a>` : '<span class="text-success">✓</span>'}
-            </td>
-          </tr>
-        `;
-      }).join('')}
-    </tbody>
+  // Create fee overview card with circular progress
+  const overviewHtml = `
+    <div class="fee-overview-card">
+      <div class="fee-overview-header">
+        <h3>Overall Payment Status</h3>
+      </div>
+      <div class="fee-overview-content">
+        <div class="circle-progress-container">
+          <svg class="circular-progress" width="140" height="140" viewBox="0 0 140 140">
+            <circle class="progress-bg" cx="70" cy="70" r="65" />
+            <circle class="progress-fill ${paymentPercentage >= 80 ? '' : 'low-attendance'}" cx="70" cy="70" r="65" style="--percentage: ${paymentPercentage}" />
+          </svg>
+          <div class="circle-percentage" style="--color: ${paymentPercentage >= 80 ? 'var(--pastel-mint)' : '#ff6b6b'}">${paymentPercentage}%</div>
+        </div>
+        <div class="fee-stats">
+          <div class="fee-stat-box">
+            <span class="stat-label">Total Amount</span>
+            <span class="stat-value">${totalFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+          </div>
+          <div class="fee-stat-box">
+            <span class="stat-label">Amount Paid</span>
+            <span class="stat-value text-success">${paidFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+          </div>
+          <div class="fee-stat-box">
+            <span class="stat-label">Amount Due</span>
+            <span class="stat-value text-danger">${pendingFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   `;
-  container.appendChild(table);
-}
+
+  // Create detailed fees table
+  const tableHtml = `
+    <div class="fee-records-section">
+      <h3>Detailed Fee Records</h3>
+      <div class="fee-records-table">
+        <div class="table-header">
+          <div class="col-id">ID</div>
+          <div class="col-description">Description</div>
+          <div class="col-amount">Total Amount</div>
+          <div class="col-paid">Paid Amount</div>
+          <div class="col-due">Due Date</div>
+          <div class="col-status">Status</div>
+          <div class="col-action">Action</div>
+        </div>
+        <div class="table-body">
+          ${fees.map(f => {
+            const totalAmt = parseFloat(f.total_amount) || 0;
+            const paidAmt = parseFloat(f.amount_paid) || 0;
+            const isPaid = paidAmt >= totalAmt;
+            const statusClass = isPaid ? 'paid-row' : 'pending-row';
+            const statusBg = isPaid ? '#27ae6020' : '#e74c3c20';
+            const statusColor = isPaid ? '#27ae60' : '#e74c3c';
+            const dueDate = new Date(f.due_date);
+            const formattedDate = dueDate.toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'short', 
+              day: 'numeric' 
+            });
+
+            return `
+              <div class="table-row ${statusClass}">
+                <div class="col-id">
+                  <span class="fee-id">${f.fee_id}</span>
+                </div>
+                <div class="col-description">
+                  <span class="description-text">${f.description || 'Tuition Fee'}</span>
+                </div>
+                <div class="col-amount">
+                  <span class="amount-text">${totalAmt.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+                </div>
+                <div class="col-paid">
+                  <span class="paid-text" style="color: #27ae60; font-weight: 600">${paidAmt.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+                </div>
+                <div class="col-due">
+                  <span class="date-text">${formattedDate}</span>
+                </div>
+                <div class="col-status">
+                  <span class="status-badge" style="background: ${statusBg}; color: ${statusColor}; border-left: 4px solid ${statusColor}">
+                    ${isPaid ? 'Paid' : 'Pending'}
+                  </span>
+                </div>
+                <div class="col-action">
+                  ${!isPaid ? `<a href="/pages/student_pages/pay_fee.html?fee_id=${f.fee_id}" class="btn-pay">Pay Now</a>` : '<span class="paid-check">✓</span>'}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = overviewHtml + tableHtml;
 
 // Auto-refresh every 30 seconds
 let refreshInterval = null;

@@ -133,6 +133,293 @@ body {
 }
 
 /* -----------------------------------------------
+   💰 Fees Page - Enhanced UI
+----------------------------------------------- */
+
+/* Fee Overview Card */
+.fee-overview-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 31, 63, 0.08);
+  padding: 28px 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.fee-overview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 31, 63, 0.15);
+}
+
+.fee-overview-header {
+  background: linear-gradient(135deg, var(--midnight) 0%, #11324a 100%);
+  color: var(--white);
+  padding: 24px;
+  margin: -28px -24px 24px -24px;
+  border-bottom: 3px solid var(--pastel-mint);
+}
+
+.fee-overview-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.fee-overview-content {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fee-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.fee-stat-box {
+  background: linear-gradient(135deg, rgba(205, 238, 228, 0.2), rgba(0, 31, 63, 0.03));
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid var(--pastel-mint);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.fee-stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(205, 238, 228, 0.3);
+  border-left-color: var(--midnight);
+}
+
+.fee-stat-box .stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: rgba(0, 31, 63, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.fee-stat-box .stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--midnight);
+}
+
+.fee-stat-box .text-success {
+  color: #27ae60;
+}
+
+.fee-stat-box .text-danger {
+  color: #e74c3c;
+}
+
+/* Fee Records Section */
+.fee-records-section {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 31, 63, 0.08);
+  padding: 28px 24px;
+  transition: all 0.3s ease;
+  margin-top: 48px;
+}
+
+.fee-records-section:hover {
+  box-shadow: 0 12px 32px rgba(0, 31, 63, 0.15);
+}
+
+.fee-records-section h3 {
+  color: var(--midnight);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--pastel-mint);
+}
+
+/* Fee Records Table */
+.fee-records-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fee-records-table .table-header {
+  display: grid;
+  grid-template-columns: 0.8fr 1.5fr 1.2fr 1.2fr 1fr 1.2fr 1fr;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(0, 31, 63, 0.08), rgba(205, 238, 228, 0.15));
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--midnight);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.fee-records-table .table-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.fee-records-table .table-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fee-records-table .table-body::-webkit-scrollbar-track {
+  background: rgba(205, 238, 228, 0.2);
+  border-radius: 10px;
+}
+
+.fee-records-table .table-body::-webkit-scrollbar-thumb {
+  background: var(--pastel-mint);
+  border-radius: 10px;
+}
+
+.fee-records-table .table-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(205, 238, 228, 0.8);
+}
+
+.fee-records-table .table-row {
+  display: grid;
+  grid-template-columns: 0.8fr 1.5fr 1.2fr 1.2fr 1fr 1.2fr 1fr;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--white);
+  border-radius: 8px;
+  border-left: 4px solid #ccc;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center;
+}
+
+.fee-records-table .table-row.paid-row {
+  border-left-color: #27ae60;
+  background: linear-gradient(90deg, rgba(39, 174, 96, 0.05), transparent);
+}
+
+.fee-records-table .table-row.pending-row {
+  border-left-color: #e74c3c;
+  background: linear-gradient(90deg, rgba(231, 76, 60, 0.05), transparent);
+}
+
+.fee-records-table .table-row:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 31, 63, 0.12);
+}
+
+.fee-records-table .col-id {
+  font-weight: 600;
+}
+
+.fee-records-table .fee-id {
+  color: var(--midnight);
+  font-size: 0.9rem;
+}
+
+.fee-records-table .col-description {
+  display: flex;
+  align-items: center;
+}
+
+.fee-records-table .description-text {
+  font-weight: 500;
+  color: var(--midnight);
+}
+
+.fee-records-table .col-amount {
+  font-weight: 600;
+  color: var(--midnight);
+}
+
+.fee-records-table .col-paid {
+  font-weight: 600;
+}
+
+.fee-records-table .col-due {
+  display: flex;
+  align-items: center;
+}
+
+.fee-records-table .date-text {
+  font-size: 0.9rem;
+  color: rgba(0, 31, 63, 0.7);
+}
+
+.fee-records-table .col-status {
+  display: flex;
+  align-items: center;
+}
+
+.fee-records-table .status-badge {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.fee-records-table .status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.fee-records-table .col-action {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-pay {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--midnight);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.3px;
+}
+
+.btn-pay:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 31, 63, 0.25);
+  background: linear-gradient(135deg, var(--midnight) 0%, #11324a 100%);
+}
+
+.paid-check {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background: #27ae60;
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* -----------------------------------------------
    💰 Fees Page Animations
 ----------------------------------------------- */
 .data-table td span {
@@ -208,74 +495,480 @@ body {
 }
 
 /* -----------------------------------------------
-   🗓️ Attendance Page - Circle Progress Bars
+   🗓️ Attendance Page - Circle Progress Bars (ENHANCED)
 ----------------------------------------------- */
 .attendance-circles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
   margin-top: 24px;
+  padding: 20px 0;
 }
 
+/* Main attendance card */
 .circle-card {
   background: var(--white);
-  border-radius: 16px;
-  box-shadow: var(--soft-shadow);
-  width: 200px;
-  height: 240px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0, 31, 63, 0.08);
+  padding: 28px 24px;
   text-align: center;
-  padding: 20px;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.circle-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(205, 238, 228, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.circle-card:hover::before {
+  left: 100%;
 }
 
 .circle-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 26px rgba(11,11,11,0.08);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 31, 63, 0.15);
 }
 
-/* Circle progress wrapper */
-.circle-progress {
-  width: 110px;
-  height: 110px;
-  margin: 0 auto 10px auto;
+/* Circular progress container */
+.circle-progress-container {
   position: relative;
-  background: conic-gradient(var(--pastel-mint) calc(var(--value) * 1%), rgba(11,11,11,0.1) 0);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  transition: var(--transition);
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 20px auto;
 }
 
-.circle-progress::before {
-  content: attr(data-value) "%";
-  font-size: 1.3rem;
+/* SVG circular progress */
+.circular-progress {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circular-progress circle {
+  fill: none;
+  stroke-width: 6;
+}
+
+/* Background circle */
+.progress-bg {
+  stroke: rgba(11, 11, 11, 0.08);
+}
+
+/* Filled progress circle */
+.progress-fill {
+  stroke: var(--pastel-mint);
+  stroke-dasharray: 408.41; /* 2 * π * 65 */
+  stroke-dashoffset: 408.41;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.3s ease;
+  animation: strokeAnimation 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes strokeAnimation {
+  0% {
+    stroke-dashoffset: 408.41;
+  }
+  100% {
+    stroke-dashoffset: calc(408.41 - (408.41 * var(--percentage, 0) / 100));
+  }
+}
+
+/* Dynamic color change for low attendance - handled via JavaScript */
+.progress-fill.low-attendance {
+  stroke: #ff6b6b;
+}
+
+/* Percentage text in center */
+.circle-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color, var(--pastel-mint));
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.circle-card:hover .circle-percentage {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Course name */
+.circle-card h3 {
+  color: var(--midnight);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+/* Attendance metadata */
+.attendance-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.meta-item {
+  background: rgba(205, 238, 228, 0.15);
+  padding: 10px 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.meta-item:hover {
+  background: rgba(205, 238, 228, 0.35);
+  transform: scale(1.05);
+}
+
+.meta-item .label {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(0, 31, 63, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  display: block;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--midnight);
-  position: absolute;
 }
 
-.circle-card h3 {
-  margin-top: 10px;
-  color: var(--midnight);
-  font-size: 1.05rem;
+.meta-item .text-success {
+  color: #27ae60;
+}
+
+.meta-item .text-danger {
+  color: #e74c3c;
+}
+
+/* View Details Button */
+.btn-view-details {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 24px;
+  background: var(--midnight);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Circle hover glow */
-.circle-progress:hover {
-  box-shadow: 0 0 20px rgba(205,238,228,0.8);
+.btn-view-details::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(205, 238, 228, 0.3);
+  transition: left 0.3s ease;
+  z-index: -1;
 }
 
-/* Animate circle filling on load */
-@keyframes fillCircle {
-  0% { --value: 0; }
-  100% { --value: var(--final); }
+.btn-view-details:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 31, 63, 0.25);
+  background: linear-gradient(135deg, var(--midnight) 0%, #11324a 100%);
 }
 
-/* Utility to apply animation */
-.circle-progress.animated {
-  animation: fillCircle 2s ease forwards;
+.btn-view-details:hover::before {
+  left: 100%;
+}
+
+/* -----------------------------------------------
+   🗓️ Attendance Detail Page Styling
+----------------------------------------------- */
+.attendance-detail-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 31, 63, 0.08);
+  margin-bottom: 28px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.attendance-detail-card:hover {
+  box-shadow: 0 12px 32px rgba(0, 31, 63, 0.15);
+  transform: translateY(-4px);
+}
+
+.attendance-detail-header {
+  background: linear-gradient(135deg, var(--midnight) 0%, #11324a 100%);
+  color: var(--white);
+  padding: 24px;
+  border-bottom: 3px solid var(--pastel-mint);
+}
+
+.attendance-detail-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.attendance-detail-header .course-code {
+  display: block;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.attendance-detail-content {
+  padding: 32px 24px;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.attendance-stats-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.stat-box {
+  background: linear-gradient(135deg, rgba(205, 238, 228, 0.2), rgba(0, 31, 63, 0.03));
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid var(--pastel-mint);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(205, 238, 228, 0.3);
+  border-left-color: var(--midnight);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: rgba(0, 31, 63, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--midnight);
+}
+
+.stat-value.text-success {
+  color: #27ae60;
+}
+
+.stat-value.text-danger {
+  color: #e74c3c;
+}
+
+/* -----------------------------------------------
+   📋 Attendance Records Table - Enhanced
+----------------------------------------------- */
+.attendance-detail-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  margin-bottom: 32px;
+}
+
+.attendance-records-section {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 31, 63, 0.08);
+  padding: 28px 24px;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.attendance-records-section:hover {
+  box-shadow: 0 12px 32px rgba(0, 31, 63, 0.15);
+}
+
+.attendance-records-section h3 {
+  color: var(--midnight);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--pastel-mint);
+}
+
+/* Custom table styling */
+.attendance-records-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 2fr 0.5fr;
+  gap: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(0, 31, 63, 0.08), rgba(205, 238, 228, 0.15));
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--midnight);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.table-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-body::-webkit-scrollbar-track {
+  background: rgba(205, 238, 228, 0.2);
+  border-radius: 10px;
+}
+
+.table-body::-webkit-scrollbar-thumb {
+  background: var(--pastel-mint);
+  border-radius: 10px;
+}
+
+.table-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(205, 238, 228, 0.8);
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 0.5fr;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--white);
+  border-radius: 8px;
+  border-left: 4px solid #ccc;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: center;
+}
+
+.table-row.present-row {
+  border-left-color: #27ae60;
+  background: linear-gradient(90deg, rgba(39, 174, 96, 0.05), transparent);
+}
+
+.table-row.absent-row {
+  border-left-color: #e74c3c;
+  background: linear-gradient(90deg, rgba(231, 76, 60, 0.05), transparent);
+}
+
+.table-row:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 31, 63, 0.12);
+}
+
+.col-date {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-text {
+  font-weight: 600;
+  color: var(--midnight);
+  font-size: 0.95rem;
+}
+
+.col-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.col-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.record-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  animation: indicatorPulse 2s infinite;
+}
+
+@keyframes indicatorPulse {
+  0%, 100% {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    transform: scale(1.1);
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(0, 31, 63, 0.5);
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.attendance-detail-wrapper {
+  animation: fadeIn 0.6s ease;
 }
 
 /* -----------------------------------------------
@@ -554,43 +1247,111 @@ body {
 }
 
 /* Notification Items */
+
 .notification-item {
   display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 26px;
+  margin-bottom: 20px;
+  background: linear-gradient(120deg, var(--midnight) 80%, var(--pastel-mint) 100%);
+  border-radius: 14px;
+  box-shadow: 0 4px 18px 0 rgba(0,31,63,0.13), 0 0 0 2px var(--pastel-mint) inset;
+  border: 2px solid var(--pastel-mint);
+  transition: box-shadow 0.3s, transform 0.3s, border 0.3s;
+  position: relative;
+}
+.notification-item:hover {
+  box-shadow: 0 8px 32px 0 rgba(0,31,63,0.22), 0 0 0 4px #cdeee488;
+  transform: translateY(-2px) scale(1.012);
+  border-color: var(--pastel-mint);
+  background: linear-gradient(120deg, #0a2342 80%, #a8ffec 100%);
+}
+.notification-item:last-child {
+  margin-bottom: 0;
+}
+.notification-item.read {
+  opacity: 0.85;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
   gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  transition: var(--transition);
+  margin-bottom: 8px;
 }
-
-.notification-item:hover {
-  background: rgba(205,238,228,0.2);
-  border-radius: 6px;
-  padding: 10px;
+.notification-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--pastel-mint);
 }
-
-.notification-item:last-child {
-  border-bottom: none;
+.notification-header small {
+  font-size: 13px;
+  color: var(--pastel-mint);
+  text-align: right;
+  font-style: italic;
+  opacity: 0.9;
+  white-space: nowrap;
 }
 
 .notification-icon {
-  font-size: 16px;
+  font-size: 20px;
   margin-top: 2px;
+  color: var(--pastel-mint);
+  filter: drop-shadow(0 0 4px #cdeee4cc);
 }
-
-.notification-content {
+.notification-body {
   flex: 1;
 }
-
+.notification-body p {
+  margin: 0;
+  color: #e0f7fa;
+  font-size: 15px;
+  letter-spacing: 0.1px;
+  line-height: 1.5;
+}
+.notification-content {
+  flex: 1;
+  color: #e0f7fa;
+}
 .notification-content p {
   margin: 0 0 4px 0;
-  color: #333;
-  font-size: 14px;
+  color: #e0f7fa;
+  font-size: 15px;
+  letter-spacing: 0.1px;
+}
+.notification-time {
+  font-size: 13px;
+  color: var(--pastel-mint);
+  text-align: right;
+  font-style: italic;
+  opacity: 0.85;
 }
 
-.notification-time {
-  font-size: 11px;
-  color: #666;
+/* Mark as Read Button */
+.btn-small {
+  background: var(--midnight);
+  color: var(--pastel-mint);
+  border: 1.5px solid var(--pastel-mint);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+  letter-spacing: 0.5px;
+}
+.btn-small:hover {
+  background: #0a2342;
+  box-shadow: 0 4px 12px 0 rgba(0,31,63,0.3), 0 0 0 3px #cdeee444;
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+.btn-small:active {
+  transform: translateY(0);
 }
 
 /* Quick Actions */
@@ -1150,6 +1911,186 @@ body {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+
+  /* Attendance detail responsive */
+  .attendance-detail-content {
+    flex-direction: column;
+    gap: 24px;
+    padding: 20px 16px;
+  }
+
+  .circle-progress-container {
+    margin: 0 auto;
+  }
+
+  .attendance-stats-detail {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    width: 100%;
+  }
+
+  .attendance-meta {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .meta-item {
+    padding: 8px 6px;
+  }
+
+  .meta-item .label {
+    font-size: 0.7rem;
+  }
+
+  .meta-item .value {
+    font-size: 1rem;
+  }
+
+  .circle-card {
+    padding: 20px 16px;
+  }
+
+  .circle-card h3 {
+    font-size: 1rem;
+  }
+
+  .btn-view-details {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  /* Attendance records mobile */
+  .attendance-detail-wrapper {
+    gap: 20px;
+  }
+
+  .attendance-records-section {
+    padding: 20px 16px;
+  }
+
+  .table-header {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .col-badge {
+    display: none;
+  }
+
+  .table-header .col-badge {
+    display: none;
+  }
+
+  .attendance-records-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+
+  .date-text {
+    font-size: 0.9rem;
+  }
+
+  .status-badge {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* Fee page mobile */
+  .fee-overview-content {
+    gap: 20px;
+  }
+
+  .fee-overview-content .circle-progress-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .fee-overview-content .circle-progress-container svg {
+    width: 120px;
+    height: 120px;
+  }
+
+  .fee-stats {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .fee-stat-box {
+    padding: 12px;
+  }
+
+  .fee-stat-box .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .fee-records-table .table-header {
+    grid-template-columns: 0.6fr 1fr 1fr 0.8fr;
+    gap: 10px;
+    padding: 12px;
+    font-size: 0.8rem;
+  }
+
+  .fee-records-table .table-row {
+    grid-template-columns: 0.6fr 1fr 1fr 0.8fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .fee-records-table .col-amount,
+  .fee-records-table .col-paid,
+  .fee-records-table .col-due,
+  .fee-records-table .col-status,
+  .fee-records-table .col-action {
+    font-size: 0.85rem;
+  }
+
+  .btn-pay {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .fee-overview-header h3 {
+    font-size: 1.1rem;
+  }
+
+
+  .table-header {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+
+  .col-badge {
+    display: none;
+  }
+
+  .table-header .col-badge {
+    display: none;
+  }
+
+  .attendance-records-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+
+  .date-text {
+    font-size: 0.9rem;
+  }
+
+  .status-badge {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
   
   .notification-content {
     min-width: 250px;
@@ -1261,3 +2202,214 @@ body {
 .mb-20 { margin-bottom: 20px; }
 .p-10 { padding: 10px; }
 .p-20 { padding: 20px; }
+/* ------------------------------------------------
+   🧾 Enrolled Courses - Card, Table & Button Styles
+-------------------------------------------------*/
+.enrolled-courses-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--soft-shadow);
+  margin-top: 18px;
+  overflow: hidden;
+}
+
+.enrolled-courses-card .empty-state {
+  text-align: center;
+  color: rgba(11,11,11,0.7);
+  padding: 28px 12px;
+}
+
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 0.98rem;
+}
+
+.courses-table thead th {
+  padding: 14px 12px;
+  font-weight: 700;
+  color: var(--midnight);
+  background: transparent;
+  border-bottom: 2px solid rgba(11,11,11,0.06);
+}
+
+.courses-table tbody td {
+  padding: 12px 10px;
+  color: rgba(11,11,11,0.85);
+  border-bottom: 1px solid rgba(11,11,11,0.06);
+  vertical-align: middle;
+}
+
+.courses-table tbody tr:hover td {
+  background: rgba(205,238,228,0.12);
+}
+
+/* Small button (action) */
+.btn-small {
+  padding: 6px 10px;
+  font-size: 0.92rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+}
+
+/* Use blue theme for action buttons (was btn-danger) */
+.btn-danger {
+  /* primary blue action (used for Drop) */
+  background: linear-gradient(90deg, #0b3a57, var(--midnight));
+  color: var(--white);
+  box-shadow: 0 6px 16px rgba(11,50,80,0.12);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(11,50,80,0.14);
+  opacity: 0.98;
+}
+
+/* Icon inside small buttons */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* Lighter variant if needed */
+.btn-blue-light {
+  /* Match the project's established gradient: #11324a -> --midnight */
+  background: linear-gradient(90deg, #11324a, var(--midnight));
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(11,50,80,0.06);
+}
+
+/* ------------------------------------------------
+   Search & Filter Controls
+-------------------------------------------------*/
+.search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-box input[type="text"] {
+  flex: 1 1 420px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(11,11,11,0.08);
+  background: var(--whitesmoke);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+.search-box input[type="text"]:focus {
+  outline: none;
+  border-color: var(--midnight);
+  box-shadow: 0 6px 18px rgba(17,50,74,0.06);
+}
+
+.search-btn, .clear-btn {
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.search-btn {
+  background: linear-gradient(90deg,#11324a,var(--midnight));
+  color: #fff;
+}
+
+.clear-btn {
+  background: transparent;
+  color: var(--midnight);
+  border: 1px solid rgba(11,11,11,0.06);
+}
+
+.search-btn:hover, .clear-btn:hover {
+  transform: translateY(-2px);
+}
+
+.filter-section {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  color: rgba(11,11,11,0.7);
+}
+
+.filter-group select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(11,11,11,0.08);
+  background: var(--whitesmoke);
+  min-width: 160px;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--midnight);
+  box-shadow: 0 6px 18px rgba(17,50,74,0.06);
+}
+
+/* Results info alignment */
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(11,11,11,0.04);
+  margin-bottom: 12px;
+}
+
+/* Table text centering and action cell */
+.courses-table thead th, .courses-table tbody td { text-align: center; }
+.courses-table tbody td.action-cell { width: 140px; }
+
+.seats-status.seats-available {
+  color: #0b664b;
+  font-weight: 600;
+}
+.seats-status.seats-full {
+  color: #c53030;
+  font-weight: 600;
+}
+
+/* Make table horizontally scrollable on small screens */
+.enrolled-courses-card {
+  overflow-x: auto;
+}
+
+@media (min-width: 900px) {
+  .enrolled-courses-card { padding: 24px; }
+  .courses-table thead th { text-align: center; }
+}

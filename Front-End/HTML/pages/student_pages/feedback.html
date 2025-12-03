@@ -125,9 +125,6 @@
               <label for="courseSelect">Course</label>
               <select id="courseSelect" name="course" required>
                 <option value="">Select a course...</option>
-                <option value="CS301">CS301 - Database Systems</option>
-                <option value="CS302">CS302 - Operating Systems</option>
-                <option value="CS303">CS303 - Artificial Intelligence</option>
               </select>
 
               <label>Rating</label>
@@ -164,48 +161,7 @@
         </div>
         
         <div class="activity-timeline">
-          <div class="timeline-item">
-            <div class="timeline-marker completed"></div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <span class="course-badge">CS301</span>
-                <span class="timeline-date">Today</span>
-              </div>
-              <h4>Database Systems</h4>
-              <p>Submitted feedback with 4.5⭐ rating</p>
-              <div class="timeline-preview">
-                "Excellent course content and practical assignments..."
-              </div>
-            </div>
-          </div>
-          
-          <div class="timeline-item">
-            <div class="timeline-marker completed"></div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <span class="course-badge">CS302</span>
-                <span class="timeline-date">2 days ago</span>
-              </div>
-              <h4>Operating Systems</h4>
-              <p>Submitted feedback with 4.0⭐ rating</p>
-              <div class="timeline-preview">
-                "Good course structure, more lab sessions would be helpful..."
-              </div>
-            </div>
-          </div>
-          
-          <div class="timeline-item pending">
-            <div class="timeline-marker pending"></div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <span class="course-badge">CS303</span>
-                <span class="timeline-date">Due in 3 days</span>
-              </div>
-              <h4>Artificial Intelligence</h4>
-              <p>Feedback pending submission</p>
-              <button class="btn small primary" onclick="location.href='feedback_pending.html'">Submit Now</button>
-            </div>
-          </div>
+          <!-- Timeline items will be loaded dynamically from the backend -->
         </div>
       </section>
 
