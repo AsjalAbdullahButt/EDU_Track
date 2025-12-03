@@ -160,8 +160,12 @@ class Notifications(Base):
     notification_id = Column(Integer, primary_key=True, index=True)
     sender_id = Column(Integer)  # Admin or Faculty
     recipient_id = Column(Integer)  # Student
-    message = Column(String(255), nullable=False)
+    student_id = Column(Integer)  # Student ID for filtering
+    title = Column(String(255), nullable=False, default="Notification")
+    message = Column(String(500), nullable=False)
     date_sent = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    is_read = Column(Boolean, default=False)
     type = Column(String(20))
 
 

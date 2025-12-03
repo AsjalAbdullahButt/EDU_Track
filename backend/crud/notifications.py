@@ -16,6 +16,17 @@ def get_notifications(db: Session):
 def get_notification(db: Session, notification_id: int):
     return db.query(Notifications).filter(Notifications.notification_id == notification_id).first()
 
+def update_notification(db: Session, notification_id: int, data: dict):
+    n = get_notification(db, notification_id)
+    if not n:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    for key, value in data.items():
+        if hasattr(n, key):
+            setattr(n, key, value)
+    db.commit()
+    db.refresh(n)
+    return n
+
 def delete_notification(db: Session, notification_id: int):
     n = get_notification(db, notification_id)
     if not n:

@@ -188,8 +188,11 @@ class FeeResponse(FeeBase):
 class NotificationBase(BaseModel):
     sender_id: int | None = None
     recipient_id: int | None = None
+    student_id: int | None = None
+    title: str = "Notification"
     message: str
     type: str | None = None
+    is_read: bool = False
 
 
 class NotificationCreate(NotificationBase):
@@ -199,6 +202,7 @@ class NotificationCreate(NotificationBase):
 class NotificationResponse(NotificationBase):
     notification_id: int
     date_sent: datetime
+    created_at: datetime
 
     class Config:
         orm_mode = True

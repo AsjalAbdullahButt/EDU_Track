@@ -13,6 +13,11 @@ def create_attendance(data: AttendanceCreate, db: Session = Depends(get_db)):
 def list_attendance(db: Session = Depends(get_db)):
     return attendance_crud.get_attendances(db)
 
+@router.get("/student/{student_id}", response_model=list[AttendanceResponse])
+def get_student_attendance(student_id: int, db: Session = Depends(get_db)):
+    """Get attendance records for a student's enrolled courses only"""
+    return attendance_crud.get_student_attendance(db, student_id)
+
 @router.get("/{attendance_id}", response_model=AttendanceResponse)
 def get_attendance(attendance_id: int, db: Session = Depends(get_db)):
     a = attendance_crud.get_attendance(db, attendance_id)

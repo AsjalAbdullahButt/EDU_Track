@@ -48,14 +48,14 @@ async function loadAttendance() {
     return;
   }
 
-  // Fetch courses and attendance
+  // Fetch only enrolled courses for this student
   const [coursesRes, attendanceRes] = await Promise.all([
-    fetchJson('/courses'),
-    fetchJson(`/attendance`)
+    fetchJson(`/courses/student/${studentId}`),
+    fetchJson(`/attendance/student/${studentId}`)
   ]);
 
   const courses = coursesRes || [];
-  const attendance = (attendanceRes || []).filter(a => a.student_id === studentId);
+  const attendance = attendanceRes || [];
 
   // Group by course and calculate stats
   const attendanceByClass = {};
@@ -80,33 +80,43 @@ async function loadAttendance() {
     return;
   }
 
-  container.innerHTML = courses.map(course => {
-    const stats = attendanceByClass[course.course_id] || { present: 0, absent: 0, total: 0 };
-    const percentage = stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0;
-    const statusClass = percentage >= 75 ? 'status-good' : 'status-warning';
+  container.innerHTML = `<div class="attendance-circles">
+    ${courses.map(course => {
+      const stats = attendanceByClass[course.course_id] || { present: 0, absent: 0, total: 0 };
+      const percentage = stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0;
+      const circleColor = percentage >= 80 ? 'var(--pastel-mint)' : '#ff6b6b';
+      const statusClass = percentage >= 80 ? 'status-good' : 'status-warning';
+      const lowAttendanceClass = percentage < 80 ? 'low-attendance' : '';
 
-    return `
-      <div class="attendance-card">
-        <h3>${course.course_name}</h3>
-        <div class="attendance-stat">
-          <strong>Total Classes:</strong> <span>${stats.total}</span>
-        </div>
-        <div class="attendance-stat">
-          <strong>Present:</strong> <span class="text-success">${stats.present}</span>
-        </div>
-        <div class="attendance-stat">
-          <strong>Absent:</strong> <span class="text-danger">${stats.absent}</span>
-        </div>
-        <div class="attendance-percentage">
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width: ${percentage}%"></div>
+      return `
+        <div class="circle-card">
+          <div class="circle-progress-container">
+            <svg class="circular-progress" width="140" height="140" viewBox="0 0 140 140">
+              <circle class="progress-bg" cx="70" cy="70" r="65" />
+              <circle class="progress-fill ${lowAttendanceClass}" cx="70" cy="70" r="65" style="--percentage: ${percentage}" />
+            </svg>
+            <div class="circle-percentage" style="--color: ${circleColor}">${percentage}%</div>
           </div>
-          <span class="percentage-text ${statusClass}">${percentage}%</span>
+          <h3>${course.course_name}</h3>
+          <div class="attendance-meta">
+            <div class="meta-item">
+              <span class="label">Present:</span>
+              <span class="value text-success">${stats.present}</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">Absent:</span>
+              <span class="value text-danger">${stats.absent}</span>
+            </div>
+            <div class="meta-item">
+              <span class="label">Total:</span>
+              <span class="value">${stats.total}</span>
+            </div>
+          </div>
+          <a href="/pages/student_pages/attendance_detail.html?course_id=${course.course_id}" class="btn-view-details">View Details</a>
         </div>
-        <a href="/pages/student_pages/attendance_detail.html?course_id=${course.course_id}" class="btn-small btn-primary">View Details</a>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('')}
+  </div>`;
 }
 
 // Auto-refresh every 30 seconds

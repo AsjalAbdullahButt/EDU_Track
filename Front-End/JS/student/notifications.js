@@ -61,18 +61,28 @@ async function loadNotifications() {
     return;
   }
 
-  container.innerHTML = notifications.map(n => `
+  container.innerHTML = notifications.map(n => {
+    const createdDate = new Date(n.created_at);
+    const formattedDate = createdDate.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    return `
     <div class="notification-item ${n.is_read ? 'read' : 'unread'}">
       <div class="notification-header">
         <h4>${n.title || 'Notification'}</h4>
-        <small>${new Date(n.created_at).toLocaleString()}</small>
+        <small>${formattedDate}</small>
       </div>
       <div class="notification-body">
         <p>${n.message || ''}</p>
       </div>
       ${!n.is_read ? `<button class="btn-small" onclick="markAsRead(${n.notification_id})">Mark as Read</button>` : ''}
     </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 async function markAsRead(notificationId) {

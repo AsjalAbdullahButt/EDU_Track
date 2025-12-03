@@ -86,31 +86,33 @@
                     </div>
                 </div>
 
-                <!-- Results Info -->
-                <div class="results-info" id="resultsInfo">
-                    <span>Available Courses</span>
-                    <span class="total-courses" id="totalCourses">0 courses</span>
-                </div>
+                <div class="enrolled-courses-card">
+                    <!-- Results Info -->
+                    <div class="results-info" id="resultsInfo">
+                        <span>Available Courses</span>
+                        <span class="total-courses" id="totalCourses">0 courses</span>
+                    </div>
 
-                <!-- Courses Table -->
-                <table class="courses-table" id="coursesTable">
-                    <thead>
-                        <tr>
-                            <th>Course Code</th>
-                            <th>Course Name</th>
-                            <th>Department</th>
-                            <th>Credits</th>
-                            <th>Availability</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="coursesTableBody">
-                        <!-- Courses loaded dynamically from backend -->
-                    </tbody>
-                </table>
-                
-                <div id="noCoursesMessage" class="no-courses" style="display: none;">
-                    No courses match your search criteria. Try adjusting your filters.
+                    <!-- Courses Table -->
+                    <table class="courses-table" id="coursesTable">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Department</th>
+                                <th>Credits</th>
+                                <th>Availability</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                            <!-- Courses loaded dynamically from backend -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="noCoursesMessage" class="no-courses" style="display: none;">
+                        No courses match your search criteria. Try adjusting your filters.
+                    </div>
                 </div>
 
             </div>

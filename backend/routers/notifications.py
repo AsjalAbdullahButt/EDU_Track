@@ -21,6 +21,10 @@ def get_notification(notification_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Notification not found")
     return n
 
+@router.put("/{notification_id}", response_model=NotificationResponse)
+def update_notification(notification_id: int, data: dict, db: Session = Depends(get_db)):
+    return notifications_crud.update_notification(db, notification_id, data)
+
 @router.delete("/{notification_id}")
 def delete_notification(notification_id: int, db: Session = Depends(get_db)):
     return notifications_crud.delete_notification(db, notification_id)

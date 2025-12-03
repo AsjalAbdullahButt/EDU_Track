@@ -72,6 +72,14 @@ async function loadEnrolledCourses() {
     return;
   }
 
+  // helper to format dates safely
+  function formatSafeDate(value) {
+    if (!value) return '—';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString();
+  }
+
   const table = document.createElement('table');
   table.className = 'courses-table';
   table.innerHTML = `
@@ -94,9 +102,16 @@ async function loadEnrolledCourses() {
           <td>${c.department || 'N/A'}</td>
           <td>${c.credits || 'N/A'}</td>
           <td>${c.instructor_name || 'N/A'}</td>
-          <td>${new Date(c.enrolled_date).toLocaleDateString()}</td>
+          <td>${formatSafeDate(c.enrolled_date)}</td>
           <td>
-            <button class="btn-small btn-danger" onclick="dropCourse(${c.enrollment_id})">Drop</button>
+            <button class="btn-small btn-danger" onclick="dropCourse(${c.enrollment_id})">
+              <span class="btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3 6h18v2H3V6zm2 3h14l-1.1 11.1A2 2 0 0 1 15.9 22H8.1a2 2 0 0 1-1.99-1.9L5 9zm6-6c.55 0 1 .45 1 1h4v2H5V4h4c0-.55.45-1 1-1z"/>
+                </svg>
+              </span>
+              <span>Drop</span>
+            </button>
           </td>
         </tr>
       `).join('')}

@@ -14,6 +14,11 @@ def create_fee(data: FeeCreate, db: Session = Depends(get_db)):
 def list_fees(db: Session = Depends(get_db)):
     return fee_crud.get_fees(db)
 
+@router.get("/student/{student_id}", response_model=list[FeeResponse])
+def get_student_fees(student_id: int, db: Session = Depends(get_db)):
+    """Get all fees for a specific student"""
+    return fee_crud.get_student_fees(db, student_id)
+
 @router.get("/{fee_id}", response_model=FeeResponse)
 def get_fee(fee_id: int, db: Session = Depends(get_db)):
     f = fee_crud.get_fee(db, fee_id)
