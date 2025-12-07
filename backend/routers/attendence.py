@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.database import get_db
-from backend.crud import attendence as attendance_crud
-from backend.schemas import AttendanceCreate, AttendanceResponse
+from database import get_db
+from crud import attendence as attendance_crud
+from schemas import AttendanceCreate, AttendanceResponse
 router = APIRouter(prefix="/attendance", tags=["Attendance"])
 
 @router.post("/", response_model=AttendanceResponse)

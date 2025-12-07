@@ -3,39 +3,24 @@
    ============================================================ */
 
 async function fetchJson(path, opts = {}) {
-  try {
-    const base = window.API_BASE || '';
-    const candidates = path.startsWith('http') ? [path] : [path, path.endsWith('/') ? path : path + '/'];
-    for (const p of candidates) {
-      const url = p.startsWith('http') ? p : (base ? base + p : p);
-      try {
-        const res = await fetch(url, opts);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-      } catch (e) {
-        console.debug('[fetchJson] candidate failed', url, e.message);
-      }
-    }
-  } catch (e) {
+  const base = window.API_BASE || '';
+  const base2 = 'http://127.0.0.1:8000';
+  
+  const candidates = path.startsWith('http') ? [path] : [path, base2 + path];
+  
+  for (const url of candidates) {
     try {
-      const base2 = 'http://127.0.0.1:8000';
-      const candidates2 = [path, path.endsWith('/') ? path : path + '/'];
-      for (const p of candidates2) {
-        const fallback = base2 + p;
-        try {
-          const res2 = await fetch(fallback, opts);
-          if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
-          return await res2.json();
-        } catch (e2) {
-          console.debug('[fetchJson] fallback failed', fallback, e2.message);
-        }
+      const res = await fetch(url, opts);
+      if (res.ok) {
+        return await res.json();
       }
-    } catch (e2) {
-      console.error('[fees] fetchJson failed', path, e, e2);
-      if (window.showToast) window.showToast(`Failed to load: ${path}`, 'error');
-      return null;
+    } catch (e) {
+      console.debug('[fetchJson] failed', url, e.message);
     }
   }
+  
+  console.error('[fees] fetchJson failed for all candidates', path);
+  if (window.showToast) window.showToast(`Failed to load: ${path}`, 'error');
   return null;
 }
 
@@ -58,12 +43,7 @@ async function loadFees() {
   const pendingFees = totalFees - paidFees;
   const paymentPercentage = totalFees > 0 ? Math.round((paidFees / totalFees) * 100) : 0;
 
-  // Update summary with enhanced styling
-  document.getElementById('totalFees').textContent = totalFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
-  document.getElementById('paidFees').textContent = paidFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
-  document.getElementById('pendingFees').textContent = pendingFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' });
-
-  // Render enhanced fee overview with circular progress
+  // Render enhanced fee overview
   const container = document.getElementById('feesTableContainer');
   if (!container) return;
 
@@ -72,32 +52,29 @@ async function loadFees() {
     return;
   }
 
-  // Create fee overview card with circular progress
+  // Create fee overview card
   const overviewHtml = `
     <div class="fee-overview-card">
       <div class="fee-overview-header">
-        <h3>Overall Payment Status</h3>
+        <h3>Fee Summary</h3>
       </div>
       <div class="fee-overview-content">
-        <div class="circle-progress-container">
-          <svg class="circular-progress" width="140" height="140" viewBox="0 0 140 140">
-            <circle class="progress-bg" cx="70" cy="70" r="65" />
-            <circle class="progress-fill ${paymentPercentage >= 80 ? '' : 'low-attendance'}" cx="70" cy="70" r="65" style="--percentage: ${paymentPercentage}" />
-          </svg>
-          <div class="circle-percentage" style="--color: ${paymentPercentage >= 80 ? 'var(--pastel-mint)' : '#ff6b6b'}">${paymentPercentage}%</div>
-        </div>
-        <div class="fee-stats">
+        <div class="fee-stats-grid">
           <div class="fee-stat-box">
             <span class="stat-label">Total Amount</span>
             <span class="stat-value">${totalFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
           </div>
           <div class="fee-stat-box">
             <span class="stat-label">Amount Paid</span>
-            <span class="stat-value text-success">${paidFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+            <span class="stat-value stat-success">${paidFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
           </div>
           <div class="fee-stat-box">
             <span class="stat-label">Amount Due</span>
-            <span class="stat-value text-danger">${pendingFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+            <span class="stat-value stat-danger">${pendingFees.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+          </div>
+          <div class="fee-stat-box">
+            <span class="stat-label">Payment Progress</span>
+            <span class="stat-value">${paymentPercentage}%</span>
           </div>
         </div>
       </div>
@@ -110,10 +87,11 @@ async function loadFees() {
       <h3>Detailed Fee Records</h3>
       <div class="fee-records-table">
         <div class="table-header">
-          <div class="col-id">ID</div>
+          <div class="col-id">Fee ID</div>
           <div class="col-description">Description</div>
           <div class="col-amount">Total Amount</div>
           <div class="col-paid">Paid Amount</div>
+          <div class="col-balance">Balance</div>
           <div class="col-due">Due Date</div>
           <div class="col-status">Status</div>
           <div class="col-action">Action</div>
@@ -122,16 +100,17 @@ async function loadFees() {
           ${fees.map(f => {
             const totalAmt = parseFloat(f.total_amount) || 0;
             const paidAmt = parseFloat(f.amount_paid) || 0;
-            const isPaid = paidAmt >= totalAmt;
+            const balance = totalAmt - paidAmt;
+            const isPaid = balance <= 0;
             const statusClass = isPaid ? 'paid-row' : 'pending-row';
-            const statusBg = isPaid ? '#27ae6020' : '#e74c3c20';
+            const statusBg = isPaid ? 'rgba(39, 174, 96, 0.1)' : 'rgba(231, 76, 60, 0.1)';
             const statusColor = isPaid ? '#27ae60' : '#e74c3c';
-            const dueDate = new Date(f.due_date);
-            const formattedDate = dueDate.toLocaleDateString('en-US', { 
+            const dueDate = f.due_date ? new Date(f.due_date) : null;
+            const formattedDate = dueDate ? dueDate.toLocaleDateString('en-US', { 
               year: 'numeric', 
               month: 'short', 
               day: 'numeric' 
-            });
+            }) : 'N/A';
 
             return `
               <div class="table-row ${statusClass}">
@@ -139,20 +118,25 @@ async function loadFees() {
                   <span class="fee-id">${f.fee_id}</span>
                 </div>
                 <div class="col-description">
-                  <span class="description-text">${f.description || 'Tuition Fee'}</span>
+                  <span class="description-text">Semester Fee - ${f.status === 'Paid' ? 'Completed' : 'Current'}</span>
                 </div>
                 <div class="col-amount">
                   <span class="amount-text">${totalAmt.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
                 </div>
                 <div class="col-paid">
-                  <span class="paid-text" style="color: #27ae60; font-weight: 600">${paidAmt.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+                  <span class="paid-text">${paidAmt.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}</span>
+                </div>
+                <div class="col-balance">
+                  <span class="balance-text" style="color: ${balance > 0 ? '#e74c3c' : '#27ae60'}; font-weight: 700">
+                    ${balance.toLocaleString('en-PK', { style: 'currency', currency: 'PKR' })}
+                  </span>
                 </div>
                 <div class="col-due">
                   <span class="date-text">${formattedDate}</span>
                 </div>
                 <div class="col-status">
                   <span class="status-badge" style="background: ${statusBg}; color: ${statusColor}; border-left: 4px solid ${statusColor}">
-                    ${isPaid ? 'Paid' : 'Pending'}
+                    ${isPaid ? 'PAID' : 'PENDING'}
                   </span>
                 </div>
                 <div class="col-action">
@@ -167,6 +151,7 @@ async function loadFees() {
   `;
 
   container.innerHTML = overviewHtml + tableHtml;
+}
 
 // Auto-refresh every 30 seconds
 let refreshInterval = null;

@@ -21,13 +21,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  fetch('/grades')
-    .then(res => res.json())
+  if (!logged || !logged.id || logged.role !== 'student') {
+    if (tableBody) {
+      tableBody.innerHTML = '<tr><td colspan="7">Please log in to view your results.</td></tr>';
+    }
+    return;
+  }
+
+  fetch(`/grades/student/${logged.id}`)
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch grades');
+      return res.json();
+    })
     .then(data => {
       if (!tableBody) return;
-      let rows = data;
-      if (logged && logged.role === 'student') rows = data.filter(g => g.student_id === logged.id);
+      const rows = Array.isArray(data) ? data : [];
       tableBody.innerHTML = '';
+
+      if (rows.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7">No grades available yet.</td></tr>';
+        return;
+      }
 
       let totalPoints = 0, subjects = 0;
 
@@ -35,8 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${g.course_id}</td>
-          <td>${g.marks_obtained ?? ''}</td>
-          <td class="grade">${g.grade ?? ''}</td>
+          <td>${g.quiz_marks ?? 0}</td>
+          <td>${g.mid_marks ?? 0}</td>
+          <td>${g.assignment_marks ?? 0}</td>
+          <td>${g.final_marks ?? 0}</td>
+          <td>${g.marks_obtained ?? 0}</td>
+          <td class="grade">${g.grade ?? 'N/A'}</td>
         `;
         tableBody.appendChild(tr);
         styleRow(tr, g.grade);
@@ -51,5 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => {
       console.error('Failed to load grades', err);
+      if (tableBody) {
+        tableBody.innerHTML = '<tr><td colspan="7">Failed to load grades. Please try again later.</td></tr>';
+      }
     });
 });

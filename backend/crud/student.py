@@ -1,23 +1,24 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from backend.models import Student
-from backend.schemas import StudentCreate, StudentResponse
+from models import Student
+from schemas import StudentCreate, StudentResponse
+from security import hash_password
 from sqlalchemy.exc import IntegrityError
 
 def create_student(db: Session, student: StudentCreate) -> Student:
-    # Prevent duplicate emails
     existing = db.query(Student).filter(Student.email == student.email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    db_student = Student(**student.dict())
+    student_data = student.dict()
+    student_data['password'] = hash_password(student_data['password'])
+    db_student = Student(**student_data)
     db.add(db_student)
     try:
         db.commit()
         db.refresh(db_student)
     except IntegrityError as e:
         db.rollback()
-        # Convert DB integrity errors to a 400 with a readable message
         raise HTTPException(status_code=400, detail=str(e.orig))
     except Exception as e:
         db.rollback()
@@ -34,7 +35,12 @@ def update_student(db: Session, student_id: int, data: StudentCreate):
     student = get_student(db, student_id)
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
-    for key, value in data.dict().items():
+    
+    update_data = data.dict()
+    if 'password' in update_data and update_data['password']:
+        update_data['password'] = hash_password(update_data['password'])
+    
+    for key, value in update_data.items():
         setattr(student, key, value)
     db.commit()
     db.refresh(student)

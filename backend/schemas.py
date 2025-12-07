@@ -6,6 +6,7 @@ from datetime import date, datetime
 # STUDENT
 # -----------------------------------------------------------
 class StudentBase(BaseModel):
+    username: str | None = None
     full_name: str
     email: str
     password: str
@@ -26,9 +27,11 @@ class StudentResponse(StudentBase):
     student_id: int
     profile_verified: bool | None = False
     verification_status: str | None = "unverified"
+    account_status: str | None = "Active"
+    twofa_enabled: bool | None = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -49,9 +52,11 @@ class FacultyCreate(FacultyBase):
 
 class FacultyResponse(FacultyBase):
     faculty_id: int
+    account_status: str | None = "Active"
+    twofa_enabled: bool | None = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -70,9 +75,11 @@ class AdminCreate(AdminBase):
 
 class AdminResponse(AdminBase):
     admin_id: int
+    account_status: str | None = "Active"
+    twofa_enabled: bool | None = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -83,6 +90,8 @@ class CourseBase(BaseModel):
     course_code: str
     credit_hours: int
     faculty_id: int | None = None
+    course_status: str | None = "Pending"
+    description: str | None = None
 
 
 class CourseCreate(CourseBase):
@@ -93,7 +102,7 @@ class CourseResponse(CourseBase):
     course_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -114,7 +123,7 @@ class EnrollmentResponse(EnrollmentBase):
     enrollment_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -135,7 +144,7 @@ class AttendanceResponse(AttendanceBase):
     attendance_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -144,6 +153,10 @@ class AttendanceResponse(AttendanceBase):
 class GradesBase(BaseModel):
     student_id: int
     course_id: int
+    quiz_marks: float | None = 0
+    mid_marks: float | None = 0
+    assignment_marks: float | None = 0
+    final_marks: float | None = 0
     marks_obtained: float | None = None
     grade: str | None = None
     semester: int | None = None
@@ -157,7 +170,7 @@ class GradesResponse(GradesBase):
     grade_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -179,7 +192,7 @@ class FeeResponse(FeeBase):
     fee_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -205,7 +218,7 @@ class NotificationResponse(NotificationBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # -----------------------------------------------------------
@@ -227,4 +240,73 @@ class FeedbackResponse(FeedbackBase):
     date_submitted: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+# -----------------------------------------------------------
+# MARKS (Detailed Assessment Breakdown)
+# -----------------------------------------------------------
+class MarksBase(BaseModel):
+    student_id: int
+    course_id: int
+    semester: int | None = None
+    quiz1: float = 0.0
+    quiz2: float = 0.0
+    quiz3: float = 0.0
+    quiz_total: float = 0.0
+    assignment1: float = 0.0
+    assignment2: float = 0.0
+    assignment3: float = 0.0
+    assignment_total: float = 0.0
+    midterm1: float = 0.0
+    midterm2: float = 0.0
+    final_exam: float = 0.0
+    total_marks: float = 0.0
+    grade_letter: str | None = None
+
+
+class MarksCreate(MarksBase):
+    pass
+
+
+class MarksUpdate(BaseModel):
+    quiz1: float | None = None
+    quiz2: float | None = None
+    quiz3: float | None = None
+    quiz_total: float | None = None
+    assignment1: float | None = None
+    assignment2: float | None = None
+    assignment3: float | None = None
+    assignment_total: float | None = None
+    midterm1: float | None = None
+    midterm2: float | None = None
+    final_exam: float | None = None
+    total_marks: float | None = None
+    grade_letter: str | None = None
+
+    class Config:
+        from_attributes = True
+
+
+class MarksResponse(MarksBase):
+    mark_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# -----------------------------------------------------------
+# SECURITY UPDATE SCHEMAS
+# -----------------------------------------------------------
+class SecurityUpdate(BaseModel):
+    """Schema for updating security settings"""
+    account_status: str | None = None
+    twofa_enabled: bool | None = None
+
+
+class PasswordReset(BaseModel):
+    """Schema for password reset"""
+    new_password: str
+

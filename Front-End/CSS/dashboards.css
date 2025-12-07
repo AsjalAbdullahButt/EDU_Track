@@ -13,23 +13,25 @@
 }
 
 /* Do not override the global body background here; main.css controls the pastel mint site background */
-body {
+html, body {
   min-height: 100vh;
-  background: transparent; /* allow main.css to control global background */
+  height: 100%;
+  background: var(--white);
   color: var(--black);
   font-family: "Inter", "Roboto", system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 *** End Patch
 
-/* Pages that should show pastel mint background: add these classes to the <body> element in each HTML page:
-   dashboard, attendance, feedback, results, fees, notifications, courses */
+/* Pages should use white background for clean full-screen display */
 body.dashboard,
 body.attendance,
 body.results,
 body.fees,
 body.notifications,
 body.courses {
-  background: linear-gradient(180deg, rgba(205,238,228,0.85), rgba(205,238,228,0.95));
+  background: var(--white);
 }
 
 /* Feedback page should use a clean smoke-white background for a calmer UI */
@@ -40,7 +42,8 @@ body.feedback {
 .layout-wrapper {
   display: flex;
   min-height: 100vh;
-  align-items: flex-start; /* ensure main content aligns to top of sidebar */
+  height: 100%;
+  align-items: stretch;
 }
 
 /* Force main content to hug the top of the layout and avoid unexpected vertical centering */
@@ -48,6 +51,7 @@ body.feedback {
   align-self: flex-start;
   margin-top: 0;
   padding-top: 8px; /* small breathing room */
+  flex: 1;
 }
 
 /* ---- SIDEBAR ---- */
@@ -57,27 +61,46 @@ body.feedback {
   color: var(--white);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 24px 20px;
+  padding: 20px 16px;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  align-self: flex-start;
+  flex-shrink: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+/* Extend sidebar background to fill entire page height */
+.sidebar::before {
+  content: '';
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background: var(--midnight);
+  z-index: -1;
 }
 
 /* Sidebar Branding */
 .logo-section {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .sidebar-logo {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(205, 238, 228, 0.3), rgba(255, 255, 255, 0.1));
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .logo-section h2 {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
 }
 
@@ -85,18 +108,23 @@ body.feedback {
 .nav-links {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  flex-grow: 1;
+  gap: 8px;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-bottom: 16px;
+  min-height: 0;
 }
 
 .nav-links a {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-radius: 8px;
   transition: all 0.25s ease;
   font-weight: 500;
   letter-spacing: 0.3px;
+  font-size: 0.95rem;
+  flex-shrink: 0;
 }
 
 .nav-links a:hover {
@@ -116,11 +144,15 @@ body.feedback {
   outline-offset: 2px;
 }
 
-/* Logout button */
+/* Logout button - always stays at bottom */
 .logout-section {
-  margin-top: 20px;
-  text-align: center;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+  background: var(--midnight);
 }
+
 
 .logout-section .btn {
   width: 100%;
@@ -165,15 +197,15 @@ body.feedback {
   background: var(--whitesmoke);
 }
 
-/* When body has one of the target page classes, make .main-content use a semi-opaque white so the mint background is visible */
+/* When body has one of the target page classes, make .main-content use solid white background and fill screen */
 body.dashboard .main-content,
 body.attendance .main-content,
 body.results .main-content,
 body.fees .main-content,
 body.notifications .main-content,
 body.courses .main-content {
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(6px);
+  background: var(--white);
+  min-height: 100vh;
 }
 
 /* Make feedback page content sit slightly higher and tighter */

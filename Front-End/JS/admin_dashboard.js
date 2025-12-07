@@ -54,7 +54,6 @@ async function fetchJson(path, opts = {}){
 }
 
 async function loadAdminDashboard(){
-  // Ensure user is admin
   const user = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
   const role = user.role || '';
   if (user && user.name){
@@ -62,55 +61,35 @@ async function loadAdminDashboard(){
     if (nameEl) nameEl.textContent = user.name;
   }
 
-  // Prepare headers for admin-only endpoints
   const adminHeaders = { 'Content-Type': 'application/json' };
   if (role) adminHeaders['x-user-role'] = role;
 
-  // Fetch data in parallel
-  const [students, faculty, fees, notifications, pendingProfiles] = await Promise.all([
-    fetchJson('/students'),
-    fetchJson('/faculties'),
+  try {
+    const statsData = await fetchJson('/admins/dashboard/stats', { headers: adminHeaders });
+    
+    if (statsData) {
+      const studentsEl = document.getElementById('studentsCount');
+      if (studentsEl) studentsEl.textContent = (statsData.total_students || 0).toLocaleString();
+      
+      const facultyEl = document.getElementById('facultyCount');
+      if (facultyEl) facultyEl.textContent = (statsData.total_faculty || 0).toLocaleString();
+      
+      const feeEl = document.getElementById('feeCollection');
+      if (feeEl) feeEl.textContent = (statsData.fee_collection_percent || 0) + '%';
+      
+      const pendEl = document.getElementById('pendingRequestsCount');
+      if (pendEl) pendEl.textContent = statsData.pending_requests || 0;
+    }
+  } catch (error) {
+    console.error('Failed to load dashboard stats:', error);
+  }
+
+  const [fees, notifications, pendingProfiles] = await Promise.all([
     fetchJson('/fees'),
     fetchJson('/notifications'),
-    // admin-only endpoint: include role header
     fetchJson('/admins/pending-profiles', { headers: adminHeaders })
   ]);
 
-  // Diagnostic logs to help debug missing records
-  try{
-    console.debug('[admin_dashboard] students:', Array.isArray(students) ? students.length : students);
-    console.debug('[admin_dashboard] faculties:', Array.isArray(faculty) ? faculty.length : faculty);
-  }catch(e){ console.warn('Debug log failed', e); }
-
-  // Students
-  if (Array.isArray(students)){
-    const val = document.getElementById('studentsCount');
-    if (val) val.textContent = students.length.toLocaleString();
-  }
-
-  // Faculty
-  if (Array.isArray(faculty)){
-    const val = document.getElementById('facultyCount');
-    if (val) val.textContent = faculty.length.toLocaleString();
-  }
-
-  // Fees: compute collection percent
-  if (Array.isArray(fees)){
-    let total = 0, paid = 0;
-    fees.forEach(f => { total += Number(f.total_amount || 0); paid += Number(f.amount_paid || 0); });
-    const percent = total > 0 ? Math.round((paid/total)*100) : 0;
-    const el = document.getElementById('feeCollection');
-    if (el) el.textContent = percent + '%';
-  }
-
-  // Pending requests = pending profiles + fees with status Pending
-  let pendingCount = 0;
-  if (Array.isArray(pendingProfiles)) pendingCount += pendingProfiles.length;
-  if (Array.isArray(fees)) pendingCount += fees.filter(f=> (f.status||'').toLowerCase() === 'pending').length;
-  const pendEl = document.getElementById('pendingRequestsCount');
-  if (pendEl) pendEl.textContent = pendingCount;
-
-  // Notifications
   if (Array.isArray(notifications)){
     const list = document.getElementById('adminNotificationList');
     if (list){
@@ -123,7 +102,6 @@ async function loadAdminDashboard(){
     }
   }
 
-  // Populate fee verification table (show most recent pending fees)
   if (Array.isArray(fees)){
     const tbody = document.querySelector('#feeVerificationTable tbody');
     if (tbody){
@@ -143,39 +121,22 @@ async function loadAdminDashboard(){
         tbody.appendChild(tr);
       });
 
-      // attach handlers for verify buttons
       tbody.querySelectorAll('button.verify').forEach(btn => {
-            btn.addEventListener('click', async (e)=>{
+        btn.addEventListener('click', async (e)=>{
           const feeId = e.target.dataset.feeId;
           const amount = Number(e.target.dataset.feeAmount || 0);
           if (!feeId) return;
           e.target.disabled = true; e.target.textContent = 'Verifying…';
           try{
-            // Attempt to mark as paid; backend may accept PUT or PATCH
             const body = { status: 'Paid', amount_paid: amount };
             const res = await fetch(`/fees/${feeId}`, { method: 'PUT', headers: {'Content-Type':'application/json', 'x-user-role': role }, body: JSON.stringify(body) });
             if (res && res.ok){
               e.target.textContent = 'Verified';
               if (window.showToast) window.showToast('Fee verified', 'success');
-              // Refresh dashboard to update counts
               setTimeout(() => loadAdminDashboard(), 800);
             } else {
-              // Try PATCH as fallback
-              try{
-                const res2 = await fetch(`/fees/${feeId}`, { method: 'PATCH', headers: {'Content-Type':'application/json', 'x-user-role': role }, body: JSON.stringify(body) });
-                if (res2 && res2.ok){
-                  e.target.textContent = 'Verified';
-                  if (window.showToast) window.showToast('Fee verified (patched)', 'success');
-                  setTimeout(() => loadAdminDashboard(), 800);
-                } else {
-                  e.target.disabled = false; e.target.textContent = 'Verify';
-                  if (window.showToast) window.showToast('Failed to verify fee', 'error');
-                }
-              }catch(e2){
-                console.error('patch verify error', e2);
-                e.target.disabled = false; e.target.textContent = 'Verify';
-                if (window.showToast) window.showToast('Failed to verify fee', 'error');
-              }
+              e.target.disabled = false; e.target.textContent = 'Verify';
+              if (window.showToast) window.showToast('Failed to verify fee', 'error');
             }
           }catch(err){
             console.error('verify error', err);

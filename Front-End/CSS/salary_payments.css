@@ -234,7 +234,8 @@
 }
 
 /* Status Color Tags */
-.status-paid {
+.status-paid,
+.status-completed {
     color: #0a8a19;
     font-weight: 700;
 }
@@ -247,6 +248,52 @@
 .status-overdue {
     color: #b00020;
     font-weight: 700;
+}
+
+/* -------------------------------
+   BUTTONS
+-------------------------------- */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--white);
+    color: var(--midnight);
+    border: 1px solid rgba(11,11,11,0.25);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn.primary {
+    background: var(--midnight);
+    color: var(--white);
+    border: none;
+}
+
+.btn.primary:hover {
+    background: #003366;
+}
+
+.btn.btn-sm {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 /* -------------------------------

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test User Management API</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+    button { padding: 10px 20px; margin: 5px; cursor: pointer; background: #03223a; color: white; border: none; border-radius: 6px; }
+    button:hover { background: #012235; }
+    pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <h1>User Management API Test</h1>
+  
+  <div class="section">
+    <h2>Test API Endpoints</h2>
+    <button onclick="testStudents()">Test GET /students</button>
+    <button onclick="testFaculty()">Test GET /faculties</button>
+    <button onclick="testAdmins()">Test GET /admins</button>
+    <button onclick="clearResults()">Clear Results</button>
+  </div>
+  
+  <div class="section">
+    <h2>Results:</h2>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const resultsDiv = document.getElementById('results');
+    
+    function clearResults() {
+      resultsDiv.innerHTML = '';
+    }
+    
+    function addResult(title, data, isError = false) {
+      const div = document.createElement('div');
+      div.innerHTML = `
+        <h3 class="${isError ? 'error' : 'success'}">${title}</h3>
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+      `;
+      resultsDiv.appendChild(div);
+    }
+    
+    async function testStudents() {
+      try {
+        const response = await fetch('/students');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const data = await response.json();
+        addResult(`✓ GET /students - Found ${data.length} students`, data.slice(0, 2));
+      } catch (error) {
+        addResult('✗ GET /students - ERROR', { error: error.message }, true);
+      }
+    }
+    
+    async function testFaculty() {
+      try {
+        const response = await fetch('/faculties');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const data = await response.json();
+        addResult(`✓ GET /faculties - Found ${data.length} faculty`, data.slice(0, 2));
+      } catch (error) {
+        addResult('✗ GET /faculties - ERROR', { error: error.message }, true);
+      }
+    }
+    
+    async function testAdmins() {
+      try {
+        const response = await fetch('/admins');
+        if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const data = await response.json();
+        addResult(`✓ GET /admins - Found ${data.length} admins`, data);
+      } catch (error) {
+        addResult('✗ GET /admins - ERROR', { error: error.message }, true);
+      }
+    }
+  </script>
+</body>
+</html>

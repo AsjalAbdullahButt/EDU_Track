@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from backend.models import Admin
-from backend.schemas import AdminCreate
+from models import Admin
+from schemas import AdminCreate
+from security import hash_password
 
 def create_admin(db: Session, data: AdminCreate):
-    obj = Admin(**data.dict())
+    admin_data = data.dict()
+    admin_data['password'] = hash_password(admin_data['password'])
+    obj = Admin(**admin_data)
     db.add(obj)
     db.commit()
     db.refresh(obj)
@@ -20,7 +23,12 @@ def update_admin(db: Session, admin_id: int, data: AdminCreate):
     admin = get_admin(db, admin_id)
     if not admin:
         raise HTTPException(status_code=404, detail="Admin not found")
-    for k, v in data.dict().items():
+    
+    update_data = data.dict()
+    if 'password' in update_data and update_data['password']:
+        update_data['password'] = hash_password(update_data['password'])
+    
+    for k, v in update_data.items():
         setattr(admin, k, v)
     db.commit()
     db.refresh(admin)

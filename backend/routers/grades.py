@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.database import get_db
-from backend.crud import grades as grades_crud
-from backend.schemas import GradesCreate, GradesResponse
+from database import get_db
+from crud import grades as grades_crud
+from schemas import GradesCreate, GradesResponse
 
 router = APIRouter(prefix="/grades", tags=["Grades"])
 
@@ -13,6 +13,11 @@ def create_grade(data: GradesCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[GradesResponse])
 def list_grades(db: Session = Depends(get_db)):
     return grades_crud.get_grades(db)
+
+@router.get("/student/{student_id}", response_model=list[GradesResponse])
+def get_student_grades(student_id: int, db: Session = Depends(get_db)):
+    """Get all grades for a specific student"""
+    return grades_crud.get_student_grades(db, student_id)
 
 @router.get("/{grade_id}", response_model=GradesResponse)
 def get_grade(grade_id: int, db: Session = Depends(get_db)):

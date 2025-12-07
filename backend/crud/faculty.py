@@ -1,10 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from backend.models import Faculty
-from backend.schemas import FacultyCreate
+from models import Faculty
+from schemas import FacultyCreate
+from security import hash_password
 
 def create_faculty(db: Session, data: FacultyCreate):
-    obj = Faculty(**data.dict())
+    faculty_data = data.dict()
+    faculty_data['password'] = hash_password(faculty_data['password'])
+    obj = Faculty(**faculty_data)
     db.add(obj)
     db.commit()
     db.refresh(obj)
@@ -20,7 +23,12 @@ def update_faculty(db: Session, faculty_id: int, data: FacultyCreate):
     faculty = get_faculty(db, faculty_id)
     if not faculty:
         raise HTTPException(status_code=404, detail="Faculty not found")
-    for k, v in data.dict().items():
+    
+    update_data = data.dict()
+    if 'password' in update_data and update_data['password']:
+        update_data['password'] = hash_password(update_data['password'])
+    
+    for k, v in update_data.items():
         setattr(faculty, k, v)
     db.commit()
     db.refresh(faculty)

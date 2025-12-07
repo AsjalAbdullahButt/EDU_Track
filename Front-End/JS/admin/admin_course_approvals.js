@@ -1,134 +1,269 @@
+// Admin Course Approvals - Enhanced with proper database connections
 let allCourses = [];
 let allFaculty = {};
 let courseRefreshInterval = null;
+let currentFilter = '';
 
-async function fetchJson(path, opts = {}){
-  try{
-    const base = window.API_BASE || '';
-    const candidates = path.startsWith('http') ? [path] : [path, path.endsWith('/') ? path : path + '/'];
-    for (const p of candidates){
-      const url = p.startsWith('http') ? p : (base ? base + p : p);
-      try{
-        const res = await fetch(url, opts);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-      }catch(e){ console.debug('[fetchJson] candidate failed', url, e.message); }
+// Utility: Fetch JSON with fallback handling
+async function fetchJson(path, opts = {}) {
+  try {
+    const base = window.API_BASE || 'http://127.0.0.1:8000';
+    const url = path.startsWith('http') ? path : base + path;
+    
+    const res = await fetch(url, opts);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
-    throw new Error('All candidates failed');
-  }catch(e){
-    if (!path.startsWith('http')){
-      try{
-        const base2 = 'http://127.0.0.1:8000';
-        const candidates2 = [path, path.endsWith('/') ? path : path + '/'];
-        for (const p of candidates2){
-          const fallback = base2 + p;
-          try{
-            const res2 = await fetch(fallback, opts);
-            if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
-            return await res2.json();
-          }catch(e2){ console.debug('[fetchJson] fallback failed', fallback, e2.message); }
-        }
-        throw new Error('Fallback candidates failed');
-      }catch(e2){
-        console.error('[admin_course_approvals] fetchJson failed', path, e, e2);
-        if (window.showToast) window.showToast(`Failed to load: ${path}`, 'error');
-        return null;
-      }
-    }
-    console.error('[admin_course_approvals] fetchJson error', path, e);
+    return await res.json();
+  } catch (e) {
+    console.error('[Course Approvals] Fetch error:', path, e);
+    showToast(`Failed to load: ${e.message}`, 'error');
     return null;
   }
 }
 
-async function loadCourses(){
-  const [coursesRes, facultyRes] = await Promise.all([
-    fetchJson('/courses'),
-    fetchJson('/faculties')
-  ]);
-
-  allCourses = coursesRes || [];
-  allFaculty = Object.fromEntries((facultyRes||[]).map(f=>[f.faculty_id, (f.name || f.full_name || f.faculty_name)]));
-
-  renderCourseTable();
+// Show toast notification
+function showToast(message, type = 'info') {
+  if (window.showToast) {
+    window.showToast(message, type);
+  } else {
+    console.log(`[${type.toUpperCase()}] ${message}`);
+  }
 }
 
-function renderCourseTable(){
+// Load courses from backend with optional status filter
+async function loadCourses(statusFilter = null) {
+  showLoadingSpinner(true);
+  
+  try {
+    // Determine filter to use
+    const filter = statusFilter !== null ? statusFilter : currentFilter;
+    
+    // Build query parameters
+    const queryParams = filter ? `?status=${encodeURIComponent(filter)}` : '';
+    
+    // Fetch courses and faculty in parallel
+    const [coursesRes, facultyRes] = await Promise.all([
+      fetchJson(`/courses${queryParams}`),
+      fetchJson('/faculties')
+    ]);
+
+    if (coursesRes === null) {
+      showToast('Failed to load courses', 'error');
+      showLoadingSpinner(false);
+      return;
+    }
+
+    allCourses = coursesRes || [];
+    allFaculty = Object.fromEntries(
+      (facultyRes || []).map(f => [
+        f.faculty_id, 
+        f.name || f.full_name || f.faculty_name || `Faculty #${f.faculty_id}`
+      ])
+    );
+
+    console.log(`Loaded ${allCourses.length} courses with filter: "${filter || 'none'}"`);
+    
+    renderCourseTable();
+    updateStatistics();
+    showLoadingSpinner(false);
+  } catch (e) {
+    console.error('Error loading courses:', e);
+    showToast('Error loading courses', 'error');
+    showLoadingSpinner(false);
+  }
+}
+
+// Render course table
+function renderCourseTable() {
   const courseList = document.getElementById('courseList');
+  const tableContainer = document.getElementById('courseTableContainer');
+  
   if (!courseList) return;
 
   courseList.innerHTML = '';
-  allCourses.forEach((course, idx) => {
+
+  if (allCourses.length === 0) {
+    tableContainer.style.display = 'none';
+    courseList.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty-state">
+          <div>
+            <h3>No courses found</h3>
+            <p>There are no courses matching the current filter.</p>
+          </div>
+        </td>
+      </tr>
+    `;
+    tableContainer.style.display = 'table';
+    return;
+  }
+
+  tableContainer.style.display = 'table';
+
+  allCourses.forEach((course) => {
     const row = document.createElement('tr');
-    const facultyName = allFaculty[course.faculty_id] || `#${course.faculty_id}`;
-    const status = course.course_status || 'Active';
+    const facultyName = allFaculty[course.faculty_id] || `Faculty #${course.faculty_id}`;
+    const status = course.course_status || 'Pending';
+    const courseCode = course.course_code || '—';
+    const creditHours = course.credit_hours || '—';
+    
     row.innerHTML = `
       <td data-label="Course ID">${course.course_id}</td>
+      <td data-label="Course Code"><strong>${courseCode}</strong></td>
       <td data-label="Course Title">${course.course_name || '—'}</td>
+      <td data-label="Credit Hours">${creditHours}</td>
       <td data-label="Instructor">${facultyName}</td>
-      <td data-label="Status"><span class="status-${status.toLowerCase()}">${status}</span></td>
+      <td data-label="Status">
+        <span class="status-badge status-${status.toLowerCase()}">${status}</span>
+      </td>
       <td data-label="Actions">
-        <button class="btn btn-sm primary" onclick="approveCourse(${course.course_id})">Approve</button>
-        <button class="btn btn-sm secondary" onclick="rejectCourse(${course.course_id})">Reject</button>
+        <div class="action-buttons">
+          ${status === 'Pending' ? `
+            <button class="btn-approve" onclick="approveCourse(${course.course_id})">
+              ✓ Approve
+            </button>
+            <button class="btn-reject" onclick="rejectCourse(${course.course_id})">
+              ✗ Reject
+            </button>
+          ` : status === 'Rejected' ? `
+            <button class="btn-approve" onclick="approveCourse(${course.course_id})">
+              ✓ Approve
+            </button>
+          ` : `
+            <button class="btn-reject" onclick="rejectCourse(${course.course_id})">
+              ✗ Reject
+            </button>
+          `}
+        </div>
       </td>
     `;
     courseList.appendChild(row);
   });
+}
 
-  if (allCourses.length === 0){
-    courseList.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">No courses found</td></tr>';
+// Update statistics cards
+function updateStatistics() {
+  const pending = allCourses.filter(c => (c.course_status || 'Pending') === 'Pending').length;
+  const active = allCourses.filter(c => c.course_status === 'Active').length;
+  const rejected = allCourses.filter(c => c.course_status === 'Rejected').length;
+  const total = allCourses.length;
+
+  document.getElementById('pendingCount').textContent = pending;
+  document.getElementById('activeCount').textContent = active;
+  document.getElementById('rejectedCount').textContent = rejected;
+  document.getElementById('totalCount').textContent = total;
+}
+
+// Show/hide loading spinner
+function showLoadingSpinner(show) {
+  const spinner = document.getElementById('loadingSpinner');
+  const table = document.getElementById('courseTableContainer');
+  
+  if (spinner) {
+    spinner.style.display = show ? 'flex' : 'none';
+  }
+  if (table) {
+    table.style.opacity = show ? '0.5' : '1';
   }
 }
 
+// Approve a course
 async function approveCourse(courseId) {
-  try{
-    await fetchJson(`/courses/${courseId}`, {
-      method: 'PUT',
+  if (!confirm(`Are you sure you want to approve course #${courseId}?`)) {
+    return;
+  }
+
+  try {
+    const result = await fetchJson(`/courses/${courseId}/status`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ course_status: 'Active' })
     });
-    window.showToast?.(`Course #${courseId} approved`, 'success');
-    await loadCourses();
-  }catch(e){
-    console.error(e);
-    window.showToast?.('Approval failed', 'error');
+
+    if (result) {
+      showToast(`Course #${courseId} has been approved successfully!`, 'success');
+      await loadCourses();
+    }
+  } catch (e) {
+    console.error('Approval error:', e);
+    showToast('Failed to approve course', 'error');
   }
 }
 
+// Reject a course
 async function rejectCourse(courseId) {
-  try{
-    await fetchJson(`/courses/${courseId}`, {
-      method: 'PUT',
+  if (!confirm(`Are you sure you want to reject course #${courseId}?`)) {
+    return;
+  }
+
+  try {
+    const result = await fetchJson(`/courses/${courseId}/status`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ course_status: 'Rejected' })
     });
-    window.showToast?.(`Course #${courseId} rejected`, 'info');
-    await loadCourses();
-  }catch(e){
-    console.error(e);
-    window.showToast?.('Rejection failed', 'error');
+
+    if (result) {
+      showToast(`Course #${courseId} has been rejected.`, 'info');
+      await loadCourses();
+    }
+  } catch (e) {
+    console.error('Rejection error:', e);
+    showToast('Failed to reject course', 'error');
   }
 }
 
-function startCourseRefresh(intervalMs = 12000){
+// Auto-refresh functionality
+function startCourseRefresh(intervalMs = 30000) {
   if (courseRefreshInterval) clearInterval(courseRefreshInterval);
-  courseRefreshInterval = setInterval(() => loadCourses(), intervalMs);
+  courseRefreshInterval = setInterval(() => {
+    console.log('Auto-refreshing courses...');
+    loadCourses();
+  }, intervalMs);
 }
 
-function stopCourseRefresh(){
-  if (courseRefreshInterval) clearInterval(courseRefreshInterval);
-  courseRefreshInterval = null;
+function stopCourseRefresh() {
+  if (courseRefreshInterval) {
+    clearInterval(courseRefreshInterval);
+    courseRefreshInterval = null;
+  }
 }
 
+// Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
+  console.log('Course Approvals page initialized');
+  
+  // Load courses initially
   loadCourses();
-  startCourseRefresh(12000);
+  
+  // Setup filter change handler
+  const filterSelect = document.getElementById('statusFilter');
+  if (filterSelect) {
+    filterSelect.addEventListener('change', (e) => {
+      currentFilter = e.target.value;
+      loadCourses(currentFilter);
+    });
+  }
+  
+  // Start auto-refresh
+  startCourseRefresh(30000);
 
-  window.addEventListener('beforeunload', stopCourseRefresh);
+  // Handle visibility changes (pause refresh when tab is hidden)
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopCourseRefresh();
-    else startCourseRefresh(12000);
+    if (document.hidden) {
+      stopCourseRefresh();
+    } else {
+      loadCourses();
+      startCourseRefresh(30000);
+    }
   });
+
+  // Cleanup on unload
+  window.addEventListener('beforeunload', stopCourseRefresh);
 });
 
+// Export functions to global scope
 window.approveCourse = approveCourse;
 window.rejectCourse = rejectCourse;
+window.loadCourses = loadCourses;

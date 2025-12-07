@@ -71,6 +71,7 @@ if (signupForm) {
   signupForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const name = signupForm.fullname.value.trim();
+    const username = (signupForm.username && signupForm.username.value) ? signupForm.username.value.trim() : '';
     const email = (signupForm.email && signupForm.email.value) ? signupForm.email.value.trim() : '';
     const contact = (signupForm.contact && signupForm.contact.value) ? signupForm.contact.value.trim() : '';
     const password = signupForm.password.value.trim();
@@ -83,8 +84,8 @@ if (signupForm) {
       return;
     }
 
-    if (!name || !email || !password) {
-      showAlert("All fields are required!");
+    if (!name || !username || !email || !password) {
+      showAlert("All required fields must be filled!");
       return;
     }
 
@@ -95,6 +96,7 @@ if (signupForm) {
 
     // Attempt to register via backend API
     const payload = {
+      username: username,
       full_name: name,
       email: email,
       password: password,
@@ -115,7 +117,7 @@ if (signupForm) {
     })
     .then((data) => {
       // After successful registration, automatically log the user in
-      const loginPayload = { email: email, password: password };
+      const loginPayload = { username: username, password: password };
       fetch('/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -159,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const confirmPw = document.getElementById('confirm');
   const toggle = document.getElementById('showPassword');
   
-  if (!pw || !confirmPw || !toggle) return;
+  if (!pw || !toggle) return;
   
   toggle.addEventListener('change', function(){
     const type = this.checked ? 'text' : 'password';
@@ -178,7 +180,7 @@ if (loginForm) {
       ? loginForm.password.value.trim()
       : (loginForm.querySelector('#password')?.value || '').trim();
     // Try server-side login first
-    const payload = { email: username, password };
+    const payload = { username: username, password };
     fetch('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

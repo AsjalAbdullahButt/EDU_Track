@@ -67,6 +67,9 @@ async function loadEnrolledCourses() {
   const container = document.getElementById('enrolledCoursesContainer');
   if (!container) return;
 
+  // Clear the container first
+  container.innerHTML = '';
+
   if (enrolledCourses.length === 0) {
     container.innerHTML = '<p class="empty-state">No courses enrolled. <a href="/pages/student_pages/add_courses.html">Browse courses</a></p>';
     return;
@@ -118,6 +121,16 @@ async function loadEnrolledCourses() {
     </tbody>
   `;
   container.appendChild(table);
+  
+  // Add "Add New Course" button below the table
+  const addButton = document.createElement('button');
+  addButton.className = 'btn primary';
+  addButton.textContent = '+ Add New Course';
+  addButton.style.marginTop = '20px';
+  addButton.onclick = () => {
+    window.location.href = '/pages/student_pages/add_courses.html';
+  };
+  container.appendChild(addButton);
 }
 
 async function dropCourse(enrollmentId) {

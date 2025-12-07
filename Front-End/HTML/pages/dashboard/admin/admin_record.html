@@ -3,11 +3,15 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Admin — Reports</title>
+	<title>Admin — Student Records & Reports</title>
 	<link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 	<!-- Main Global Styles -->
 	<link rel="stylesheet" href="/static/CSS/main.css">
+	<link rel="stylesheet" href="/static/CSS/dashboards.css">
 
 	<!-- Admin Report Styles -->
 	<link rel="stylesheet" href="/static/CSS/admin_record.css">
@@ -15,115 +19,385 @@
 
 <body>
 
-	<main class="admin-report-page" data-api="/api/admin/reports">
+	<!-- Page Layout with Sidebar -->
+	<div class="page-layout">
+		<!-- Sidebar -->
+		<aside class="sidebar">
+			<div class="logo-section">
+				<img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+				<h2 class="sidebar-title">EDU Track</h2>
+			</div>
+
+			<nav class="nav-links">
+				<a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+				<a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+				<a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+				<a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+				<a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
+				<a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+				<a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+				<a href="/pages/dashboard/admin/admin_record.html" class="nav-link active">Records</a>
+			</nav>
+
+			<div class="logout-section">
+				<button class="btn secondary" onclick="logout()">Logout</button>
+			</div>
+		</aside>
+
+		<!-- Main Content -->
+		<main class="main-content admin-report-page" data-api="/api/admin/reports">
 
 		<header class="report-header">
-			<h1>Reports — Records</h1>
+			<h1><i class="fas fa-chart-bar"></i> Student Records & Reports</h1>
 			<div class="report-actions">
-				<button id="exportCsv" class="btn">Export CSV</button>
-				<button id="exportPdf" class="btn">Export PDF</button>
+				<button id="addNewRecord" class="btn btn-primary">
+					<i class="fas fa-plus"></i> Add Record
+				</button>
+				<button id="exportCsv" class="btn btn-success">
+					<i class="fas fa-file-csv"></i> Export CSV
+				</button>
+				<button id="exportPdf" class="btn btn-danger">
+					<i class="fas fa-file-pdf"></i> Export PDF
+				</button>
+				<button id="refreshData" class="btn btn-info">
+					<i class="fas fa-sync-alt"></i> Refresh
+				</button>
 			</div>
 		</header>
 
 		<section class="filters">
+			<div class="filter-header">
+				<h3><i class="fas fa-filter"></i> Filters</h3>
+				<button type="button" id="toggleFilters" class="btn-text">
+					<i class="fas fa-chevron-up"></i>
+				</button>
+			</div>
 			<form id="reportFilters" class="filter-form" aria-label="Report filters" onsubmit="return false;">
 
 				<div class="filter-group">
-					<label for="filterFrom">From</label>
-					<input type="date" id="filterFrom" name="from" />
+					<label for="filterStudent">
+						<i class="fas fa-user"></i> Student
+					</label>
+					<select id="filterStudent" name="student">
+						<option value="">All Students</option>
+						<!-- Populated dynamically -->
+					</select>
 				</div>
 
 				<div class="filter-group">
-					<label for="filterTo">To</label>
-					<input type="date" id="filterTo" name="to" />
-				</div>
-
-				<div class="filter-group">
-					<label for="filterCourse">Course</label>
+					<label for="filterCourse">
+						<i class="fas fa-book"></i> Course
+					</label>
 					<select id="filterCourse" name="course">
-						<option value="">All</option>
+						<option value="">All Courses</option>
 						<!-- Populated dynamically from backend -->
 					</select>
 				</div>
 
 				<div class="filter-group">
-					<label for="filterStatus">Status</label>
+					<label for="filterStatus">
+						<i class="fas fa-tag"></i> Status
+					</label>
 					<select id="filterStatus" name="status">
-						<option value="">All</option>
+						<option value="">All Status</option>
 						<option value="active">Active</option>
 						<option value="completed">Completed</option>
 						<option value="dropped">Dropped</option>
+						<option value="withdrawn">Withdrawn</option>
+					</select>
+				</div>
+
+				<div class="filter-group">
+					<label for="filterSemester">
+						<i class="fas fa-calendar-alt"></i> Semester
+					</label>
+					<select id="filterSemester" name="semester">
+						<option value="">All Semesters</option>
+						<option value="Fall 2024">Fall 2024</option>
+						<option value="Spring 2024">Spring 2024</option>
+						<option value="Fall 2023">Fall 2023</option>
+						<option value="Spring 2023">Spring 2023</option>
 					</select>
 				</div>
 
 				<div class="filter-actions">
-					<button type="button" id="applyFilters" class="btn primary">Apply</button>
-					<button type="button" id="clearFilters" class="btn">Clear</button>
+					<button type="button" id="applyFilters" class="btn btn-primary">
+						<i class="fas fa-check"></i> Apply
+					</button>
+					<button type="button" id="clearFilters" class="btn btn-secondary">
+						<i class="fas fa-times"></i> Clear
+					</button>
 				</div>
 
 			</form>
 		</section>
 
 		<section class="summary-cards">
-			<div class="card">
-				<div class="card-title">Total Enrollments</div>
-				<div id="totalEnrollments" class="card-value">1,247</div>
+			<div class="card card-blue">
+				<div class="card-icon">
+					<i class="fas fa-clipboard-list"></i>
+				</div>
+				<div class="card-content">
+					<div class="card-title">Total Enrollments</div>
+					<div id="totalEnrollments" class="card-value">0</div>
+				</div>
 			</div>
-			<div class="card">
-				<div class="card-title">Active Students</div>
-				<div id="activeStudents" class="card-value">893</div>
+			<div class="card card-green">
+				<div class="card-icon">
+					<i class="fas fa-user-check"></i>
+				</div>
+				<div class="card-content">
+					<div class="card-title">Active Students</div>
+					<div id="activeStudents" class="card-value">0</div>
+				</div>
 			</div>
-			<div class="card">
-				<div class="card-title">Completed</div>
-				<div id="completedCount" class="card-value">284</div>
+			<div class="card card-purple">
+				<div class="card-icon">
+					<i class="fas fa-graduation-cap"></i>
+				</div>
+				<div class="card-content">
+					<div class="card-title">Completed</div>
+					<div id="completedCount" class="card-value">0</div>
+				</div>
 			</div>
-			<div class="card">
-				<div class="card-title">Dropouts</div>
-				<div id="dropoutCount" class="card-value">70</div>
+			<div class="card card-red">
+				<div class="card-icon">
+					<i class="fas fa-user-times"></i>
+				</div>
+				<div class="card-content">
+					<div class="card-title">Dropouts</div>
+					<div id="dropoutCount" class="card-value">0</div>
+				</div>
 			</div>
 		</section>
 
 		<section class="report-visuals">
-			<div class="chart-card">
-				<h2>Enrollment Trend</h2>
-				<canvas id="enrollmentChart" width="600" height="300"></canvas>
-			</div>
-
 			<div class="table-card">
-				<h2>Records</h2>
-
-				<div class="table-actions">
-					<div class="search-group">
-						<label for="tableSearch">Search</label>
-						<input type="search" id="tableSearch" placeholder="Search by student or course" />
+				<div class="table-header">
+					<h2><i class="fas fa-table"></i> Enrollment Records</h2>
+					<div class="table-info">
+						<span id="recordCount" class="record-count">0 records</span>
 					</div>
 				</div>
 
-				<table id="reportTable" class="report-table">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Student</th>
-							<th>Course</th>
-							<th>Enrolled On</th>
-							<th>Status</th>
-							<th>Progress</th>
-						</tr>
-					</thead>
-					<tbody>
-					<!-- Populated dynamically by JS -->
-					</tbody>
-				</table>
+				<div class="table-actions">
+					<div class="search-group">
+						<i class="fas fa-search"></i>
+						<input type="search" id="tableSearch" placeholder="Search by student, course, or semester..." />
+					</div>
+					<div class="table-controls">
+						<label for="rowsPerPage">Rows per page:</label>
+						<select id="rowsPerPage">
+							<option value="10">10</option>
+							<option value="25" selected>25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+					</div>
+				</div>
 
-				<nav class="pagination">
-				<!-- Pagination populated by JS -->
-				</nav>
+				<div class="table-wrapper">
+					<table id="reportTable" class="report-table">
+						<thead>
+							<tr>
+								<th><input type="checkbox" id="selectAll" title="Select All"></th>
+								<th data-sort="enrollment_id">#</th>
+								<th data-sort="student">Student <i class="fas fa-sort"></i></th>
+								<th data-sort="course">Course <i class="fas fa-sort"></i></th>
+								<th data-sort="semester">Semester <i class="fas fa-sort"></i></th>
+								<th data-sort="status">Status <i class="fas fa-sort"></i></th>
+								<th data-sort="grade">Grade</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="loading-row">
+								<td colspan="8" style="text-align:center;padding:40px;">
+									<i class="fas fa-spinner fa-spin fa-2x"></i>
+									<p>Loading records...</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="table-footer">
+					<div class="bulk-actions">
+						<button id="bulkDelete" class="btn btn-danger" disabled>
+							<i class="fas fa-trash"></i> Delete Selected
+						</button>
+					</div>
+					<nav class="pagination">
+						<!-- Pagination populated by JS -->
+					</nav>
+				</div>
 			</div>
 		</section>
 
 	</main>
+	</div>
 
-	<script src="/static/JS/admin_record.js" defer></script>
+	<!-- Add/Edit Modal -->
+	<div id="recordModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 id="modalTitle">
+					<i class="fas fa-plus-circle"></i> Add New Enrollment
+				</h2>
+				<button class="close-modal" aria-label="Close">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="recordForm">
+					<input type="hidden" id="enrollmentId" name="enrollment_id">
+					
+					<div class="form-row">
+						<div class="form-group">
+							<label for="studentId">
+								<i class="fas fa-user"></i> Student *
+							</label>
+							<select id="studentId" name="student_id" required>
+								<option value="">Select Student</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="courseId">
+								<i class="fas fa-book"></i> Course *
+							</label>
+							<select id="courseId" name="course_id" required>
+								<option value="">Select Course</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="semester">
+								<i class="fas fa-calendar-alt"></i> Semester *
+							</label>
+							<input type="text" id="semester" name="semester" 
+							       placeholder="e.g., Fall 2024" required>
+						</div>
+
+						<div class="form-group">
+							<label for="enrollmentStatus">
+								<i class="fas fa-tag"></i> Status *
+							</label>
+							<select id="enrollmentStatus" name="status" required>
+								<option value="Active">Active</option>
+								<option value="Completed">Completed</option>
+								<option value="Dropped">Dropped</option>
+								<option value="Withdrawn">Withdrawn</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+							<label for="grade">
+								<i class="fas fa-award"></i> Grade
+							</label>
+							<select id="grade" name="grade">
+								<option value="">Not Graded</option>
+								<option value="A+">A+</option>
+								<option value="A">A</option>
+								<option value="A-">A-</option>
+								<option value="B+">B+</option>
+								<option value="B">B</option>
+								<option value="B-">B-</option>
+								<option value="C+">C+</option>
+								<option value="C">C</option>
+								<option value="C-">C-</option>
+								<option value="D">D</option>
+								<option value="F">F</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="remarks">
+								<i class="fas fa-comment"></i> Remarks
+							</label>
+							<input type="text" id="remarks" name="remarks" 
+							       placeholder="Optional notes">
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn btn-secondary close-modal">
+							<i class="fas fa-times"></i> Cancel
+						</button>
+						<button type="submit" class="btn btn-primary">
+							<i class="fas fa-save"></i> Save
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- View Details Modal -->
+	<div id="detailsModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>
+					<i class="fas fa-info-circle"></i> Enrollment Details
+				</h2>
+				<button class="close-modal" aria-label="Close">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="modal-body" id="detailsContent">
+				<!-- Populated dynamically -->
+			</div>
+		</div>
+	</div>
+
+	<!-- Toast Notification -->
+	<div id="toast" class="toast"></div>
+
+	<script>
+		// Inline diagnostic script - runs before main script
+		console.log('%c=== DIAGNOSTIC START ===', 'color: blue; font-weight: bold');
+		console.log('Page URL:', window.location.href);
+		console.log('Timestamp:', new Date().toISOString());
+		
+		window.addEventListener('DOMContentLoaded', () => {
+			console.log('%c=== DOM LOADED ===', 'color: green; font-weight: bold');
+			console.log('reportTable exists:', !!document.getElementById('reportTable'));
+			console.log('tbody exists:', !!document.querySelector('#reportTable tbody'));
+		});
+		
+		// Catch any errors
+		window.addEventListener('error', (e) => {
+			console.error('%c=== ERROR CAUGHT ===', 'color: red; font-weight: bold');
+			console.error('Message:', e.message);
+			console.error('Source:', e.filename);
+			console.error('Line:', e.lineno, 'Col:', e.colno);
+			console.error('Error object:', e.error);
+		});
+		
+		// Test fetch immediately
+		setTimeout(() => {
+			console.log('%c=== TESTING API ===', 'color: orange; font-weight: bold');
+			fetch('http://127.0.0.1:8000/enrollments/')
+				.then(r => {
+					console.log('Fetch response status:', r.status, r.statusText);
+					return r.json();
+				})
+				.then(data => {
+					console.log('Fetch data type:', Array.isArray(data) ? 'Array' : typeof data);
+					console.log('Fetch data length/keys:', Array.isArray(data) ? data.length : Object.keys(data));
+					console.log('First item:', data[0] || data);
+				})
+				.catch(err => {
+					console.error('Fetch error:', err);
+				});
+		}, 1000);
+	</script>
+
+	<script src="/static/JS/admin_record.js?v=20251207160500"></script>
 
 </body>
 </html>

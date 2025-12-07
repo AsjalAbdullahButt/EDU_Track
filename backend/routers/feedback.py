@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.database import get_db
-from backend.crud import feedback as feedback_crud
-from backend.schemas import FeedbackCreate, FeedbackResponse
+from database import get_db
+from crud import feedback as feedback_crud
+from schemas import FeedbackCreate, FeedbackResponse
 
 router = APIRouter(prefix="/feedback", tags=["Feedback"])
 
@@ -13,6 +13,11 @@ def create_feedback(data: FeedbackCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[FeedbackResponse])
 def list_feedback(db: Session = Depends(get_db)):
     return feedback_crud.get_feedbacks(db)
+
+@router.get("/faculty/{faculty_id}", response_model=list[FeedbackResponse])
+def get_faculty_feedback(faculty_id: int, db: Session = Depends(get_db)):
+    """Get all feedback for a specific faculty member"""
+    return feedback_crud.get_faculty_feedback(db, faculty_id)
 
 @router.get("/{feedback_id}", response_model=FeedbackResponse)
 def get_feedback(feedback_id: int, db: Session = Depends(get_db)):

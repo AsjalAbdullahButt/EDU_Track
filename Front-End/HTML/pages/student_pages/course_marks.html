@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EDU Track - Course Marks</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png"/>
+  <link rel="stylesheet" href="/static/CSS/main.css"/>
+  <link rel="stylesheet" href="/static/CSS/dashboards.css"/>
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css"/>
+  <!-- Small page-specific tweaks to ensure assessment tables match courses look -->
+  <style>
+    /* keep minimal — main styling comes from your CSS files */
+    .assessment-details { max-width: 1100px; margin: 18px auto; }
+    .assessment-table-section {
+      background: var(--white, #fff);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--soft-shadow, 0 6px 18px rgba(11,11,11,0.06));
+      margin-bottom: 18px;
+      animation: fadeIn 420ms ease;
+    }
+    .assessment-table-section h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.05rem;
+      color: var(--midnight, #001f3f);
+    }
+    /* reuse courses-table visuals if present, otherwise fall back */
+    .assessment-table, .courses-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white, #fff);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: none;
+    }
+    .assessment-table thead th {
+      text-align: left;
+      padding: 12px 14px;
+      background: rgba(0,31,63,0.04);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--midnight, #001f3f);
+      border-bottom: 1px solid rgba(11,11,11,0.06);
+    }
+    .assessment-table tbody td {
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: rgba(11,11,11,0.85);
+      border-bottom: 1px solid rgba(11,11,11,0.04);
+    }
+    .assessment-table tbody tr.total-row td {
+      font-weight: 700;
+      background: rgba(0,31,63,0.03);
+    }
+    .grade-badge {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:0.95rem;
+    }
+    .grade-a+, .grade-aplus { background: #28a745; color: #fff; }
+    .grade-a { background: #5cb85c; color: #fff; }
+    .grade-b+, .grade-bplus { background: #17a2b8; color: #fff; }
+    .grade-b { background: #5bc0de; color: #fff; }
+    .grade-c+, .grade-cplus { background: #ffc107; color: #000; }
+    .grade-c { background: #f0ad4e; color: #000; }
+    .grade-d { background: #fd7e14; color: #fff; }
+    .grade-f { background: #dc3545; color: #fff; }
+    .empty-state { padding:18px; background:var(--white); border-radius:10px; text-align:center; color:rgba(11,11,11,0.65); }
+    @media (max-width: 900px) {
+      .assessment-table thead { display:none; }
+      .assessment-table tbody td { display:block; width:100%; box-sizing:border-box; }
+      .assessment-table tbody tr { margin-bottom:12px; display:block; background:var(--whitesmoke,#f5f7f8); padding:12px; border-radius:8px; }
+    }
+  </style>
+</head>
+<body class="course-marks">
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo"/>
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <button class="back-btn" onclick="window.history.back()"><span>←</span> Back</button>
+        <div>
+          <h1 id="courseTitle">Course Marks</h1>
+          <p id="courseSubtitle">View detailed marks breakdown for this course</p>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="assessment-details">
+          <h2>Assessment Details</h2>
+          <div id="assessmentTablesContainer" class="assessment-tables-container">
+            <!-- JS will inject one card + table per assessment here -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/course_marks.js" defer></script>
+</body>
+</html>

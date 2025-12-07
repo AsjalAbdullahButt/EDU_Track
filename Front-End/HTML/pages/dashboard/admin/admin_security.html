@@ -38,30 +38,152 @@
       </header>
 
       <section class="container-wide">
-        <table class="security-table">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>2FA Enabled</th>
-              <th>Account Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="securityList">
-            <!-- User data will populate here -->
-          </tbody>
-        </table>
+        <!-- Search and Filter Controls -->
+        <div class="security-controls">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by name, ID, or email..." class="search-input">
+            <button class="btn primary" onclick="filterUsers()">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 12C9.76 12 12 9.76 12 7C12 4.24 9.76 2 7 2C4.24 2 2 4.24 2 7C2 9.76 4.24 12 7 12Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 14L10.65 10.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Search
+            </button>
+          </div>
+          <div class="filter-group">
+            <select id="roleFilter" class="filter-select" onchange="filterUsers()">
+              <option value="">All Roles</option>
+              <option value="student">Students</option>
+              <option value="faculty">Faculty</option>
+              <option value="admin">Admins</option>
+            </select>
+            <select id="statusFilter" class="filter-select" onchange="filterUsers()">
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="locked">Locked</option>
+              <option value="suspended">Suspended</option>
+            </select>
+            <button class="btn secondary" onclick="resetFilters()">Reset Filters</button>
+          </div>
+        </div>
 
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalUsers">0</h3>
+              <p>Total Users</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 id="activeUsers">0</h3>
+              <p>Active Accounts</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 id="twoFAEnabled">0</h3>
+              <p>2FA Enabled</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon red">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 8V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-content">
+              <h3 id="lockedUsers">0</h3>
+              <p>Locked Accounts</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-container">
+          <table class="security-table">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>2FA Status</th>
+                <th>Account Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="securityList">
+              <!-- User data will populate here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Security Activity Logs -->
         <div class="log-section">
-          <h2>Recent Security Activity</h2>
-          <ul id="securityLogs">
+          <div class="log-header">
+            <h2>Recent Security Activity</h2>
+            <button class="btn secondary btn-sm" onclick="refreshLogs()">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2V6H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 14V10H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M13.5 6C12.89 4.28 11.47 2.97 9.67 2.5C7.87 2.03 5.97 2.45 4.5 3.62L2 6M14 10L11.5 12.38C10.03 13.55 8.13 13.97 6.33 13.5C4.53 13.03 3.11 11.72 2.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          <div id="securityLogs" class="logs-container">
             <!-- Activity logs here -->
-          </ul>
+          </div>
         </div>
       </section>
     </main>
+
+    <!-- Password Reset Modal -->
+    <div id="passwordModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Reset Password</h2>
+          <span class="close" onclick="closePasswordModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p>Reset password for: <strong id="resetUserName"></strong></p>
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" class="form-input" placeholder="Enter new password">
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm new password">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn secondary" onclick="closePasswordModal()">Cancel</button>
+          <button class="btn primary" onclick="submitPasswordReset()">Reset Password</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="/static/JS/admin/admin_security.js" defer></script>

@@ -1,8 +1,233 @@
-/* Extracted styles for fee records page */
-.filter-section { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.filter-section input, .filter-section select { padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(11,11,11,0.2); font-size: 0.95rem; }
-.fee-table th, .fee-table td { padding: 12px 20px; text-align: left; }
-.fee-table th { font-weight: bold; }
-.fee-table td.status-paid { color: green; font-weight: 600; }
-.fee-table td.status-missing { color: red; font-weight: 600; }
-.fee-table tr:nth-child(even) { background-color: #e0f0ec; }
+/* ====================================
+   EDU Track - Fee Records Page Styling
+   Matches main.css color scheme + design
+==================================== */
+
+:root {
+    --midnight: #001f3f;
+    --mint: #cdeee4;
+    --pastel-mint: #cdeee4;
+    --whitesmoke: #f5f7f8;
+    --black: #0b0b0b;
+    --white: #ffffff;
+}
+
+/* Page Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Container */
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeInUp 420ms ease both;
+}
+
+/* Filter Section */
+.filters {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin-bottom: 26px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.filter-form {
+  width: 100%;
+}
+
+.filter-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: var(--black);
+  flex: 1;
+  min-width: 180px;
+}
+
+.filter-row input,
+.filter-row select {
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(11,11,11,0.25);
+  font-size: 0.92rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--white);
+  color: var(--black);
+  font-family: inherit;
+}
+
+.filter-row input:focus,
+.filter-row select:focus {
+  outline: none;
+  border-color: var(--midnight);
+  box-shadow: 0 0 0 3px rgba(0,31,63,0.12);
+  transform: translateY(-1px);
+}
+
+.filter-row input::placeholder {
+  color: rgba(11,11,11,0.45);
+}
+
+/* Fee Table Specific Styling */
+.fee-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.fee-table thead {
+  background: linear-gradient(135deg, var(--midnight) 0%, #003366 100%);
+}
+
+.fee-table th {
+  background: transparent;
+  color: var(--white);
+  font-weight: 600;
+  padding: 16px 18px;
+  text-align: left;
+  letter-spacing: 0.4px;
+  font-size: 0.92rem;
+  text-transform: uppercase;
+}
+
+.fee-table td {
+  padding: 15px 18px;
+  border-bottom: 1px solid rgba(11,11,11,0.06);
+  color: rgba(11,11,11,0.87);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.94rem;
+}
+
+.fee-table tbody tr {
+  transition: all 0.25s ease;
+}
+
+.fee-table tbody tr:hover {
+  background: rgba(205,238,228,0.25);
+  transform: scale(1.005);
+  box-shadow: 0 2px 8px rgba(0,31,63,0.08);
+}
+
+.fee-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  transition: all 0.3s ease;
+}
+
+.status-badge.status-paid {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border: 1.5px solid #28a745;
+}
+
+.status-badge.status-pending {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  color: #856404;
+  border: 1.5px solid #ffc107;
+}
+
+.status-badge.status-overdue {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+  border: 1.5px solid #dc3545;
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Loading and Empty States */
+.fee-table td[colspan] {
+  text-align: center;
+  padding: 32px;
+  color: rgba(11,11,11,0.55);
+  font-size: 0.96rem;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .filter-row label {
+    min-width: 140px;
+    flex: 1 1 calc(50% - 9px);
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    padding: 16px 18px;
+  }
+  
+  .filter-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .filter-row label {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
+  
+  .fee-table {
+    font-size: 0.84rem;
+  }
+  
+  .fee-table th,
+  .fee-table td {
+    padding: 12px 14px;
+  }
+  
+  .fee-table th {
+    font-size: 0.85rem;
+  }
+  
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 5px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Make table scrollable on very small screens */
+  .container-wide {
+    overflow-x: auto;
+  }
+  
+  .fee-table {
+    min-width: 600px;
+  }
+}
+
+

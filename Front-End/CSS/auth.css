@@ -154,3 +154,52 @@
         padding: 24px;
     }
 }
+
+/* Password visibility toggle styling */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"] {
+    flex: 1;
+    padding-right: 45px;
+}
+
+.show-password-label {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.show-password-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.eye-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    color: #555;
+}
+
+.show-password-label:hover .eye-icon {
+    opacity: 1;
+}
+
+.show-password-label input[type="checkbox"]:checked ~ .eye-icon .eye-open {
+    display: none;
+}
+
+.show-password-label input[type="checkbox"]:checked ~ .eye-icon .eye-closed {
+    display: block !important;
+}

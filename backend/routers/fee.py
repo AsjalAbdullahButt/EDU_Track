@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.database import get_db
-from backend.crud import fee as fee_crud
-from backend.schemas import FeeCreate, FeeResponse
+from database import get_db
+from crud import fee as fee_crud
+from schemas import FeeCreate, FeeResponse
 
 router = APIRouter(prefix="/fees", tags=["Fees"])
 

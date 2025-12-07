@@ -24,32 +24,43 @@ const notifContainer = document.querySelector(".notification-list");
 if (notifContainer) {
   notifContainer.innerHTML = "";
   const logged = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
-  fetch('/notifications')
-    .then(res => {
-      if (!res.ok) throw new Error('network');
-      return res.json();
-    })
-    .then(data => {
-      let rows = Array.isArray(data) ? data : [];
-      if (logged && logged.role === 'student') rows = rows.filter(n => n.recipient_id === logged.id);
-      notifContainer.innerHTML = '';
-      if (rows.length === 0) {
-        const li = document.createElement('li');
-        li.textContent = 'No notifications at this time.';
-        notifContainer.appendChild(li);
-      } else {
-        rows.forEach(n => {
+  if (logged && logged.role === 'student' && logged.id) {
+    fetch(`/notifications/student/${logged.id}`)
+      .then(res => {
+        if (!res.ok) throw new Error('network');
+        return res.json();
+      })
+      .then(data => {
+        const rows = Array.isArray(data) ? data : [];
+        notifContainer.innerHTML = '';
+        if (rows.length === 0) {
           const li = document.createElement('li');
-          li.textContent = `${n.date_sent ? new Date(n.date_sent).toLocaleString() : ''} — ${n.message || ''}`;
+          li.textContent = 'No notifications at this time.';
           notifContainer.appendChild(li);
-        });
-      }
-    })
-    .catch((err) => {
-      console.warn('Failed to load notifications', err);
-      notifContainer.innerHTML = '';
-      const li = document.createElement('li');
-      li.textContent = 'Unable to load notifications.';
-      notifContainer.appendChild(li);
-    });
+        } else {
+          rows.forEach(n => {
+            const li = document.createElement('li');
+            li.className = n.is_read ? 'read' : 'unread';
+            li.textContent = `${n.title || 'Notification'}: ${n.message || ''}`;
+            if (n.created_at) {
+              const time = document.createElement('span');
+              time.className = 'notification-time';
+              time.textContent = new Date(n.created_at).toLocaleString();
+              li.prepend(time);
+            }
+            notifContainer.appendChild(li);
+          });
+          
+          fetch(`/notifications/student/${logged.id}/mark-read`, { method: 'POST' })
+            .catch(err => console.warn('Failed to mark notifications as read', err));
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to load notifications', err);
+        notifContainer.innerHTML = '';
+        const li = document.createElement('li');
+        li.textContent = 'Unable to load notifications.';
+        notifContainer.appendChild(li);
+      });
+  }
 }

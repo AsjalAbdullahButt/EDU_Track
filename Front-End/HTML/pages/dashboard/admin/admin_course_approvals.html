@@ -35,15 +35,58 @@
     <main class="main-content">
       <header class="dashboard-header">
         <h1>Course Approvals</h1>
-        <p>Approve or reject course proposals</p>
+        <p>Manage and approve course proposals</p>
       </header>
 
+      <!-- Statistics Cards -->
+      <section class="stats-cards">
+        <div class="stat-card pending">
+          <h3>Pending Approval</h3>
+          <p class="stat-value" id="pendingCount">0</p>
+        </div>
+        <div class="stat-card active">
+          <h3>Active Courses</h3>
+          <p class="stat-value" id="activeCount">0</p>
+        </div>
+        <div class="stat-card rejected">
+          <h3>Rejected</h3>
+          <p class="stat-value" id="rejectedCount">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Courses</h3>
+          <p class="stat-value" id="totalCount">0</p>
+        </div>
+      </section>
+
+      <!-- Filter Controls -->
+      <section class="course-approvals-header">
+        <div class="filter-controls">
+          <label for="statusFilter" style="font-weight: 600; color: #333;">Filter by Status:</label>
+          <select id="statusFilter">
+            <option value="">All Courses</option>
+            <option value="Pending">Pending Approval</option>
+            <option value="Active">Active</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <button class="btn primary" onclick="loadCourses()">
+          <span>🔄</span> Refresh
+        </button>
+      </section>
+
+      <!-- Course Table -->
       <section class="container-wide">
-        <table class="course-table">
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+          <div class="spinner"></div>
+        </div>
+        
+        <table class="course-table" id="courseTableContainer">
           <thead>
             <tr>
               <th>Course ID</th>
+              <th>Course Code</th>
               <th>Course Title</th>
+              <th>Credit Hours</th>
               <th>Instructor</th>
               <th>Status</th>
               <th>Actions</th>

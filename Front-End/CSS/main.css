@@ -46,7 +46,7 @@
 
 /* Body defaults */
 body {
-    background: linear-gradient(135deg, var(--pastel-mint) 0%, #f0f9f7 100%);
+    background: var(--white);
     color: var(--black);
     min-height: 100vh;
     display: flex;

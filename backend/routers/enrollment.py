@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.database import get_db
-from backend.crud import enrollment as enrollment_crud
-from backend.schemas import EnrollmentCreate, EnrollmentResponse
+from database import get_db
+from crud import enrollment as enrollment_crud
+from schemas import EnrollmentCreate, EnrollmentResponse
 
 router = APIRouter(prefix="/enrollments", tags=["Enrollments"])
 

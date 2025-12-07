@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Records API</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 4px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e9; color: #2e7d32; }
+        pre { overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Admin Records API Test</h1>
+    <button id="testBtn">Test API Calls</button>
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8000';
+        const results = document.getElementById('results');
+
+        async function testAPI() {
+            results.innerHTML = '<div class="result">Testing...</div>';
+            
+            try {
+                // Test enrollments
+                const enrollRes = await fetch(`${API_BASE}/enrollments/`);
+                const enrollData = await enrollRes.json();
+                
+                results.innerHTML += `
+                    <div class="result success">
+                        <strong>Enrollments Response:</strong><br>
+                        Type: ${Array.isArray(enrollData) ? 'Array' : 'Object'}<br>
+                        ${Array.isArray(enrollData) ? `Length: ${enrollData.length}` : `Keys: ${Object.keys(enrollData).join(', ')}`}<br>
+                        <pre>${JSON.stringify(enrollData.slice ? enrollData.slice(0, 2) : enrollData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                // Test students
+                const studRes = await fetch(`${API_BASE}/students/`);
+                const studData = await studRes.json();
+                
+                results.innerHTML += `
+                    <div class="result success">
+                        <strong>Students Response:</strong><br>
+                        Type: ${Array.isArray(studData) ? 'Array' : 'Object'}<br>
+                        ${Array.isArray(studData) ? `Length: ${studData.length}` : `Keys: ${Object.keys(studData).join(', ')}`}<br>
+                        <pre>${JSON.stringify(studData.slice ? studData.slice(0, 2) : studData, null, 2)}</pre>
+                    </div>
+                `;
+                
+                // Test courses
+                const courseRes = await fetch(`${API_BASE}/courses/`);
+                const courseData = await courseRes.json();
+                
+                results.innerHTML += `
+                    <div class="result success">
+                        <strong>Courses Response:</strong><br>
+                        Type: ${Array.isArray(courseData) ? 'Array' : 'Object'}<br>
+                        ${Array.isArray(courseData) ? `Length: ${courseData.length}` : `Keys: ${Object.keys(courseData).join(', ')}`}<br>
+                        <pre>${JSON.stringify(courseData.slice ? courseData.slice(0, 2) : courseData, null, 2)}</pre>
+                    </div>
+                `;
+                
+            } catch (error) {
+                results.innerHTML += `
+                    <div class="result error">
+                        <strong>Error:</strong><br>
+                        ${error.message}<br>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        document.getElementById('testBtn').addEventListener('click', testAPI);
+        
+        // Auto-run on load
+        window.addEventListener('load', testAPI);
+    </script>
+</body>
+</html>
