@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/static/CSS/dashboards.css">
 <link rel="stylesheet" href="/static/CSS/faculty/faculty_announcements.css">
 </head>
-<body class="announcements">
+<body>
 
 <div class="layout-wrapper">
 
@@ -21,10 +21,13 @@
     </div>
     <nav class="nav-links">
       <a href="/pages/dashboard/faculty/dashboard_faculty.html">Dashboard</a>
-      <a href="/pages/dashboard/faculty/faculty_grades.html">Grades</a>
-      <a class="active" href="/pages/dashboard/faculty/faculty_announcements.html">Post Announcements</a>
+      <a href="/pages/dashboard/faculty/my_students.html">My Students</a>
+      <a href="/pages/dashboard/faculty/my_courses.html">My Courses</a>
+      <a href="/pages/dashboard/faculty/my_grades.html">My Grades</a>
+      <a href="/pages/dashboard/faculty/faculty_grades_new.html">Manage Grades</a>
       <a href="/pages/dashboard/faculty/manage_attendance.html">Attendance</a>
       <a href="/pages/dashboard/faculty/faculty_attendance_report.html">Attendance Report</a>
+      <a href="/pages/dashboard/faculty/faculty_announcements.html" class="active">Announcements</a>
       <a href="/pages/dashboard/faculty/view_feedback.html">Feedback</a>
     </nav>
     <div class="logout-section">
@@ -33,30 +36,36 @@
   </aside>
 
   <main class="main-content">
-    <h1>Post Announcements</h1>
+    <header class="dashboard-header">
+      <h1>Post Announcements</h1>
+      <p>Create announcements visible to all students</p>
+    </header>
 
-    <div style="display:flex; margin-top:20px;">
-      <input type="text" id="announcementInput" placeholder="Write a new announcement...">
-      <button class="add-btn" onclick="addAnnouncement()">Add</button>
-    </div>
+    <section class="announcement-form-section">
+      <h2>Create New Announcement</h2>
+      <div class="form-group">
+        <label for="announcementTitle">Title</label>
+        <input type="text" id="announcementTitle" class="form-control" placeholder="Enter announcement title...">
+      </div>
+      <div class="form-group">
+        <label for="announcementMessage">Message</label>
+        <textarea id="announcementMessage" class="form-control" rows="4" placeholder="Enter announcement message..."></textarea>
+      </div>
+      <button class="btn primary" id="postAnnouncementBtn">
+        <span>📢</span> Post Announcement
+      </button>
+    </section>
 
-    <ul class="announcement-list" id="announcementList">
-      <!-- Existing announcements will appear here -->
-      <li>
-        Welcome to the new semester!
-        <button class="delete-btn" onclick="deleteAnnouncement(this)">Delete</button>
-      </li>
-      <li>
-        Submit assignments by Nov 25.
-        <button class="delete-btn" onclick="deleteAnnouncement(this)">Delete</button>
-      </li>
-    </ul>
+    <section class="announcements-list-section">
+      <h2>Your Announcements</h2>
+      <div id="announcementList"></div>
+    </section>
   </main>
 </div>
 
 <script src="/static/JS/session-protection.js"></script>
 <script src="/static/JS/auth.js"></script>
-<script src="/static/JS/faculty/faculty_announcements.js" defer></script>
-<script src="/static/JS/dashboard.js" defer></script>
+<script src="/static/JS/dashboard.js"></script>
+<script src="/static/JS/faculty/faculty_announcements.js"></script>
 </body>
 </html>

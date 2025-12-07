@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Marks Entry - EDU Track</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/tables.css">
+  <link rel="stylesheet" href="/static/CSS/faculty/student_marks_entry.css">
+</head>
+<body>
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="/pages/dashboard/faculty/dashboard_faculty.html">Dashboard</a>
+      <a href="/pages/dashboard/faculty/my_students.html">My Students</a>
+      <a href="/pages/dashboard/faculty/my_courses.html">My Courses</a>
+      <a href="/pages/dashboard/faculty/my_grades.html">My Grades</a>
+      <a href="/pages/dashboard/faculty/faculty_grades_new.html" class="active">Manage Grades</a>
+      <a href="/pages/dashboard/faculty/manage_attendance.html">Attendance</a>
+      <a href="/pages/dashboard/faculty/faculty_attendance_report.html">Attendance Report</a>
+      <a href="/pages/dashboard/faculty/faculty_announcements.html">Announcements</a>
+      <a href="/pages/dashboard/faculty/view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="dashboard-header">
+      <button onclick="goBack()" class="btn-back">← Back to Students</button>
+      <div class="header-info">
+        <h1>Student Marks Entry</h1>
+        <div class="student-course-info">
+          <span id="studentNameHeader">Loading...</span> | 
+          <span id="courseNameHeader">Loading...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Student Summary Card -->
+    <div class="student-summary-card">
+      <div class="summary-left">
+        <h2 id="studentName">-</h2>
+        <p><strong>Course:</strong> <span id="courseName">-</span></p>
+      </div>
+      <div class="summary-right">
+        <div class="total-grade">
+          <span class="label">Total Marks</span>
+          <span class="value" id="totalMarks">0.00</span>
+        </div>
+        <div class="letter-grade">
+          <span class="label">Grade</span>
+          <span class="grade-badge" id="letterGrade">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assessment Sections -->
+    <div class="assessments-container">
+      
+      <!-- Quizzes Section (10% total) -->
+      <div class="assessment-section">
+        <div class="section-header">
+          <h3>Quizzes</h3>
+          <span class="weightage-info">Total: 10% (3.333% each)</span>
+        </div>
+        <div class="marks-grid">
+          <div class="mark-input-group">
+            <label>Quiz 1</label>
+            <input type="number" id="quiz1" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="quiz1-weightage">0.00%</span>
+          </div>
+          <div class="mark-input-group">
+            <label>Quiz 2</label>
+            <input type="number" id="quiz2" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="quiz2-weightage">0.00%</span>
+          </div>
+          <div class="mark-input-group">
+            <label>Quiz 3</label>
+            <input type="number" id="quiz3" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="quiz3-weightage">0.00%</span>
+          </div>
+        </div>
+        <div class="section-total">
+          <span>Quizzes Total:</span>
+          <strong id="quizTotal">0.00%</strong>
+        </div>
+      </div>
+
+      <!-- Assignments Section (10% total) -->
+      <div class="assessment-section">
+        <div class="section-header">
+          <h3>Assignments</h3>
+          <span class="weightage-info">Total: 10% (3.333% each)</span>
+        </div>
+        <div class="marks-grid">
+          <div class="mark-input-group">
+            <label>Assignment 1</label>
+            <input type="number" id="assignment1" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="assignment1-weightage">0.00%</span>
+          </div>
+          <div class="mark-input-group">
+            <label>Assignment 2</label>
+            <input type="number" id="assignment2" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="assignment2-weightage">0.00%</span>
+          </div>
+          <div class="mark-input-group">
+            <label>Assignment 3</label>
+            <input type="number" id="assignment3" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="assignment3-weightage">0.00%</span>
+          </div>
+        </div>
+        <div class="section-total">
+          <span>Assignments Total:</span>
+          <strong id="assignmentTotal">0.00%</strong>
+        </div>
+      </div>
+
+      <!-- Midterms Section (30% total) -->
+      <div class="assessment-section">
+        <div class="section-header">
+          <h3>Midterm Exams</h3>
+          <span class="weightage-info">Total: 30% (15% each)</span>
+        </div>
+        <div class="marks-grid">
+          <div class="mark-input-group">
+            <label>Midterm 1</label>
+            <input type="number" id="midterm1" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="midterm1-weightage">0.00%</span>
+          </div>
+          <div class="mark-input-group">
+            <label>Midterm 2</label>
+            <input type="number" id="midterm2" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="midterm2-weightage">0.00%</span>
+          </div>
+        </div>
+        <div class="section-total">
+          <span>Midterms Total:</span>
+          <strong id="midtermTotal">0.00%</strong>
+        </div>
+      </div>
+
+      <!-- Final Exam Section (50%) -->
+      <div class="assessment-section">
+        <div class="section-header">
+          <h3>Final Exam</h3>
+          <span class="weightage-info">Total: 50%</span>
+        </div>
+        <div class="marks-grid">
+          <div class="mark-input-group">
+            <label>Final Exam</label>
+            <input type="number" id="final_exam" min="0" max="100" value="0" oninput="calculateTotal()">
+            <span class="out-of">/ 100</span>
+            <span class="weightage" id="final-weightage">0.00%</span>
+          </div>
+        </div>
+        <div class="section-total">
+          <span>Final Total:</span>
+          <strong id="finalTotal">0.00%</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Save Button -->
+    <div class="save-section">
+      <button class="btn-save" onclick="saveMarks()">
+        <span class="btn-icon">💾</span>
+        Save Marks
+      </button>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="/static/JS/session-protection.js"></script>
+<script src="/static/JS/auth.js"></script>
+<script src="/static/JS/dashboard.js"></script>
+<script src="/static/JS/faculty/student_marks_entry.js"></script>
+</body>
+</html>

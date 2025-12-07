@@ -1,86 +1,64 @@
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from fastapi import HTTPException
-from models import Marks
-from schemas import MarksCreate, MarksUpdate
+from database import get_db
+from crud import marks as marks_crud
+from schemas import MarksCreate, MarksUpdate, MarksResponse
+
+router = APIRouter(prefix="/marks", tags=["Marks"])
 
 
-def create_mark(db: Session, data: MarksCreate):
+@router.post("/", response_model=MarksResponse)
+def create_mark(data: MarksCreate, db: Session = Depends(get_db)):
     """Create a new marks record"""
-    # Check if marks already exist for this student-course-semester combination
-    existing = db.query(Marks).filter(
-        Marks.student_id == data.student_id,
-        Marks.course_id == data.course_id,
-        Marks.semester == data.semester
-    ).first()
-    
-    if existing:
-        raise HTTPException(
-            status_code=400,
-            detail="Marks record already exists for this student-course-semester combination"
-        )
-    
-    obj = Marks(**data.dict())
-    db.add(obj)
-    db.commit()
-    db.refresh(obj)
-    return obj
+    return marks_crud.create_mark(db, data)
 
 
-def get_all_marks(db: Session):
+@router.get("/", response_model=list[MarksResponse])
+def list_marks(db: Session = Depends(get_db)):
     """Get all marks records"""
-    return db.query(Marks).all()
+    return marks_crud.get_all_marks(db)
 
 
-def get_student_marks(db: Session, student_id: int):
+@router.get("/student/{student_id}", response_model=list[MarksResponse])
+def get_student_marks(student_id: int, db: Session = Depends(get_db)):
     """Get all marks for a specific student"""
-    return db.query(Marks).filter(Marks.student_id == student_id).all()
+    return marks_crud.get_student_marks(db, student_id)
 
 
-def get_course_marks(db: Session, course_id: int):
+@router.get("/course/{course_id}", response_model=list[MarksResponse])
+def get_course_marks(course_id: int, db: Session = Depends(get_db)):
     """Get all marks for a specific course"""
-    return db.query(Marks).filter(Marks.course_id == course_id).all()
+    return marks_crud.get_course_marks(db, course_id)
 
 
-def get_student_course_marks(db: Session, student_id: int, course_id: int):
+@router.get("/semester/{semester}", response_model=list[MarksResponse])
+def get_semester_marks(semester: int, db: Session = Depends(get_db)):
+    """Get all marks for a specific semester"""
+    return marks_crud.get_semester_marks(db, semester)
+
+
+@router.get("/student/{student_id}/course/{course_id}", response_model=list[MarksResponse])
+def get_student_course_marks(student_id: int, course_id: int, db: Session = Depends(get_db)):
     """Get marks for a specific student-course combination"""
-    return db.query(Marks).filter(
-        Marks.student_id == student_id,
-        Marks.course_id == course_id
-    ).all()
+    return marks_crud.get_student_course_marks(db, student_id, course_id)
 
 
-def get_mark(db: Session, mark_id: int):
-    """Get a specific mark record by ID"""
-    return db.query(Marks).filter(Marks.mark_id == mark_id).first()
-
-
-def update_mark(db: Session, mark_id: int, data: MarksUpdate):
-    """Update a marks record"""
-    mark = get_mark(db, mark_id)
+@router.get("/{mark_id}", response_model=MarksResponse)
+def get_mark(mark_id: int, db: Session = Depends(get_db)):
+    """Get a specific marks record by ID"""
+    mark = marks_crud.get_mark(db, mark_id)
     if not mark:
         raise HTTPException(status_code=404, detail="Marks record not found")
-    
-    update_data = data.dict(exclude_unset=True)
-    for key, value in update_data.items():
-        if value is not None:
-            setattr(mark, key, value)
-    
-    db.commit()
-    db.refresh(mark)
     return mark
 
 
-def delete_mark(db: Session, mark_id: int):
+@router.put("/{mark_id}", response_model=MarksResponse)
+def update_mark(mark_id: int, data: MarksUpdate, db: Session = Depends(get_db)):
+    """Update a marks record"""
+    return marks_crud.update_mark(db, mark_id, data)
+
+
+@router.delete("/{mark_id}")
+def delete_mark(mark_id: int, db: Session = Depends(get_db)):
     """Delete a marks record"""
-    mark = get_mark(db, mark_id)
-    if not mark:
-        raise HTTPException(status_code=404, detail="Marks record not found")
-    
-    db.delete(mark)
-    db.commit()
-    return {"detail": "Marks record deleted"}
-
-
-def get_semester_marks(db: Session, semester: int):
-    """Get all marks for a specific semester"""
-    return db.query(Marks).filter(Marks.semester == semester).all()
+    return marks_crud.delete_mark(db, mark_id)

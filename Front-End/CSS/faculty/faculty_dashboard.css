@@ -1,3 +1,75 @@
 /* Faculty dashboard small layout overrides moved from inline styles */
 body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; }
 .main-content { flex: 1; padding: 25px; }
+
+/* Clickable stat cards */
+.stat-card.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card.clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card.clickable:active {
+  transform: translateY(-2px);
+}
+
+/* Course cards styling */
+.course-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.course-card h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+}
+
+.course-card p {
+  margin: 0 0 15px 0;
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.course-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.course-stats span {
+  color: #3498db;
+  font-weight: 600;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 0.85em;
+  transition: background 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.btn-small:hover {
+  background: linear-gradient(135deg, #2980b9, #21618c);
+  transform: scale(1.05);
+}
+

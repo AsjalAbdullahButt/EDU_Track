@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faculty Dashboard - EDU Track</title>
+  <title>Manage Student Grades - EDU Track</title>
   <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
   <link rel="stylesheet" href="/static/CSS/main.css">
   <link rel="stylesheet" href="/static/CSS/dashboards.css">
-
-  <link rel="stylesheet" href="/static/CSS/faculty/faculty_dashboard.css">
+  <link rel="stylesheet" href="/static/CSS/tables.css">
+  <link rel="stylesheet" href="/static/CSS/faculty/faculty_grades_new.css">
 </head>
 <body>
 <div class="layout-wrapper">
@@ -18,14 +18,13 @@
     <div class="logo-section">
       <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
       <h2>EDU Track</h2>
-
     </div>
     <nav class="nav-links">
-      <a href="/pages/dashboard/faculty/dashboard_faculty.html" class="active">Dashboard</a>
+      <a href="/pages/dashboard/faculty/dashboard_faculty.html">Dashboard</a>
       <a href="/pages/dashboard/faculty/my_students.html">My Students</a>
       <a href="/pages/dashboard/faculty/my_courses.html">My Courses</a>
       <a href="/pages/dashboard/faculty/my_grades.html">My Grades</a>
-      <a href="/pages/dashboard/faculty/faculty_grades_new.html">Manage Grades</a>
+      <a href="/pages/dashboard/faculty/faculty_grades_new.html" class="active">Manage Grades</a>
       <a href="/pages/dashboard/faculty/manage_attendance.html">Attendance</a>
       <a href="/pages/dashboard/faculty/faculty_attendance_report.html">Attendance Report</a>
       <a href="/pages/dashboard/faculty/faculty_announcements.html">Announcements</a>
@@ -39,36 +38,33 @@
   <!-- MAIN CONTENT -->
   <main class="main-content">
     <header class="dashboard-header">
-      <h1>Welcome, <span data-user-name id="facultyName">Sir Zeeshan Nazar</span></h1>
-      <p>Manage your courses and students here</p>
+      <h1>Manage Student Grades</h1>
+      <p>Select a course and click on a student to manage their grades</p>
     </header>
 
-    <section class="stats-grid">
-      <div class="stat-card clickable" onclick="window.location.href='/pages/dashboard/faculty/my_courses.html'">
-        <h2 id="totalCourses">0</h2>
-        <p>Courses Taught</p>
-      </div>
-      <div class="stat-card clickable" onclick="window.location.href='/pages/dashboard/faculty/my_students.html'">
-        <h2 id="totalStudents">0</h2>
-        <p>Total Students</p>
-      </div>
-      <div class="stat-card clickable" onclick="window.location.href='/pages/dashboard/faculty/my_grades.html'">
-        <h2 id="totalGrades">0</h2>
-        <p>Grades Recorded</p>
+    <section class="section">
+      <div class="filter-section">
+        <select id="courseFilter" class="form-control" onchange="loadStudentsList()">
+          <option value="">Select Course</option>
+        </select>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Your Courses</h2>
-      <div id="coursesListContainer"></div>
+    <section class="section" id="studentsListSection" style="display: none;">
+      <div class="section-header">
+        <h2>Students Enrolled - <span id="selectedCourseName"></span></h2>
+        <p class="course-info">Click on a student to manage their grades</p>
+      </div>
+      
+      <div class="students-grid" id="studentsGrid"></div>
     </section>
   </main>
 
 </div>
 
 <script src="/static/JS/session-protection.js"></script>
-  <script src="/static/JS/auth.js"></script>
-  <script src="/static/JS/dashboard.js"></script>
-  <script src="/static/JS/faculty/dashboard_faculty.js" defer></script>
+<script src="/static/JS/auth.js"></script>
+<script src="/static/JS/dashboard.js"></script>
+<script src="/static/JS/faculty/faculty_grades_new.js"></script>
 </body>
 </html>

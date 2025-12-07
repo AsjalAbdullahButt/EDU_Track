@@ -3,9 +3,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from database import get_db
 from crud import faculty as faculty_crud
-from schemas import FacultyCreate, FacultyResponse, SecurityUpdate, PasswordReset
+from schemas import FacultyCreate, FacultyResponse
 from models import Course, Feedback, Enrollment
-from security import hash_password
 
 router = APIRouter(prefix="/faculties", tags=["Faculty"])
 
@@ -63,35 +62,3 @@ def get_faculty_courses(faculty_id: int, db: Session = Depends(get_db)):
     """Get all courses taught by a faculty member"""
     courses = db.query(Course).filter(Course.faculty_id == faculty_id).all()
     return courses
-
-
-# -----------------------------------------------------------
-# SECURITY ENDPOINTS
-# -----------------------------------------------------------
-@router.patch("/{faculty_id}")
-def patch_faculty_security(faculty_id: int, update: SecurityUpdate, db: Session = Depends(get_db)):
-    """Update faculty security settings (account_status, twofa_enabled)"""
-    faculty = faculty_crud.get_faculty(db, faculty_id)
-    if not faculty:
-        raise HTTPException(status_code=404, detail="Faculty not found")
-    
-    if update.account_status is not None:
-        faculty.account_status = update.account_status
-    if update.twofa_enabled is not None:
-        faculty.twofa_enabled = update.twofa_enabled
-    
-    db.commit()
-    db.refresh(faculty)
-    return {"detail": "Security settings updated successfully", "faculty_id": faculty_id}
-
-
-@router.post("/{faculty_id}/reset-password")
-def reset_faculty_password(faculty_id: int, reset: PasswordReset, db: Session = Depends(get_db)):
-    """Reset faculty password (admin only)"""
-    faculty = faculty_crud.get_faculty(db, faculty_id)
-    if not faculty:
-        raise HTTPException(status_code=404, detail="Faculty not found")
-    
-    faculty.password = hash_password(reset.new_password)
-    db.commit()
-    return {"detail": "Password reset successfully", "faculty_id": faculty_id}
