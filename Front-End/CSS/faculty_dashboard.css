@@ -1,0 +1,3 @@
+/* Faculty dashboard small layout overrides moved from inline styles */
+body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; }
+.main-content { flex: 1; padding: 25px; }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Admin Reports</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+</head>
+<body>
+  <div class="layout-wrapper">
+  <aside class="sidebar">
+    <div class="logo-section">
+  <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+<nav class="nav-links">
+        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link active">Dashboard</a>
+        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+        <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+        <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+        <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
+      </nav>
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <h1>Reports</h1>
+      <p>Administrative reports (stub page)</p>
+    </header>
+
+    <section class="section container-wide">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Students</h3>
+          <p class="stat-value" id="totalStudents">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Faculty</h3>
+          <p class="stat-value" id="totalFaculty">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Courses</h3>
+          <p class="stat-value" id="totalCourses">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Enrollments</h3>
+          <p class="stat-value" id="totalEnrollments">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Avg Enrollments/Course</h3>
+          <p class="stat-value" id="avgEnrollments">0</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 30px;">Courses by Department</h3>
+      <div id="departmentStatsContainer"></div>
+
+      <h3 style="margin-top: 30px;">Enrollment Trends</h3>
+      <div id="enrollmentTrendsContainer"></div>
+    </section>
+  </main>
+
+  </div>
+
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/admin/admin_reports.js" defer></script>
+</body>
+</html>

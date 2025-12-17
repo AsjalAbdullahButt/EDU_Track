@@ -1,0 +1,6 @@
+/* Attendance report page styles extracted from inline */
+body.attendance-report .main-content { background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); border-radius: 12px; padding: 30px; }
+#attendanceTable { width: 100%; border-collapse: collapse; border-radius:12px; overflow:hidden; margin-top:20px; }
+#attendanceTable th, #attendanceTable td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+#attendanceTable th { background: var(--midnight); color:#fff; }
+#courseFilter { padding:6px 10px; border-radius:8px; border:1px solid #ccc; margin-bottom:15px; }

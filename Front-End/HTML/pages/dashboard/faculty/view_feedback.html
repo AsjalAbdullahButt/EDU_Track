@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Feedback - EDU Track</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+<link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/faculty/view_feedback.css">
+</head>
+<body class="feedback">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+<nav class="nav-links">
+            <a href="/pages/dashboard/faculty/dashboard_faculty.html" class="active">Dashboard</a>
+      <a href="/pages/dashboard/faculty/my_students.html">My Students</a>
+      <a href="/pages/dashboard/faculty/my_courses.html">My Courses</a>
+      <a href="/pages/dashboard/faculty/my_grades.html">My Grades</a>
+      <a href="/pages/dashboard/faculty/faculty_grades_new.html">Manage Grades</a>
+      <a href="/pages/dashboard/faculty/manage_attendance.html">Attendance</a>
+      <a href="/pages/dashboard/faculty/faculty_attendance_report.html">Attendance Report</a>
+      <a href="/pages/dashboard/faculty/faculty_announcements.html">Announcements</a>
+      <a href="/pages/dashboard/faculty/view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <h1>Course Feedback</h1>
+
+    <div class="filter-row">
+      <label>Filter by Course: </label>
+      <select id="courseFilter">
+        <option value="">All Courses</option>
+        <option value="Database Systems">Database Systems</option>
+        <option value="AI">AI</option>
+        <option value="Software Design">Software Design</option>
+      </select>
+
+      <label>Filter by Rating: </label>
+      <select id="ratingFilter">
+        <option value="">All Ratings</option>
+        <option value="5">5 Stars</option>
+        <option value="4">4 Stars</option>
+        <option value="3">3 Stars</option>
+        <option value="2">2 Stars</option>
+        <option value="1">1 Star</option>
+      </select>
+    </div>
+
+    <table id="feedbackTable">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Rating</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody id="feedbackTableBody">
+        <!-- rows populated dynamically from /feedback -->
+      </tbody>
+    </table>
+  </main>
+
+</div>
+
+<script src="/static/JS/session-protection.js"></script>
+<script src="/static/JS/auth.js"></script>
+<script src="/static/JS/faculty/view_feedback.js" defer></script>
+<script src="/static/JS/dashboard.js" defer></script>
+</body>
+</html>

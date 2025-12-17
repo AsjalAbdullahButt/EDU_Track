@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Submitted Feedback</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+</head>
+<body class="feedback">
+
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html" class="active">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div class="header-content">
+          <div>
+            <h1>Submitted Feedback</h1>
+            <p>Review your previously submitted course feedback</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn secondary" onclick="downloadAllFeedback()">Download All</button>
+            <button class="btn primary" onclick="location.href='/pages/student_pages/feedback.html'">Back to Feedback</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Filters -->
+      <section class="section">
+        <div class="filters-bar">
+          <div class="search-box">
+            <input type="text" placeholder="Search feedback..." class="search-input">
+            <span class="search-icon">🔍</span>
+          </div>
+          <select class="filter-select">
+            <option value="">All Courses</option>
+            <option value="CS301">Database Systems</option>
+            <option value="CS302">Operating Systems</option>
+            <option value="CS303">Artificial Intelligence</option>
+          </select>
+          <select class="filter-select">
+            <option value="">All Semesters</option>
+            <option value="fall2024">Fall 2024</option>
+            <option value="spring2024">Spring 2024</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Feedback List -->
+      <section class="section">
+        <div id="submittedFeedbackContainer"></div>
+      </section>
+
+      <!-- Pagination -->
+      <section class="section">
+        <div class="pagination">
+          <button class="pagination-btn" disabled>Previous</button>
+          <span class="pagination-info">Page 1 of 3</span>
+          <button class="pagination-btn">Next</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/student/feedback.js" defer></script>
+  <script src="/static/JS/student/feedback_submitted.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDU Track - Register</title>
+    <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/CSS/main.css">
+    <link rel="stylesheet" href="/static/CSS/auth.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        <!-- Left side: Registration form -->
+        <section class="auth-panel">
+            <h1 class="auth-title">Sign Up</h1>
+
+            <form id="registerForm" class="auth-form" novalidate>
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" placeholder="e.g. Ahmad Ali" required>
+
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="e.g. ahmad123" required>
+
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" placeholder="e.g. rollno@city.nu.edu.pk" required>
+
+                <label for="contact">Phone Number (Optional)</label>
+                <input type="tel" id="contact" name="contact" placeholder="e.g. +92-300-1234567">
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+                <label for="confirm">Confirm Password</label>
+                <input type="password" id="confirm" name="confirm" placeholder="Repeat your password" required>
+
+                <div id="pwHelp" class="field-help"></div>
+
+                <!-- Added: show passwords checkbox -->
+                <div class="field-help">
+                    <label for="showPassword">Show Passwords</label>
+                    <input type="checkbox" id="showPassword" />
+                </div>
+
+                <div class="auth-actions">
+                    <button type="submit" class="btn primary">Sign Up</button>
+                    <a href="/pages/login.html" class="btn secondary">Back to Login</a>
+                </div>
+            </form>
+        </section>
+
+        <!-- Right side: Branding panel -->
+        <aside class="auth-welcome">
+            <h2>Welcome to EDU Track</h2>
+            <img src="/static/Images/EDU-Logo.png" alt="EDU Track Logo" class="app-logo">
+            <p>Create your student account and start learning!</p>
+            
+        </aside>
+    </div>
+
+    <script src="/static/JS/api.js"></script>
+    <script src="/static/JS/auth.js" defer></script>
+</body>
+</html>

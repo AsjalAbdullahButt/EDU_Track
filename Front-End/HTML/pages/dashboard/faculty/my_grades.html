@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Grades - EDU Track</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/tables.css">
+  <link rel="stylesheet" href="/static/CSS/faculty/my_grades.css">
+</head>
+<body>
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="/pages/dashboard/faculty/dashboard_faculty.html" class="active">Dashboard</a>
+      <a href="/pages/dashboard/faculty/my_students.html">My Students</a>
+      <a href="/pages/dashboard/faculty/my_courses.html">My Courses</a>
+      <a href="/pages/dashboard/faculty/my_grades.html">My Grades</a>
+      <a href="/pages/dashboard/faculty/faculty_grades_new.html">Manage Grades</a>
+      <a href="/pages/dashboard/faculty/manage_attendance.html">Attendance</a>
+      <a href="/pages/dashboard/faculty/faculty_attendance_report.html">Attendance Report</a>
+      <a href="/pages/dashboard/faculty/faculty_announcements.html">Announcements</a>
+      <a href="/pages/dashboard/faculty/view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="dashboard-header">
+      <h1>My Grades Overview</h1>
+      <p>All grades assigned across your courses</p>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h2 id="totalGrades">0</h2>
+        <p>Total Grades</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="averageGrade">0.0</h2>
+        <p>Average Grade</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="passingRate">0%</h2>
+        <p>Passing Rate</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Grade Distribution</h2>
+        <div class="filter-controls">
+          <select id="courseFilter" class="form-control">
+            <option value="">All Courses</option>
+          </select>
+          <select id="gradeFilter" class="form-control">
+            <option value="">All Grades</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="F">F</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <table class="data-table" id="gradesTable">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Student Name</th>
+              <th>Course</th>
+              <th>Grade</th>
+              <th>Marks</th>
+              <th>Semester</th>
+              <th>Date Assigned</th>
+            </tr>
+          </thead>
+          <tbody id="gradesTableBody">
+            <tr>
+              <td colspan="7" class="empty-state">Loading grades...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+<script src="/static/JS/session-protection.js"></script>
+<script src="/static/JS/auth.js"></script>
+<script src="/static/JS/dashboard.js"></script>
+<script src="/static/JS/faculty/my_grades.js"></script>
+</body>
+</html>

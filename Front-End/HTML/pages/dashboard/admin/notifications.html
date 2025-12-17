@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Notifications</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/admin/notifications.css">
+</head>
+
+<body>
+  <div class="layout-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+        <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fees</a>
+        <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+        <a href="/pages/dashboard/admin/notifications.html" class="nav-link active">Notifications</a>
+        <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    <script src="/static/JS/admin/notifications.js" defer></script>
+  
+      editId = null;
+      populateNotifications();
+    }
+
+    function deleteNotification(id) {
+      notifications = notifications.filter(n => n.id !== id);
+      populateNotifications();
+    }
+
+      function logout() {
+      alert("Logging out...");
+      window.location.href = "/pages/login.html";
+    }
+
+    // Replace the demo behavior with backend-driven operations
+    function populateNotifications() {
+      const tbody = document.getElementById('notificationList');
+      fetch('/notifications').then(r=>r.json()).then(list=>{
+        tbody.innerHTML = '';
+        list.forEach(n => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${n.notification_id}</td>
+            <td>${n.type || ''}</td>
+            <td>${n.message}</td>
+            <td>${n.recipient_id || 'All'}</td>
+            <td>
+              <button class="action-btn btn-delete" data-id="${n.notification_id}">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        tbody.querySelectorAll('.btn-delete').forEach(b => b.addEventListener('click', e => {
+          const id = e.target.dataset.id;
+          if (!confirm('Delete notification?')) return;
+          fetch(`/notifications/${id}`, { method:'DELETE' }).then(()=> populateNotifications());
+        }));
+      });
+    }
+
+    function addNotification() {
+      let title = document.getElementById("titleInput").value.trim();
+      let message = document.getElementById("messageInput").value.trim();
+      let category = document.getElementById("categoryInput").value;
+      let target = document.getElementById("targetInput").value;
+      if (!message || !category || !target) { alert('Please fill required fields'); return; }
+      const payload = { message: message, type: category, recipient_id: target === 'All' ? null : (target === 'Students' ? 0 : -1) };
+      fetch('/notifications', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }).then(r=>{ if(r.ok){ alert('Added'); populateNotifications(); } else alert('Failed'); });
+    }
+
+    window.onload = populateNotifications;
+  </script>
+
+  <script src="/static/JS/dashboard.js" defer></script>
+</body>
+</html>

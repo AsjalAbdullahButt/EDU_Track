@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Pending Feedback</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+</head>
+<body class="feedback">
+
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div class="header-content">
+          <div>
+            <h1>Pending Feedback</h1>
+            <p>Complete your feedback for these courses</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn primary" onclick="submitAllFeedback()">Submit All</button>
+            <button class="btn secondary" onclick="location.href='feedback.html'">Back to Feedback</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Pending Courses List -->
+      <section class="section">
+        <div id="pendingFeedbackContainer"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/student/feedback.js" defer></script>
+</body>
+</html>
+              <div class="course-info">
+                <span class="course-badge">CS303</span>
+                <div>
+                  <h3>Artificial Intelligence</h3>
+                  <p>Miss Sana Malik • Fall 2024</p>
+                </div>
+              </div>
+              <div class="deadline-info">
+                <span class="deadline-badge urgent">Due in 2 days</span>
+              </div>
+            </div>
+            
+            <div class="course-description">
+              <p>Introduction to AI concepts, machine learning algorithms, and intelligent systems design.</p>
+            </div>
+            
+            <div class="progress-section">
+              <div class="progress-info">
+                <span>Feedback completion:</span>
+                <span class="progress-text">Not started</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="course-actions">
+              <button class="btn primary" onclick="startFeedback('CS303')">Start Feedback</button>
+              <button class="btn-text" onclick="remindLater('CS303')">Remind Later</button>
+            </div>
+          </div>
+
+          <!-- Pending Course 2 -->
+          <div class="pending-course-card warning">
+            <div class="course-header">
+              <div class="course-info">
+                <span class="course-badge">MTH205</span>
+                <div>
+                  <h3>Linear Algebra</h3>
+                  <p>Dr. Ahmed Raza • Fall 2024</p>
+                </div>
+              </div>
+              <div class="deadline-info">
+                <span class="deadline-badge warning">Due in 5 days</span>
+              </div>
+            </div>
+            
+            <div class="course-description">
+              <p>Vector spaces, linear transformations, matrices, eigenvalues, and applications.</p>
+            </div>
+            
+            <div class="progress-section">
+              <div class="progress-info">
+                <span>Feedback completion:</span>
+                <span class="progress-text">In progress (40%)</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+              </div>
+            </div>
+            
+            <div class="course-actions">
+              <button class="btn primary" onclick="continueFeedback('MTH205')">Continue</button>
+              <button class="btn secondary" onclick="viewDraft('MTH205')">View Draft</button>
+            </div>
+          </div>
+
+          <!-- Pending Course 3 -->
+          <div class="pending-course-card normal">
+            <div class="course-header">
+              <div class="course-info">
+                <span class="course-badge">CS304</span>
+                <div>
+                  <h3>Software Engineering</h3>
+                  <p>Mr. Bilal Khan • Fall 2024</p>
+                </div>
+              </div>
+              <div class="deadline-info">
+                <span class="deadline-badge normal">Due in 1 week</span>
+              </div>
+            </div>
+            
+            <div class="course-description">
+              <p>Software development methodologies, requirements engineering, design patterns, and testing.</p>
+            </div>
+            
+            <div class="progress-section">
+              <div class="progress-info">
+                <span>Feedback completion:</span>
+                <span class="progress-text">Not started</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div class="course-actions">
+              <button class="btn primary" onclick="startFeedback('CS304')">Start Feedback</button>
+              <button class="btn-text" onclick="remindLater('CS304')">Remind Later</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Submission -->
+      <section class="section">
+        <div class="quick-submission-card">
+          <h3>🚀 Quick Submission</h3>
+          <p>Submit basic feedback quickly for multiple courses</p>
+          
+          <div class="quick-feedback-form">
+            <div class="quick-feedback-item">
+              <label>
+                <input type="checkbox" name="quickCourses" value="CS303">
+                <span class="course-code">CS303</span>
+                <span class="course-name">Artificial Intelligence</span>
+              </label>
+              <select class="quick-rating">
+                <option value="">Select Rating</option>
+                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                <option value="4">⭐⭐⭐⭐ Very Good</option>
+                <option value="3">⭐⭐⭐ Good</option>
+                <option value="2">⭐⭐ Fair</option>
+                <option value="1">⭐ Poor</option>
+              </select>
+            </div>
+            
+            <div class="quick-feedback-item">
+              <label>
+                <input type="checkbox" name="quickCourses" value="MTH205">
+                <span class="course-code">MTH205</span>
+                <span class="course-name">Linear Algebra</span>
+              </label>
+              <select class="quick-rating">
+                <option value="">Select Rating</option>
+                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                <option value="4">⭐⭐⭐⭐ Very Good</option>
+                <option value="3">⭐⭐⭐ Good</option>
+                <option value="2">⭐⭐ Fair</option>
+                <option value="1">⭐ Poor</option>
+              </select>
+            </div>
+            
+            <div class="quick-feedback-item">
+              <label>
+                <input type="checkbox" name="quickCourses" value="CS304">
+                <span class="course-code">CS304</span>
+                <span class="course-name">Software Engineering</span>
+              </label>
+              <select class="quick-rating">
+                <option value="">Select Rating</option>
+                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                <option value="4">⭐⭐⭐⭐ Very Good</option>
+                <option value="3">⭐⭐⭐ Good</option>
+                <option value="2">⭐⭐ Fair</option>
+                <option value="1">⭐ Poor</option>
+              </select>
+            </div>
+            
+            <div class="quick-actions">
+              <label class="checkbox-label">
+                <input type="checkbox" name="quickAnonymous">
+                <span class="checkmark"></span>
+                Submit all anonymously
+              </label>
+              <button class="btn primary" onclick="submitQuickFeedback()">Submit Selected</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Completion Stats -->
+      <section class="section">
+        <div class="completion-stats">
+          <div class="completion-card">
+            <h4>Feedback Progress</h4>
+            <div class="completion-circle">
+              <div class="circle-progress" style="--progress: 60">
+                <span class="progress-value">60%</span>
+              </div>
+            </div>
+            <div class="completion-details">
+              <div class="stat-item">
+                <span class="stat-number" id="pendingCount">—</span>
+                <span class="stat-label">Pending</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number" id="totalSubmittedCount">—</span>
+                <span class="stat-label">Completed</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">2</span>
+                <span class="stat-label">Due Soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/auth.js"></script>
+  <script src="../../../JS/student-api.js"></script>
+  <script src="../../../JS/dashboard.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/student/feedback_pending.js"></script>
+  <script>
+    protectDashboard('student');
+  </script>
+</body>
+</html>

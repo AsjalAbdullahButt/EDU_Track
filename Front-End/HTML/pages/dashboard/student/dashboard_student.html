@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Student Dashboard</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student_pages.css">
+</head>
+<body class="dashboard">
+
+  <div class="layout-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/dashboard_student.html" class="active">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Welcome, <span data-user-name id="studentName">Asjal Abdullah</span></h1>
+        <p>Your academic summary at a glance</p>
+      </header>
+
+      <!-- Quick Stats -->
+      <section class="stats-grid">
+        <a class="stat-link" href="../../student_pages/courses.html">
+          <div class="stat-card">
+            <h2 id="activeCourses">-</h2>
+            <p>Active Courses</p>
+          </div>
+        </a>
+
+        <a class="stat-link" href="../../student_pages/attendance.html">
+          <div class="stat-card">
+            <h2 id="attendancePercent">-</h2>
+            <p>Attendance</p>
+          </div>
+        </a>
+
+        <a class="stat-link" href="../../student_pages/results.html">
+          <div class="stat-card">
+            <h2 id="cgpaValue">-</h2>
+            <p>CGPA</p>
+          </div>
+        </a>
+
+        <a class="stat-link" href="../../student_pages/fees.html">
+          <div class="stat-card">
+            <h2 id="feeStatus">-</h2>
+            <p>Fee Status</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- Two Column Layout -->
+      <div class="dashboard-columns">
+        <!-- Left Column -->
+        <div class="column">
+          <!-- Today's Schedule -->
+          <section class="section">
+            <h2>Today's Schedule</h2>
+            <div class="schedule-list">
+              <div class="schedule-item">
+                <div class="schedule-time">
+                  <span class="time">09:00 AM</span>
+                  <span class="duration">60 min</span>
+                </div>
+                <div class="schedule-details">
+                  <h4>Database Systems</h4>
+                  <p>CS-301 | Room A-12</p>
+                </div>
+                <div class="schedule-status ongoing">Ongoing</div>
+              </div>
+              <div class="schedule-item">
+                <div class="schedule-time">
+                  <span class="time">11:00 AM</span>
+                  <span class="duration">90 min</span>
+                </div>
+                <div class="schedule-details">
+                  <h4>Operating Systems</h4>
+                  <p>CS-302 | Lab B-05</p>
+                </div>
+                <div class="schedule-status upcoming">Upcoming</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Upcoming Deadlines -->
+          <section class="section">
+            <h2>Upcoming Deadlines</h2>
+            <div class="deadlines-list">
+              <div class="deadline-item urgent">
+                <div class="deadline-icon">📅</div>
+                <div class="deadline-content">
+                  <h4>Project Submission</h4>
+                  <p>Database Systems - Due Tomorrow</p>
+                </div>
+                <div class="deadline-days">1 day</div>
+              </div>
+              <div class="deadline-item warning">
+                <div class="deadline-icon">📝</div>
+                <div class="deadline-content">
+                  <h4>Quiz 2</h4>
+                  <p>Operating Systems - 3 days left</p>
+                </div>
+                <div class="deadline-days">3 days</div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Column -->
+        <div class="column">
+          <!-- Notifications -->
+          <section class="section">
+            <h2>Recent Notifications</h2>
+            <ul class="notification-list">
+              <li>⚙️ Your course registration for Spring 2025 has been confirmed.</li>
+              <li>📢 Midterm schedule is now available on the portal.</li>
+              <li>💰 Fee due reminder: 5th March 2025.</li>
+              <li>🎓 Grades for Database Systems midterm have been published.</li>
+            </ul>
+          </section>
+
+          <!-- Quick Actions -->
+          <section class="section">
+            <h2>Quick Actions</h2>
+            <div class="actions-grid">
+              <button class="action-btn" onclick="location.href='/pages/student_pages/add_courses.html'">
+                <span class="action-icon">📝</span>
+                <span>Course Registration</span>
+              </button>
+              <button class="action-btn" onclick="location.href='/pages/student_pages/fees.html'">
+                <span class="action-icon">💳</span>
+                <span>Pay Fees</span>
+              </button>
+              <button class="action-btn" onclick="location.href='/pages/student_pages/feedback.html'">
+                <span class="action-icon">📋</span>
+                <span>Submit Feedback</span>
+              </button>
+              <button class="action-btn" onclick="downloadTranscript()">
+                <span class="action-icon">📄</span>
+                <span>Download Transcript</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/student-api.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/dashboard_student.js"></script>
+  
+  <!-- Protect dashboard and display user info -->
+  <script>
+    protectDashboard('student');
+  </script>
+</body>
+</html>

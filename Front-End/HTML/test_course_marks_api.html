@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Course Marks</title>
+</head>
+<body>
+  <h1>Testing Course Marks Page</h1>
+  <div id="output"></div>
+
+  <script src="/static/JS/api.js"></script>
+  <script>
+    // Simulate logged in user
+    localStorage.setItem('loggedInUser', JSON.stringify({
+      id: 1,
+      name: 'Asjal',
+      role: 'student'
+    }));
+
+    const output = document.getElementById('output');
+    
+    async function testAPI() {
+      output.innerHTML = '<p>Testing API...</p>';
+      
+      try {
+        // Check if API is defined
+        if (typeof API === 'undefined') {
+          output.innerHTML += '<p style="color: red;">ERROR: API object not defined!</p>';
+          return;
+        }
+        output.innerHTML += '<p style="color: green;">✓ API object loaded</p>';
+        
+        // Test marks endpoint
+        output.innerHTML += '<p>Fetching marks for student 1, course 2...</p>';
+        const marks = await API.marks.getStudentCourse(1, 2);
+        output.innerHTML += `<p style="color: green;">✓ Marks loaded: ${JSON.stringify(marks).substring(0, 200)}</p>`;
+        
+        // Test courses endpoint
+        output.innerHTML += '<p>Fetching courses...</p>';
+        const courses = await API.courses.getAll();
+        output.innerHTML += `<p style="color: green;">✓ Courses loaded: ${courses.length} courses</p>`;
+        
+        // Test course marks endpoint
+        output.innerHTML += '<p>Fetching all course marks...</p>';
+        const courseMarks = await API.marks.getByCourse(2);
+        output.innerHTML += `<p style="color: green;">✓ Course marks loaded: ${courseMarks.length} records</p>`;
+        
+        output.innerHTML += '<h2 style="color: green;">All API calls successful!</h2>';
+      } catch (error) {
+        output.innerHTML += `<p style="color: red;">ERROR: ${error.message}</p>`;
+        console.error('Test error:', error);
+      }
+    }
+    
+    testAPI();
+  </script>
+</body>
+</html>

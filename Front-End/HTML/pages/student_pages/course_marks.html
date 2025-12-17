@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Course Marks</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+  <style>
+    .assessment-details { max-width: 1100px; margin: 18px auto; }
+    .assessment-table-section {
+      background: var(--white, #fff);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--soft-shadow, 0 6px 18px rgba(11,11,11,0.06));
+      margin-bottom: 18px;
+      animation: fadeIn 420ms ease;
+    }
+    .assessment-table-section h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.05rem;
+      color: var(--midnight, #001f3f);
+    }
+    .assessment-table, .courses-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white, #fff);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: none;
+    }
+    .assessment-table thead th {
+      text-align: left;
+      padding: 12px 14px;
+      background: rgba(0,31,63,0.04);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--midnight, #001f3f);
+      border-bottom: 1px solid rgba(11,11,11,0.06);
+    }
+    .assessment-table tbody td {
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: rgba(11,11,11,0.85);
+      border-bottom: 1px solid rgba(11,11,11,0.04);
+    }
+    .assessment-table tbody tr.total-row td {
+      font-weight: 700;
+      background: rgba(0,31,63,0.03);
+    }
+    .grade-badge {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:0.95rem;
+    }
+    .grade-aplus { background: #28a745; color: #fff; }
+    .grade-a { background: #5cb85c; color: #fff; }
+    .grade-bplus { background: #17a2b8; color: #fff; }
+    .grade-b { background: #5bc0de; color: #fff; }
+    .grade-cplus { background: #ffc107; color: #000; }
+    .grade-c { background: #f0ad4e; color: #000; }
+    .grade-d { background: #fd7e14; color: #fff; }
+    .grade-f { background: #dc3545; color: #fff; }
+    .empty-state { padding:18px; background:var(--white); border-radius:10px; text-align:center; color:rgba(11,11,11,0.65); }
+  </style>
+</head>
+<body class="course-marks">
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <button class="back-btn" onclick="window.history.back()"><span>←</span> Back</button>
+        <div>
+          <h1 id="courseTitle">Course Marks</h1>
+          <p id="courseSubtitle">View detailed marks breakdown for this course</p>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="assessment-details">
+          <h2>Assessment Details</h2>
+          <div id="assessmentTablesContainer" class="assessment-tables-container"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script>
+    // Direct inline implementation - no external dependencies
+    const API_BASE = 'http://127.0.0.1:8000';
+    
+    function getCourseId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('courseId');
+    }
+
+    async function loadMarks() {
+      console.log('=== loadMarks function started ===');
+      const container = document.getElementById('assessmentTablesContainer');
+      console.log('Container element:', container);
+      
+      const session = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+      console.log('Session data:', session);
+      
+      const studentId = session.id;
+      const courseId = getCourseId();
+
+      console.log('Student:', studentId, 'Course:', courseId);
+
+      if (!studentId) {
+        container.innerHTML = '<p class="empty-state">Please log in</p>';
+        return;
+      }
+
+      if (!courseId) {
+        container.innerHTML = '<p class="empty-state">No course selected. <a href="/pages/student_pages/results.html">Go back</a></p>';
+        return;
+      }
+
+      container.innerHTML = '<p class="empty-state">Loading...</p>';
+
+      try {
+        // Fetch data directly
+        console.log('Fetching marks from:', `${API_BASE}/marks/student/${studentId}/course/${courseId}`);
+        const marksResp = await fetch(`${API_BASE}/marks/student/${studentId}/course/${courseId}`);
+        console.log('Marks response:', marksResp.status, marksResp.ok);
+        
+        console.log('Fetching courses from:', `${API_BASE}/courses`);
+        const coursesResp = await fetch(`${API_BASE}/courses`);
+        console.log('Courses response:', coursesResp.status, coursesResp.ok);
+        
+        if (!marksResp.ok || !coursesResp.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const marksData = await marksResp.json();
+        const coursesData = await coursesResp.json();
+
+        console.log('Marks data:', marksData);
+        console.log('Courses data length:', coursesData.length);
+
+        if (!marksData || marksData.length === 0) {
+          console.log('No marks data found');
+          container.innerHTML = '<p class="empty-state">No marks recorded yet</p>';
+          return;
+        }
+
+        const mark = marksData[0];
+        console.log('Mark object:', mark);
+        
+        const course = coursesData.find(c => c.course_id == courseId);
+        console.log('Found course:', course);
+
+        if (!course) {
+          console.log('Course not found for courseId:', courseId);
+          container.innerHTML = '<p class="empty-state">Course not found</p>';
+          return;
+        }
+
+        console.log('Setting course title:', course.course_name);
+
+        document.getElementById('courseTitle').textContent = course.course_name;
+        document.getElementById('courseSubtitle').textContent = `${course.course_code} - Detailed assessment breakdown`;
+
+        console.log('Building HTML with mark data:', {
+          quiz1: mark.quiz1,
+          quiz_total: mark.quiz_total,
+          total_marks: mark.total_marks,
+          grade: mark.grade_letter
+        });
+
+        // Build simple table
+        container.innerHTML = `
+          <div class="assessment-table-section">
+            <h3>Quizzes</h3>
+            <table class="assessment-table">
+              <thead>
+                <tr><th>Assessment</th><th>Marks</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Quiz 1</td><td>${mark.quiz1}</td></tr>
+                <tr><td>Quiz 2</td><td>${mark.quiz2}</td></tr>
+                <tr><td>Quiz 3</td><td>${mark.quiz3}</td></tr>
+                <tr class="total-row"><td>Quiz Total</td><td>${mark.quiz_total} / 10</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="assessment-table-section">
+            <h3>Assignments</h3>
+            <table class="assessment-table">
+              <thead>
+                <tr><th>Assessment</th><th>Marks</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Assignment 1</td><td>${mark.assignment1}</td></tr>
+                <tr><td>Assignment 2</td><td>${mark.assignment2}</td></tr>
+                <tr><td>Assignment 3</td><td>${mark.assignment3}</td></tr>
+                <tr class="total-row"><td>Assignment Total</td><td>${mark.assignment_total} / 10</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="assessment-table-section">
+            <h3>Midterm Exams</h3>
+            <table class="assessment-table">
+              <thead>
+                <tr><th>Exam</th><th>Marks</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Midterm 1</td><td>${mark.midterm1} / 15</td></tr>
+                <tr><td>Midterm 2</td><td>${mark.midterm2} / 15</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="assessment-table-section">
+            <h3>Final Exam</h3>
+            <table class="assessment-table">
+              <thead>
+                <tr><th>Exam</th><th>Marks</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Final Exam</td><td>${mark.final_exam} / 50</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="assessment-table-section">
+            <h3>Overall Performance</h3>
+            <table class="assessment-table">
+              <tbody>
+                <tr class="total-row">
+                  <td><strong>Total Marks</strong></td>
+                  <td><strong>${mark.total_marks} / 100</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Grade</strong></td>
+                  <td><span class="grade-badge grade-${mark.grade_letter.toLowerCase().replace('+', 'plus')}">${mark.grade_letter}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+        
+        console.log('=== HTML rendered successfully ===');
+
+      } catch (error) {
+        console.error('=== Error occurred ===');
+        console.error('Error:', error);
+        console.error('Stack:', error.stack);
+        container.innerHTML = '<p class="empty-state">Failed to load marks. Please try again.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try { protectDashboard && protectDashboard('student'); } catch (e) {}
+      loadMarks();
+    });
+  </script>
+</body>
+</html>

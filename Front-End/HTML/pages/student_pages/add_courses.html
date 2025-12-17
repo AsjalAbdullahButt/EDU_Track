@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Catalog - EDU Track</title>
+    <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/CSS/main.css">
+    <link rel="stylesheet" href="/static/CSS/dashboards.css">
+    <link rel="stylesheet" href="/static/CSS/student_pages.css">
+</head>
+
+<body class="courses">
+<div class="layout-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+            <h2>EDU Track</h2>
+        </div>
+
+        <nav class="nav-links">
+            <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+            <a href="/pages/student_pages/courses.html">My Courses</a>
+            <a href="/pages/student_pages/add_courses.html" class="active">Add Courses</a>
+            <a href="/pages/student_pages/attendance.html">Attendance</a>
+            <a href="/pages/student_pages/results.html">Results</a>
+            <a href="/pages/student_pages/fees.html">Fees</a>
+            <a href="/pages/student_pages/notifications.html">Notifications</a>
+            <a href="/pages/student_pages/feedback.html">Feedback</a>
+        </nav>
+
+        <div class="logout-section">
+            <button class="btn secondary" onclick="logout()">Logout</button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="container-wide">
+
+            <header class="dashboard-header">
+                <h1>Course Catalog</h1>
+                <p>Browse and enroll in available courses</p>
+            </header>
+
+            <!-- Single Card Container -->
+            <div class="catalog-container">
+                
+                <!-- Search and Filter Section -->
+                <div class="search-section">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search courses by name or code...">
+                        <button class="search-btn" onclick="searchCourses()">Search</button>
+                        <button class="clear-btn" onclick="clearFilters()">Clear Filters</button>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <div class="filter-group">
+                            <label>Department</label>
+                            <select id="departmentFilter">
+                                <option value="">All Departments</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Credits</label>
+                            <select id="creditsFilter">
+                                <option value="">All Credits</option>
+                                <option value="1">1 Credit</option>
+                                <option value="2">2 Credits</option>
+                                <option value="3">3 Credits</option>
+                                <option value="4">4 Credits</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Availability</label>
+                            <select id="seatsFilter">
+                                <option value="">All Status</option>
+                                <option value="Available">Available</option>
+                                <option value="Full">Full</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="enrolled-courses-card">
+                    <!-- Results Info -->
+                    <div class="results-info" id="resultsInfo">
+                        <span>Available Courses</span>
+                        <span class="total-courses" id="totalCourses">0 courses</span>
+                    </div>
+
+                    <!-- Courses Table -->
+                    <table class="courses-table" id="coursesTable">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Department</th>
+                                <th>Credits</th>
+                                <th>Availability</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coursesTableBody">
+                            <!-- Courses loaded dynamically from backend -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="noCoursesMessage" class="no-courses" style="display: none;">
+                        No courses match your search criteria. Try adjusting your filters.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+<script src="/static/JS/session-protection.js" defer></script>
+<script src="/static/JS/auth.js" defer></script>
+<script src="/static/JS/dashboard.js" defer></script>
+<script src="/static/JS/student/add_courses.js" defer></script>
+
+</body>
+</html>

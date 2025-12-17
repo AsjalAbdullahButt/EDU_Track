@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Transcript</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+</head>
+<body class="transcript">
+
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Transcript</h1>
+        <p>All semesters — semester-wise GPA and cumulative CGPA</p>
+      </header>
+
+      <section class="section">
+        <div class="transcript-summary" id="transcriptSummary">
+          <div>
+            <h3 id="studentName">—</h3>
+            <p class="muted" id="studentEmail">—</p>
+          </div>
+          <div style="text-align:right;">
+            <p class="muted">Cumulative CGPA</p>
+            <h2 id="cgpaValue">—</h2>
+            <button class="btn primary" id="printTranscript">Print / Save PDF</button>
+          </div>
+        </div>
+
+        <table class="data-table" id="transcriptTable">
+          <thead>
+            <tr><th>Semester</th><th>Course</th><th>Credits</th><th>Grade</th><th>Points</th></tr>
+          </thead>
+          <tbody>
+            <!-- filled by JS -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/transcript.js" defer></script>
+</body>
+</html>

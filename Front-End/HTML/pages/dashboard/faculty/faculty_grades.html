@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grades Management - EDU Track</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/faculty/faculty_grades.css">
+</head>
+<body class="grades">
+
+<div class="layout-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="/static/Images/EDU-Logo.png" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+    <nav class="nav-links">
+            <a href="/pages/dashboard/faculty/dashboard_faculty.html" class="active">Dashboard</a>
+      <a href="/pages/dashboard/faculty/my_students.html">My Students</a>
+      <a href="/pages/dashboard/faculty/my_courses.html">My Courses</a>
+      <a href="/pages/dashboard/faculty/my_grades.html">My Grades</a>
+      <a href="/pages/dashboard/faculty/faculty_grades_new.html">Manage Grades</a>
+      <a href="/pages/dashboard/faculty/manage_attendance.html">Attendance</a>
+      <a href="/pages/dashboard/faculty/faculty_attendance_report.html">Attendance Report</a>
+      <a href="/pages/dashboard/faculty/faculty_announcements.html">Announcements</a>
+      <a href="/pages/dashboard/faculty/view_feedback.html">Feedback</a>
+    </nav>
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <h1>Grades Management</h1>
+    <p>Manage student grades per category and calculate total marks</p>
+
+    <div>
+      <label>Select Course</label>
+      <select class="select-box" style="border-radius:12px;">
+        <option>BSCS - Database Systems</option>
+        <option>BSCS - AI</option>
+        <option>BSSE - Software Design</option>
+      </select>
+    </div>
+
+    <div class="tab-container" id="tabs">
+      <div class="tab active">Midterms</div>
+      <div class="tab">Assignments</div>
+      <div class="tab">Quizzes</div>
+      <div class="tab">Finals</div>
+    </div>
+
+    <div class="table-container">
+      <table id="gradesTable">
+        <thead>
+          <tr id="headerRow">
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Midterm1</th>
+            <th>Midterm2</th>
+            <th class="assign-header">Assignment1 <button class="add-column-btn" onclick="addAssignment()">+</button></th>
+            <th class="quiz-header">Quiz1 <button class="add-column-btn" onclick="addQuiz()">+</button></th>
+            <th>Final</th>
+            <th>Total /100</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BSCS-001</td>
+            <td>Ali Khan</td>
+            <td><input type="number" value="20" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="18" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="10" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="15" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="25" onchange="calculateTotal(this)"></td>
+            <td class="total">88</td>
+          </tr>
+          <tr>
+            <td>BSCS-002</td>
+            <td>Ayesha Noor</td>
+            <td><input type="number" value="18" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="20" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="10" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="15" onchange="calculateTotal(this)"></td>
+            <td><input type="number" value="22" onchange="calculateTotal(this)"></td>
+            <td class="total">85</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<script src="/static/JS/session-protection.js"></script>
+<script src="/static/JS/auth.js"></script>
+<script src="/static/JS/dashboard.js"></script>
+<script src="/static/JS/faculty/faculty_grades.js" defer></script>
+</body>
+</html>

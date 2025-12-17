@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Fee Verification</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/fee_verification.css">
+
+</head>
+
+<body>
+
+<div class="layout-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-section">
+      <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+      <h2>EDU Track</h2>
+    </div>
+
+    <nav class="nav-links">
+      <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+      <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link">User Management</a>
+      <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+      <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+      <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link active">Fee Verification</a>
+      <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+      <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+      <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
+    </nav>
+
+    <div class="logout-section">
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <header class="dashboard-header">
+      <h1>Fee Verification</h1>
+      <p>Verify student payment receipts and update payment status</p>
+    </header>
+
+    <section class="container-wide">
+
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Receipt</th>
+            <th>Status</th>
+            <th>Verify</th>
+          </tr>
+        </thead>
+
+        <tbody id="feeVerificationList">
+          <!-- Rows populated by JS -->
+        </tbody>
+      </table>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Receipt Modal -->
+<div class="modal" id="receiptModal">
+  <div class="modal-content">
+    <h3>Receipt Preview</h3>
+    <img id="receiptImage" src="" alt="Receipt" style="max-width:100%;display:block;margin:8px 0;">
+    <div id="noReceipt" style="color:#666;margin:8px 0;display:none;">No receipt available for this payment.</div>
+    <textarea id="remarks" placeholder="Add remarks (optional)"></textarea>
+
+    <div class="modal-buttons">
+      <button class="btn primary" onclick="approveFee()">Approve</button>
+      <button class="btn danger" onclick="rejectFee()">Reject</button>
+      <button class="btn secondary" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/JS/fee_verification.js" defer></script>
+<script src="/static/JS/dashboard.js" defer></script>
+</body>
+</html>

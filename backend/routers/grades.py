@@ -1,0 +1,35 @@
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from database import get_db
+from crud import grades as grades_crud
+from schemas import GradesCreate, GradesResponse
+
+router = APIRouter(prefix="/grades", tags=["Grades"])
+
+@router.post("/", response_model=GradesResponse)
+def create_grade(data: GradesCreate, db: Session = Depends(get_db)):
+    return grades_crud.create_grade(db, data)
+
+@router.get("/", response_model=list[GradesResponse])
+def list_grades(db: Session = Depends(get_db)):
+    return grades_crud.get_grades(db)
+
+@router.get("/student/{student_id}", response_model=list[GradesResponse])
+def get_student_grades(student_id: int, db: Session = Depends(get_db)):
+    """Get all grades for a specific student"""
+    return grades_crud.get_student_grades(db, student_id)
+
+@router.get("/{grade_id}", response_model=GradesResponse)
+def get_grade(grade_id: int, db: Session = Depends(get_db)):
+    g = grades_crud.get_grade(db, grade_id)
+    if not g:
+        raise HTTPException(status_code=404, detail="Grade not found")
+    return g
+
+@router.put("/{grade_id}", response_model=GradesResponse)
+def update_grade(grade_id: int, data: GradesCreate, db: Session = Depends(get_db)):
+    return grades_crud.update_grade(db, grade_id, data)
+
+@router.delete("/{grade_id}")
+def delete_grade(grade_id: int, db: Session = Depends(get_db)):
+    return grades_crud.delete_grade(db, grade_id)

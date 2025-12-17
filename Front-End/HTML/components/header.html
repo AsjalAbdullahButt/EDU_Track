@@ -1,0 +1,26 @@
+<!-- ======================================================
+     EDU Track - Header Component
+     Author: Asjal Abdullah
+====================================================== -->
+
+<header class="main-header">
+  <div class="header-left">
+  <img src="/static/Images/EDU-Logo.png" alt="EDU Track Logo" class="header-logo">
+    <h1>EDU Track</h1>
+  </div>
+
+  <div class="header-center">
+    <h2 id="dashboardGreeting">Welcome Back!</h2>
+  </div>
+
+  <div class="header-right">
+    <button class="notif-btn" id="notifBtn" aria-label="View Notifications">
+      <i class="bell-icon">🔔</i>
+      <span class="notif-count" id="notifCount">3</span>
+    </button>
+
+    <button class="btn secondary" onclick="logout()">Logout</button>
+  </div>
+</header>
+<link rel="stylesheet" href="/static/CSS/components/header_footer.css">
+<script src="/static/JS/inject-favicon.js"></script>

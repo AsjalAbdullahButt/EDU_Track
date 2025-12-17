@@ -1,0 +1,385 @@
+/* ==============================================
+   EDU Track - Fees Page Styling
+   ============================================== */
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(11, 11, 11, 0.5);
+  font-size: 1rem;
+  background: var(--white);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+/* Fee Overview Card */
+.fee-overview-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 31, 63, 0.08);
+}
+
+.fee-overview-header {
+  background: linear-gradient(135deg, var(--midnight), #003366);
+  color: var(--white);
+  padding: 20px 24px;
+  border-bottom: 3px solid var(--pastel-mint);
+}
+
+.fee-overview-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.fee-overview-content {
+  padding: 24px;
+}
+
+/* Fee Stats Grid */
+.fee-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.fee-stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 10px;
+  border-left: 4px solid var(--midnight);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fee-stat-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.fee-stat-box .stat-label {
+  font-size: 0.9rem;
+  color: rgba(11, 11, 11, 0.6);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fee-stat-box .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--midnight);
+}
+
+.fee-stat-box .stat-value.stat-success {
+  color: #27ae60;
+}
+
+.fee-stat-box .stat-value.stat-danger {
+  color: #e74c3c;
+}
+
+/* Fee Records Section */
+.fee-records-section {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(0, 31, 63, 0.08);
+}
+
+.fee-records-section h3 {
+  margin: 0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, var(--midnight), #003366);
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-bottom: 3px solid var(--pastel-mint);
+}
+
+/* Fee Records Table */
+.fee-records-table {
+  width: 100%;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 70px 1.5fr 1fr 1fr 1fr 1fr 110px 110px;
+  gap: 12px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid rgba(0, 31, 63, 0.1);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--midnight);
+}
+
+.table-body {
+  background: var(--white);
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 70px 1.5fr 1fr 1fr 1fr 1fr 110px 110px;
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.25s ease;
+  align-items: center;
+}
+
+.table-row:hover {
+  background: rgba(205, 238, 228, 0.08);
+  transform: translateX(4px);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+/* Row Status Colors */
+.table-row.paid-row {
+  background: rgba(39, 174, 96, 0.02);
+}
+
+.table-row.pending-row {
+  background: rgba(231, 76, 60, 0.02);
+}
+
+.table-row.paid-row:hover {
+  background: rgba(39, 174, 96, 0.08);
+}
+
+.table-row.pending-row:hover {
+  background: rgba(231, 76, 60, 0.08);
+}
+
+/* Column Styling */
+.col-id,
+.col-description,
+.col-amount,
+.col-paid,
+.col-balance,
+.col-due,
+.col-status,
+.col-action {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.fee-id {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--midnight), #003366);
+  color: var(--white);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.description-text {
+  color: var(--black);
+  font-weight: 500;
+}
+
+.amount-text,
+.balance-text {
+  font-weight: 700;
+  color: var(--midnight);
+  font-size: 1rem;
+}
+
+.paid-text {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #27ae60;
+}
+
+.date-text {
+  color: rgba(11, 11, 11, 0.7);
+  font-size: 0.9rem;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* Action Buttons */
+.btn-pay {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--midnight), #003366);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid var(--midnight);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn-pay:hover {
+  background: transparent;
+  color: var(--midnight);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 31, 63, 0.2);
+}
+
+.paid-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #27ae60;
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 60px 1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 100px 100px;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .fee-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .table-header {
+    display: none;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+
+  .table-row:hover {
+    transform: none;
+  }
+
+  .col-id,
+  .col-description,
+  .col-amount,
+  .col-paid,
+  .col-balance,
+  .col-due,
+  .col-status,
+  .col-action {
+    justify-content: space-between;
+  }
+
+  .col-id::before {
+    content: 'Fee ID:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-description::before {
+    content: 'Description:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-amount::before {
+    content: 'Total Amount:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-paid::before {
+    content: 'Paid Amount:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-balance::before {
+    content: 'Balance:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-due::before {
+    content: 'Due Date:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-status::before {
+    content: 'Status:';
+    font-weight: 600;
+    color: var(--midnight);
+  }
+
+  .col-action {
+    justify-content: center;
+  }
+
+  .fee-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .fee-overview-header,
+  .fee-records-section h3 {
+    padding: 16px 20px;
+    font-size: 1.1rem;
+  }
+
+  .fee-overview-content {
+    padding: 20px;
+  }
+
+  .fee-stat-box {
+    padding: 16px;
+  }
+
+  .fee-stat-box .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .table-row {
+    padding: 16px;
+  }
+}

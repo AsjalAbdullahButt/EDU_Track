@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Management Tabs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
+        .tab-btn { 
+            padding: 12px 24px; 
+            border: none; 
+            background: transparent; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { background: #f0f0f0; }
+        .tab-btn.active { 
+            color: #2563eb; 
+            border-bottom-color: #2563eb; 
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f9fafb; font-weight: 600; }
+        .badge { 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            font-weight: 600; 
+        }
+        .badge.verified { background: #27ae60; color: white; }
+        .badge.unverified { background: #e74c3c; color: white; }
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 4px;
+        }
+        .btn.primary { background: #2563eb; color: white; }
+        .btn.secondary { background: #6b7280; color: white; }
+        .btn.success { background: #27ae60; color: white; }
+        .btn.danger { background: #e74c3c; color: white; }
+        .btn:hover { opacity: 0.9; }
+        #log { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: #1e293b; 
+            color: #10b981; 
+            font-family: monospace; 
+            font-size: 12px; 
+            border-radius: 4px; 
+            max-height: 300px; 
+            overflow-y: auto; 
+        }
+        .log-entry { margin-bottom: 5px; }
+        .log-error { color: #ef4444; }
+        .log-success { color: #10b981; }
+        .log-info { color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Management Test</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-filter="students">Students</button>
+            <button class="tab-btn" data-filter="faculty">Faculty</button>
+            <button class="tab-btn" data-filter="admin">Admin Members</button>
+        </div>
+
+        <div id="tableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th id="dynamicHeader">Verification</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userList">
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:40px;">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="log"></div>
+    </div>
+
+    <script>
+        let allUsers = { students: [], faculty: [], admin: [] };
+        let currentFilter = 'students';
+        const logEl = document.getElementById('log');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        async function loadAllUsers() {
+            log('Starting to load users...', 'info');
+            
+            try {
+                log('Fetching students from /students', 'info');
+                const students = await fetch('/students').then(r => r.json());
+                log(`Received ${students.length} students`, 'success');
+                
+                log('Fetching faculty from /faculties', 'info');
+                const faculty = await fetch('/faculties').then(r => r.json());
+                log(`Received ${faculty.length} faculty members`, 'success');
+                
+                log('Fetching admins from /admins', 'info');
+                const admins = await fetch('/admins').then(r => r.json());
+                log(`Received ${admins.length} admins`, 'success');
+                
+                allUsers.students = students.map(s => ({
+                    id: s.student_id,
+                    name: s.full_name,
+                    email: s.email,
+                    role: 'Student',
+                    verified: s.profile_verified === true || s.verification_status === 'verified',
+                    department: s.department
+                }));
+                
+                allUsers.faculty = faculty.map(f => ({
+                    id: f.faculty_id,
+                    name: f.name,
+                    email: f.email,
+                    role: 'Faculty',
+                    department: f.department
+                }));
+                
+                allUsers.admin = admins.map(a => ({
+                    id: a.admin_id,
+                    name: a.name,
+                    email: a.email,
+                    role: 'Admin'
+                }));
+                
+                log(`Processed data - Students: ${allUsers.students.length}, Faculty: ${allUsers.faculty.length}, Admin: ${allUsers.admin.length}`, 'success');
+                
+                renderTable();
+                
+            } catch (error) {
+                log(`ERROR loading users: ${error.message}`, 'error');
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('userList');
+            const users = allUsers[currentFilter];
+            
+            log(`Rendering table for filter: ${currentFilter}`, 'info');
+            log(`Users to render: ${users.length}`, 'info');
+            
+            const dynamicHeader = document.getElementById('dynamicHeader');
+            dynamicHeader.textContent = currentFilter === 'students' ? 'Verification' : 
+                                       currentFilter === 'faculty' ? 'Department' : 'Status';
+            
+            tbody.innerHTML = '';
+            
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px;">No ${currentFilter} found</td></tr>`;
+                return;
+            }
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                let statusHtml = '';
+                if (currentFilter === 'students') {
+                    statusHtml = user.verified
+                        ? '<span class="badge verified">✓ Verified</span>'
+                        : '<span class="badge unverified">✗ Unverified</span>';
+                } else if (currentFilter === 'faculty') {
+                    statusHtml = user.department || 'N/A';
+                } else {
+                    statusHtml = '-';
+                }
+                
+                let actionsHtml = `
+                    <button class="btn secondary">View</button>
+                    <button class="btn primary">Edit</button>`;
+                
+                if (currentFilter === 'students' && !user.verified) {
+                    actionsHtml += `<button class="btn success">Verify</button>`;
+                }
+                
+                actionsHtml += `<button class="btn danger">Delete</button>`;
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>${statusHtml}</td>
+                    <td style="white-space:nowrap;">${actionsHtml}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            log(`Rendered ${users.length} rows successfully`, 'success');
+        }
+
+        function switchTab(filter) {
+            log(`Switching to tab: ${filter}`, 'info');
+            currentFilter = filter;
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const btnFilter = btn.getAttribute('data-filter');
+                if (btnFilter === filter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            renderTable();
+        }
+
+        // Setup event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Page loaded, initializing...', 'info');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const filter = this.getAttribute('data-filter');
+                    switchTab(filter);
+                });
+            });
+            
+            loadAllUsers();
+        });
+    </script>
+</body>
+</html>

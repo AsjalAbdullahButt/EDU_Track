@@ -1,0 +1,6 @@
+/* view_feedback page styles */
+body.feedback .main-content { background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); border-radius: 12px; padding: 30px; }
+.filter-row { display:flex; gap:12px; align-items:center; margin-bottom:16px; }
+#feedbackTable { width:100%; border-collapse: collapse; }
+#feedbackTable th, #feedbackTable td { padding:10px; border-bottom:1px solid #eee; }
+#feedbackTable th { background: var(--midnight); color:#fff; }

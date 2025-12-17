@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDU Track - Login</title>
+    <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/CSS/main.css">
+    <link rel="stylesheet" href="/static/CSS/auth.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        <!-- Left side: Login form -->
+        <section class="auth-panel">
+            <h1 class="auth-title">Login</h1>
+
+            <form id="loginForm" class="auth-form">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <label class="show-password-label">
+                        <input type="checkbox" id="showPassword">
+                        <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle class="eye-open" cx="12" cy="12" r="3"></circle>
+                            <path class="eye-closed" d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" style="display:none;"></path>
+                            <line class="eye-closed" x1="1" y1="1" x2="23" y2="23" style="display:none;"></line>
+                        </svg>
+                    </label>
+                </div>
+
+                <div class="auth-actions">
+                    <button type="submit" class="btn primary">Login</button>
+                            <p class="text-small">
+                                Don't have an account?
+                                <a href="/pages/register.html" class="link">Register Now</a>
+                            </p>
+                </div>
+            </form>
+        </section>
+
+        <!-- Right side: Branding panel -->
+        <aside class="auth-welcome">
+            <h2>Welcome Back</h2>
+            <img src="/static/Images/EDU-Logo.png" alt="EDU Track Logo" class="app-logo">
+            <p>Your Academic Companion</p>
+        </aside>
+    </div>
+
+    <script src="/static/JS/api.js"></script>
+    <script src="/static/JS/auth.js" defer></script>
+</body>
+</html>

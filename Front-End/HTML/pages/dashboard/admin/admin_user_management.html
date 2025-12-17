@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Admin User Management</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/admin/admin_user_management.css">
+</head>
+<body>
+  <div class="page-layout">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2 class="sidebar-title">EDU Track</h2>
+      </div>
+      <nav class="nav-links">
+        <a href="/pages/dashboard/admin/dashboard_admin.html" class="nav-link">Dashboard</a>
+        <a href="/pages/dashboard/admin/admin_user_management.html" class="nav-link active">User Management</a>
+        <a href="/pages/dashboard/admin/admin_course_approvals.html" class="nav-link">Course Approvals</a>
+        <a href="/pages/dashboard/admin/fee_records.html" class="nav-link">Fee Records</a>
+        <a href="/pages/dashboard/admin/fee_verification.html" class="nav-link">Fee Verification</a>
+        <a href="/pages/dashboard/admin/salary_payments.html" class="nav-link">Salary Payments</a>
+        <a href="/pages/dashboard/admin/admin_security.html" class="nav-link">Security Settings</a>
+        <a href="/pages/dashboard/admin/admin_record.html" class="nav-link">Records</a>
+      </nav>
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1 class="dashboard-title">User Management</h1>
+        <p class="dashboard-subtitle">Manage all users in the system</p>
+      </header>
+
+      <!-- Filter Tabs with Add Button -->
+      <section class="filter-tabs">
+        <div class="tabs-wrapper">
+          <button class="tab-btn active" data-filter="students">Students</button>
+          <button class="tab-btn" data-filter="faculty">Faculty</button>
+          <button class="tab-btn" data-filter="admin">Admin Members</button>
+          <button class="btn primary add-btn" id="addUserBtn">+ Add New</button>
+        </div>
+      </section>
+
+      <!-- User Table Section -->
+      <section class="section user-table-container">
+        <div class="card">
+          <table class="data-table" id="userTable">
+            <thead>
+              <tr id="tableHeader">
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th id="dynamicHeader">Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userList">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Confirm modal for delete actions -->
+  <div id="confirmModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="modal-header">
+        <h3 id="confirmTitle">Confirm Action</h3>
+        <button class="close" aria-label="Close" onclick="closeConfirmModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage">Are you sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" onclick="closeConfirmModal()">Cancel</button>
+        <button type="button" class="btn danger" id="confirmBtn" onclick="confirmAction()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit user modal -->
+  <div id="editUserModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editUserTitle">
+      <div class="modal-header">
+        <h3 id="editUserTitle">Edit User</h3>
+        <button class="close" aria-label="Close" onclick="closeEditModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="editUserForm">
+          <input type="hidden" id="editUserFilter">
+          <input type="hidden" id="editUserId">
+          <input type="hidden" id="editMode" value="edit">
+          <div class="form-row">
+            <label for="editName">Name</label>
+            <input id="editName" name="name" type="text" required>
+          </div>
+          <div class="form-row">
+            <label for="editEmail">Email</label>
+            <input id="editEmail" name="email" type="email" required>
+          </div>
+          <div class="form-row">
+            <label for="editPassword">Password (leave blank to keep current)</label>
+            <input id="editPassword" name="password" type="password" placeholder="••••••">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" onclick="closeEditModal()">Cancel</button>
+        <button type="button" class="btn primary" id="saveEditBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New User Modal -->
+  <div id="addUserModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="addUserTitle">
+      <div class="modal-header">
+        <h3 id="addUserTitle">Add New User</h3>
+        <button class="close" aria-label="Close" onclick="closeAddUserModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addUserForm">
+          <div class="form-row">
+            <label for="addUserType">User Type</label>
+            <select id="addUserType" name="type" onchange="updateAddFormFields()" required>
+              <option value="">Select Type</option>
+              <option value="students">Student</option>
+              <option value="faculty">Faculty</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          
+          <!-- Student/Faculty/Admin Common Fields -->
+          <div class="form-row">
+            <label for="addName"><span id="nameLabel">Full Name</span></label>
+            <input id="addName" name="name" type="text" required>
+          </div>
+          <div class="form-row">
+            <label for="addEmail">Email</label>
+            <input id="addEmail" name="email" type="email" required>
+          </div>
+          <div class="form-row">
+            <label for="addPassword">Password</label>
+            <input id="addPassword" name="password" type="password" required>
+          </div>
+          
+          <!-- Student-specific fields -->
+          <div class="form-row student-field" id="usernameField" style="display:none;">
+            <label for="addUsername">Username</label>
+            <input id="addUsername" name="username" type="text">
+          </div>
+          <div class="form-row student-field" id="genderField" style="display:none;">
+            <label for="addGender">Gender</label>
+            <select id="addGender" name="gender">
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-row student-field" id="dobField" style="display:none;">
+            <label for="addDOB">Date of Birth</label>
+            <input id="addDOB" name="dob" type="date">
+          </div>
+          <div class="form-row student-field faculty-field" id="departmentField" style="display:none;">
+            <label for="addDepartment">Department</label>
+            <input id="addDepartment" name="department" type="text">
+          </div>
+          <div class="form-row student-field" id="semesterField" style="display:none;">
+            <label for="addSemester">Semester</label>
+            <input id="addSemester" name="semester" type="number" min="1" max="8">
+          </div>
+          <div class="form-row student-field faculty-field" id="contactField" style="display:none;">
+            <label for="addContact">Contact</label>
+            <input id="addContact" name="contact" type="tel">
+          </div>
+          <div class="form-row student-field" id="addressField" style="display:none;">
+            <label for="addAddress">Address</label>
+            <textarea id="addAddress" name="address" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" onclick="closeAddUserModal()">Cancel</button>
+        <button type="button" class="btn primary" id="saveAddBtn">Add User</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verify Student Modal -->
+  <div id="verifyStudentModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="verifyStudentTitle">
+      <div class="modal-header">
+        <h3 id="verifyStudentTitle">Verify Student Registration</h3>
+        <button class="close" aria-label="Close" onclick="closeVerifyModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Student:</strong> <span id="verifyStudentName"></span></p>
+        <p><strong>Email:</strong> <span id="verifyStudentEmail"></span></p>
+        <p><strong>Department:</strong> <span id="verifyStudentDept"></span></p>
+        <p><strong>Current Status:</strong> <span id="verifyStudentStatus"></span></p>
+        <hr>
+        <p>Do you want to verify this student's registration?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn secondary" onclick="closeVerifyModal()">Cancel</button>
+        <button type="button" class="btn success" id="confirmVerifyBtn">Verify</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- View user modal -->
+  <div id="viewUserModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="viewUserTitle">
+      <div class="modal-header">
+        <h3 id="viewUserTitle">User Details</h3>
+        <button class="close" aria-label="Close" onclick="closeViewModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre id="viewUserDetails" style="white-space:pre-wrap;">{}</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn primary" onclick="closeViewModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/JS/inject-favicon.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/admin_user_management.js"></script>
+</body>
+</html>

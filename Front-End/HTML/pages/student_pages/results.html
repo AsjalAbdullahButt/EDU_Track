@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Results</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+  <style>
+    .assessment-details { max-width: 1100px; margin: 18px auto; }
+    .assessment-table-section {
+      background: var(--white, #fff);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--soft-shadow, 0 6px 18px rgba(11,11,11,0.06));
+      margin-bottom: 18px;
+    }
+    .assessment-table-section h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.05rem;
+      color: var(--midnight, #001f3f);
+    }
+    .assessment-table, .courses-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white, #fff);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .assessment-table thead th {
+      text-align: left;
+      padding: 12px 14px;
+      background: rgba(0,31,63,0.04);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--midnight, #001f3f);
+      border-bottom: 1px solid rgba(11,11,11,0.06);
+    }
+    .assessment-table tbody td {
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      color: rgba(11,11,11,0.85);
+      border-bottom: 1px solid rgba(11,11,11,0.04);
+    }
+    .grade-badge {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:0.95rem;
+    }
+    .grade-a+, .grade-aplus { background: #28a745; color: #fff; }
+    .grade-a { background: #5cb85c; color: #fff; }
+    .grade-b+, .grade-bplus { background: #17a2b8; color: #fff; }
+    .grade-b { background: #5bc0de; color: #fff; }
+    .grade-c+, .grade-cplus { background: #ffc107; color: #000; }
+    .grade-c { background: #f0ad4e; color: #000; }
+    .grade-d { background: #fd7e14; color: #fff; }
+    .grade-f { background: #dc3545; color: #fff; }
+    .clickable-row:hover { background: rgba(205,238,228,0.1); }
+  </style>
+</head>
+<body class="results">
+
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html" class="active">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>My Results</h1>
+        <p>Check your academic performance for each semester</p>
+      </header>
+
+      <section class="section">
+        <div class="results-summary">
+          <div class="summary-card">
+            <h2>Overall GPA</h2>
+            <div class="gpa-display">
+              <span id="gpaScore" class="gpa-value">0.00</span>
+              <span class="gpa-scale">/4.0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="assessment-details">
+          <div id="resultsTableContainer" class="assessment-tables-container"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/student/results.js" defer></script>
+</body>
+</html>

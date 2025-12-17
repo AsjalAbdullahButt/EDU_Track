@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU Track - Feedback</title>
+  <link rel="icon" href="/static/Images/EDU-Logo.png" type="image/png">
+  <link rel="stylesheet" href="/static/CSS/main.css">
+  <link rel="stylesheet" href="/static/CSS/dashboards.css">
+  <link rel="stylesheet" href="/static/CSS/student/student_pages.css">
+</head>
+<body class="feedback">
+
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <div class="logo-section">
+        <img src="/static/Images/EDU-Logo.png" alt="Logo" class="sidebar-logo">
+        <h2>EDU Track</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/pages/dashboard/student/dashboard_student.html">Dashboard</a>
+        <a href="/pages/student_pages/courses.html">Courses</a>
+        <a href="/pages/student_pages/attendance.html">Attendance</a>
+        <a href="/pages/student_pages/results.html">Results</a>
+        <a href="/pages/student_pages/fees.html">Fees</a>
+        <a href="/pages/student_pages/notifications.html">Notifications</a>
+        <a href="/pages/student_pages/feedback.html" class="active">Feedback</a>
+      </nav>
+
+      <div class="logout-section">
+        <button class="btn secondary" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Course Feedback</h1>
+        <p>Share your valuable feedback to help improve teaching and learning experience</p>
+      </header>
+
+      <!-- Feedback Overview -->
+      <section class="section">
+        <div class="feedback-stats">
+          <a href="feedback_submitted.html" class="stat-link">
+            <div class="stat-card">
+              <div class="stat-icon">📝</div>
+              <div class="stat-content">
+                <h3 id="feedbackCount">—</h3>
+                <p>Feedbacks Submitted</p>
+                <div class="stat-action">View All →</div>
+              </div>
+            </div>
+          </a>
+          
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-content">
+              <h3 id="feedbackAverage">—</h3>
+              <p>Average Rating</p>
+            </div>
+          </div>
+          
+          <a href="feedback_pending.html" class="stat-link">
+            <div class="stat-card">
+              <div class="stat-icon">🎯</div>
+              <div class="stat-content">
+                <h3 id="feedbackPending">—</h3>
+                <p>Pending Feedback</p>
+                <div class="stat-action">Complete Now →</div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="section">
+        <div class="actions-grid">
+          <button class="action-card" onclick="location.href='feedback_pending.html'">
+            <div class="card-left">📋</div>
+            <div class="card-body">
+              <div class="card-title">Submit Pending Feedback</div>
+              <div class="card-sub">You have <strong><span id="cardPendingCount">—</span></strong> pending feedbacks</div>
+            </div>
+            <div class="card-action">→</div>
+          </button>
+
+          <button class="action-card" onclick="location.href='feedback_submitted.html'">
+            <div class="card-left">📊</div>
+            <div class="card-body">
+              <div class="card-title">View Submitted Feedback</div>
+              <div class="card-sub">Total <strong><span id="cardTotalCount">—</span></strong> submissions</div>
+            </div>
+            <div class="card-action">→</div>
+          </button>
+
+          <button class="action-card primary" onclick="startNewFeedback()">
+            <div class="card-left">✨</div>
+            <div class="card-body">
+              <div class="card-title">Start New Feedback</div>
+              <div class="card-sub">Share your thoughts about a course</div>
+            </div>
+            <div class="card-action">+</div>
+          </button>
+
+          <button class="action-card" onclick="downloadFeedbackHistory()">
+            <div class="card-left">📥</div>
+            <div class="card-body">
+              <div class="card-title">Download History</div>
+              <div class="card-sub">Export a PDF report</div>
+            </div>
+            <div class="card-action">↓</div>
+          </button>
+        </div>
+
+        <!-- New Feedback Modal (moved here for structure) -->
+        <div id="newFeedbackModal" class="modal" aria-hidden="true">
+          <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-header">
+              <h3 id="modalTitle">Start New Feedback</h3>
+              <button class="close" aria-label="Close" onclick="closeNewFeedbackModal()">&times;</button>
+            </div>
+            <form id="newFeedbackForm" class="modal-body">
+              <label for="courseSelect">Course</label>
+              <select id="courseSelect" name="course" required>
+                <option value="">Select a course...</option>
+              </select>
+
+              <label>Rating</label>
+              <div class="rating" id="ratingStars" role="radiogroup" aria-label="Rating" aria-hidden="false">
+                <button type="button" class="star" data-value="5" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="4" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="3" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="2" role="radio" aria-checked="false">★</button>
+                <button type="button" class="star" data-value="1" role="radio" aria-checked="false">★</button>
+              </div>
+              <input type="hidden" id="ratingValue" name="ratingValue" value="0">
+              <div id="feedbackLive" class="sr-only" aria-live="polite"></div>
+
+              <label for="feedbackText">Feedback</label>
+              <textarea id="feedbackText" name="message" rows="5" placeholder="Write your feedback..." required></textarea>
+
+              <div class="modal-footer">
+                <label class="inline"><input type="checkbox" id="anonymousCheck"> Submit anonymously</label>
+                <div class="modal-actions">
+                  <button type="button" class="btn secondary" onclick="closeNewFeedbackModal()">Cancel</button>
+                  <button type="submit" class="btn primary">Submit Feedback</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Feedback Activity -->
+      <section class="section">
+        <div class="section-header">
+          <h2>Recent Feedback Activity</h2>
+          <a href="feedback_submitted.html" class="btn-text">View All History</a>
+        </div>
+        
+        <div class="activity-timeline">
+          <!-- Timeline items will be loaded dynamically from the backend -->
+        </div>
+      </section>
+
+      <!-- Feedback Guidelines -->
+      <section class="section">
+        <div class="guidelines-card">
+          <h3>📝 Feedback Guidelines</h3>
+          <div class="guidelines-list">
+            <div class="guideline-item">
+              <span class="guideline-icon">🎯</span>
+              <div class="guideline-content">
+                <strong>Be Specific</strong>
+                <p>Provide concrete examples to support your feedback</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">💡</span>
+              <div class="guideline-content">
+                <strong>Constructive Criticism</strong>
+                <p>Focus on suggestions for improvement rather than just criticism</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">⭐</span>
+              <div class="guideline-content">
+                <strong>Balanced Feedback</strong>
+                <p>Highlight both strengths and areas for improvement</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <span class="guideline-icon">🔒</span>
+              <div class="guideline-content">
+                <strong>Anonymous Option</strong>
+                <p>You can choose to submit feedback anonymously</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Duplicate legacy modal removed to avoid inline pastel section (kept updated modal inside Quick Actions) -->
+
+  <script src="/static/JS/inject-favicon.js"></script>
+  <script src="/static/JS/auth.js"></script>
+  <script src="/static/JS/dashboard.js"></script>
+  <script src="/static/JS/session-protection.js"></script>
+  <script src="/static/JS/student/feedback.js"></script>
+  <script>
+    protectDashboard('student');
+  </script>
+</body>
+</html>
